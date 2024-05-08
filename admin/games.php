@@ -57,15 +57,12 @@
                 
                 <thead>
                             <tr>
-                                <th>Game No.</th>
-                                <th>Banner</th>
-                                <th>Name</th>
-                                <th>Genre</th>
-                                <th>Platform</th>
-                                <th>Developer</th>
-                                <th>Publisher</th>
-                                <th>Release Date</th>
-                                <th>Mature Content</th>
+                                <th>#</th>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Category</th>
                                 <th>Price</th>
                                 <th>Action</th>
                             </tr>
@@ -81,20 +78,17 @@
         ?>
         <tr>
             <td><?php echo $row['id']; ?></td>
-            <td><?php if ($row['image_path'] != ""): ?>
-                        <img src="uploads/<?php echo $row['image_path']; ?>" style="width: 80px;">
+            <td><?php if ($row['image_front'] != ""): ?>
+                        <img src="uploads/<?php echo $row['image_front']; ?>" style="width: 80px;">
                       <?php else: ?>
                         <img src="uploads/default.jpg" style="width: 80px">
                       <?php endif; ?></td>
-            <td><?php echo $row['name']; ?></td>
-            <td><?php echo $row['genre']; ?></td>
-            <td><?php echo $row['platform']; ?></td>
-            <td><?php echo $row['developer']; ?></td>
-            <td><?php echo $row['publisher']; ?></td>
-            <td><?php echo $row['release_date']; ?></td>
-            <td><?php echo $row['mature_content']; ?></td>
+            <td><?php echo $row['name_item']; ?></td>
             <td><?php echo $row['price']; ?></td>
-            <td>
+            <td><?php echo $row['quantity']; ?></td>
+            <td><?php echo $row['category']; ?></td>
+            <td><?php echo $row['price']; ?></td>
+             <td>
                
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProductModal<?php echo $row['id']; ?>"><i class="fas fa-edit"></i></button>
             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProductModal<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></button>
@@ -252,19 +246,7 @@
         </div>
     </div>
    
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row text-muted">
-                <div class="col-6 text-start">
-                    <p class="mb-0">
-                        <a href="#" class="text-muted">
-                            <strong>RRBMS</strong>
-                        </a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
+   
     <!-- Bootstrap Bundle with Popper -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables -->
