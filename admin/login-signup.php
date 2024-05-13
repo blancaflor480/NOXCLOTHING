@@ -78,9 +78,7 @@ function showAlert(title, message, icon, type) {
             });
         }
     </script>
-		<video autoplay loop muted plays-inline class="back-video">
-			<source src="images/bgvid-glitch.mp4" type="video/mp4">
-		</video>
+		
 	<div class="container" id="container">
 		<div class="form-container sign-up-container">
 			<form action="" method="post">
@@ -200,13 +198,15 @@ if(empty($errors)){
 			<div class="overlay">
 				<div class="overlay-panel overlay-left">
 					<a href="main.html" class="close-button-left"><img src="images/close-wht.png" class="close-icon-left"></a>
-					<img src="images/main-logo.png" style="width: 250px; height: 105px; margin-bottom: -15px;">
+					<!--<img src="images/main-logo.png" style="width: 250px; height: 105px; margin-bottom: -15px;">-->
+					<h3 style="font-size: 2rem;">NOX CLOTHING</h3>
 					<p>Already have an account? To keep connected<br>with us please login with your personal info.</p>
 					<button class="ghost" id="signIn">Sign In</button>
 				</div>
 				<div class="overlay-panel overlay-right">
 					<a href="main.html" class="close-button-right"><img src="images/close-wht.png" class="close-icon-right"></a>
-					<img src="images/main-logo.png" style="width: 250px; height: 105px; margin-bottom: -15px;">
+					<!--<img src="images/main-logo.png" style="width: 250px; height: 105px; margin-bottom: -15px;">-->
+					<h3 style="font-size: 2rem;">NOX CLOTHING</h3>
 					<p>Already have an account? To keep connected<br>with us please login with your personal info.</p>
 				
 				</div>

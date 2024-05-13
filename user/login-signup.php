@@ -36,7 +36,7 @@
 		if(mysqli_num_rows($result) === 1){
 			$row = mysqli_fetch_assoc($result);
 			$_SESSION['uname'] = $uname;
-			header("Location: store.php?uname=$uname");
+			header("Location: index.php?uname=$uname");
 			exit();	
 		} else {
 			// Display error message using Alertify
@@ -94,8 +94,8 @@ include 'dbconn/conn.php';
 if (isset($_POST['submit'])) {
     $uname = stripcslashes($_REQUEST['uname']);
     $uname = mysqli_real_escape_string($conn, $uname);
-    $fullname = stripcslashes($_REQUEST['fullname']);
-    $fullname = mysqli_real_escape_string($conn, $fullname);
+    $fname = stripcslashes($_REQUEST['fname']);
+    $fname = mysqli_real_escape_string($conn, $fname);
     $email = stripcslashes($_REQUEST['email']);
     $email = mysqli_real_escape_string($conn, $email);
     $password = stripcslashes($_REQUEST['password']);
@@ -108,7 +108,7 @@ if (isset($_POST['submit'])) {
 	}
 	
 
-    $check_email_query = "SELECT * FROM user WHERE email='$email'";
+    $check_email_query = "SELECT * FROM customer WHERE email='$email'";
     $check_email_result = mysqli_query($conn, $check_email_query);
     $check_uname_query = "SELECT * FROM user WHERE uname='$uname'";
     $check_uname_result = mysqli_query($conn, $check_uname_query);
@@ -124,7 +124,7 @@ if (isset($_POST['submit'])) {
         // Hashing password with MD5
         $hashed_password = md5($password);
 
-        $query = "INSERT into user (uname,fullname,email,password,bday) VALUES ('$uname','$fullname','$email','$hashed_password','$bday')";
+        $query = "INSERT into customer (uname,fname,email,password,bday) VALUES ('$uname','$fullname','$email','$hashed_password','$bday')";
         $result = mysqli_query($conn, $query);
 
         if ($result) {

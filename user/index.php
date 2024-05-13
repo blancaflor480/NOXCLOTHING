@@ -1,3 +1,52 @@
+<?php
+session_start();
+
+// Check kung may session na itinakda para sa 'uname'
+if (!isset($_SESSION['uname'])) {
+    header("Location: index.php?error=Login%20First");
+    exit();
+}
+
+// Include ng database connection
+include 'dbconn/conn.php';
+
+// Kunin ang 'uname' mula sa session
+$uname = $_SESSION['uname'];
+
+// Subukan kung mayroong resulta sa query
+$stmt = $conn->prepare("SELECT * FROM user WHERE uname = ?");
+$stmt->bind_param("s", $uname);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Siguraduhing may resulta bago kunin ang data
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+    $user_id = $user['id']; // Kunin ang 'id' ng user
+} else {
+    // Kung wala, i-redirect sa login page
+    header("Location: login-signup.php?error=Login%20First");
+    exit();
+}
+
+// I-set ang 'user_id' sa session para magamit sa ibang mga pahina
+$_SESSION['user_id'] = $user_id;
+?>
+
+<?php
+    $totalItems = 0; // Initialize total items count
+
+    $sql = "SELECT addcart.*, products.price AS product_price FROM addcart INNER JOIN products ON addcart.products_id = products.id";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $totalItems++; // Increment total items count
+        }
+    }
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
