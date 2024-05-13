@@ -23,7 +23,7 @@ if (!$result) {
 <main class="content px-3 py-2">
     <div class="container-fluid">
         <div class="mb-3">
-            <h4><small>Product > </small> Transactions</h4>
+            <h4><small>Product > </small> Transactions Orders</h4>
         </div>
         
         <!-- Table Element -->
@@ -41,20 +41,25 @@ if (!$result) {
                 <table class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>Game No.</th>
+                            <th>#</th>
                             <th>Customer Name</th>
-                            <th>Total Amount</th>
+                            <th>Innovoice</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Size</th>
                             <th>Order Date</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
 
                     <tbody>
                     <?php
-                        $sql = "SELECT orders.id, user.fullname AS customer_name, orders.total_amount, orders.order_date 
+                        $sql = "SELECT orders.id, customer.fname AS customer_name, orders.total_amount, orders.order_date 
                                 FROM orders 
-                                JOIN user 
-                                ON orders.customer_id = user.id";
+                                JOIN customer 
+                                ON orders.customer_id = customer.id";
              
                         $result = mysqli_query($conn, $sql);
 
@@ -64,8 +69,14 @@ if (!$result) {
                         <tr>
                             <td><?php echo $row['id']; ?></td>
                             <td><?php echo isset($row['customer_name']) ? $row['customer_name'] : 'N/A'; ?></td>
-                            <td><?php echo $row['total_amount']; ?></td>
+                            <td><?php echo $row['innovoice']; ?></td>
+                            <td><?php echo $row['products_id']; ?></td>
+                            <td><?php echo $row['quantity']; ?></td>
+                            <td><?php echo $row['size']; ?></td>
                             <td><?php echo $row['order_date']; ?></td>
+                            <td><?php echo $row['total_amount']; ?></td>
+                            <td><?php echo $row['status']; ?></td>
+                            
                             <td>
                                 <!-- Ang mga action buttons ay maaaring idagdag dito -->
                             </td>

@@ -22,34 +22,33 @@
     }
     ?>
     <script>
-    document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('change', function() {
-        var input = this;
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('currentImagePath').value = e.target.result;
-            }
-            reader.readAsDataURL(input.files[0]);
+document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('change', function() {
+    var input = this;
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('currentImagePath<?php echo $row['id']; ?>').value = e.target.result;
         }
-    });
+        reader.readAsDataURL(input.files[0]);
+    }
+});
 </script>
 
     <?php include('sidebar.php'); ?>
     <main class="content px-3 py-2">
         <div class="container-fluid">
             <div class="mb-3">
-                <h4><small>Product > </small>Games </h4>
+                <h4><small>Product > </small>Items </h4>
             </div>
             <!-- Table Element -->
             <div class="card border-0">
             <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title">
-                        List of Games
+                        List of Items 
                     </h5>
                     <div class="d-flex justify-content-end align-items-center">
                         <button type="button" class="btn btn-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addProductModal">Add</button>
-                        <a href="history_transaction.php" style="font-size: 17px;" class="btn btn-primary btn-sm me-2">History</a>
-                    </div>
+                        </div>
                 </div>
                 
                 <div class="card-body table-responsive">
@@ -60,7 +59,7 @@
                                 <th>#</th>
                                 <th>Image</th>
                                 <th>Product Name</th>
-                                <th>Price</th>
+                                <th>Status</th>
                                 <th>Quantity</th>
                                 <th>Category</th>
                                 <th>Price</th>
@@ -84,7 +83,7 @@
                         <img src="uploads/default.jpg" style="width: 80px">
                       <?php endif; ?></td>
             <td><?php echo $row['name_item']; ?></td>
-            <td><?php echo $row['price']; ?></td>
+            <td><?php echo $row['status']; ?></td>
             <td><?php echo $row['quantity']; ?></td>
             <td><?php echo $row['category']; ?></td>
             <td><?php echo $row['price']; ?></td>
@@ -106,44 +105,75 @@
                     </div>
                     <div class="modal-body">
                         <!-- Edit Product Form -->
-                        <form action="edit_product.php" method="POST">
+                        <form action="edit_product.php" method="POST" enctype="multipart/form-data">
                             <!-- Input fields for editing product details -->
-                            <div class="mb-3">
-                            <label for="editProductName<?php echo $row['id']; ?>" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="editProductName<?php echo $row['id']; ?>" name="editProductName" value="<?php echo $row['name']; ?>" required>
-            
-            <label for="editGenre<?php echo $row['id']; ?>" class="form-label">Genre</label>
-            <input type="text" class="form-control" id="editGenre<?php echo $row['id']; ?>" name="genre" value="<?php echo $row['genre']; ?>" required>
-            
-            <label for="editPlatform<?php echo $row['id']; ?>" class="form-label">Platform</label>
-            <input type="text" class="form-control" id="editPlatform<?php echo $row['id']; ?>" name="platform" value="<?php echo $row['platform']; ?>" required>
-            
-            <label for="editDeveloper<?php echo $row['id']; ?>" class="form-label">Developer</label>
-            <input type="text" class="form-control" id="editDeveloper<?php echo $row['id']; ?>" name="developer" value="<?php echo $row['developer']; ?>" required>
-            
-            <label for="editDeveloper<?php echo $row['id']; ?>" class="form-label">Publisher</label>
-            <input type="text" class="form-control" id="editDeveloper<?php echo $row['id']; ?>" name="publisher" value="<?php echo $row['publisher']; ?>" required>
-            
-            <label for="editReleaseDate<?php echo $row['id']; ?>" class="form-label">Release Date</label>
-            <input type="date" class="form-control" id="editReleaseDate<?php echo $row['id']; ?>" name="release_date" value="<?php echo $row['release_date']; ?>">
-            
-            <label for="editmature<?php echo $row['id']; ?>" class="form-label">Mature Content</label>
-            <input type="number" class="form-control" id="editmature<?php echo $row['id']; ?>" name="mature_content" value="<?php echo $row['mature_content']; ?>" required>
-            
+                             <div class="mb-3">
+                        <label for="editProductName<?php echo $row['id']; ?>" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="editProductName<?php echo $row['id']; ?>" name="editProductName" value="<?php echo $row['name_item']; ?>" required>
+                        
+                        <label for="editProductColor<?php echo $row['id']; ?>" class="form-label">Color</label>
+                        <input type="text" class="form-control" id="editProductColor<?php echo $row['id']; ?>" name="editProductColor" value="<?php echo $row['color']; ?>" required>
+                        
+                        <label for="editProductSize<?php echo $row['id']; ?>" class="form-label">Size</label>
+                        <select class="form-control" id="editProductSize<?php echo $row['id']; ?>" name="editProductSize" required>
+                            <option value="small" <?php if($row['size'] == 'small') echo 'selected'; ?>>Small</option>
+                            <option value="medium" <?php if($row['size'] == 'medium') echo 'selected'; ?>>Medium</option>
+                            <option value="large" <?php if($row['size'] == 'large') echo 'selected'; ?>>Large</option>
+                        </select>
 
-            <div style="position: relative;">
+                        <label for="editProductCategory<?php echo $row['id']; ?>" class="form-label">Category</label>
+                        <select class="form-select" id="editProductCategory<?php echo $row['id']; ?>" name="editProductCategory" required>
+                            <option disabled>Select Here</option>
+                            <option value="T-SHIRT" <?php if($row['category'] == 'T-SHIRT') echo 'selected'; ?>>T-SHIRT</option>
+                            <option value="SHORTS" <?php if($row['category'] == 'SHORT') echo 'selected'; ?>>SHORTS</option>
+                            <option value="JACKETS" <?php if($row['category'] == 'JACKET') echo 'selected'; ?>>JACKETS</option>
+                        </select>
+                        
+                        <label for="editProductQuantity<?php echo $row['id']; ?>" class="form-label">Quantity</label>
+                        <input type="text" class="form-control" id="editProductQuantity<?php echo $row['id']; ?>" name="editProductQuantity" value="<?php echo $row['quantity']; ?>" required>
+                        
+                        <label for="editProductType<?php echo $row['id']; ?>" class="form-label">Type</label>
+                        <select class="form-select" id="editProductType<?php echo $row['id']; ?>" name="editProductType" required>
+                            <option disabled>Select Here</option>
+                            <option value="male" <?php if($row['type'] == 'male') echo 'selected'; ?>>Male</option>
+                            <option value="female" <?php if($row['type'] == 'female') echo 'selected'; ?>>Female</option>
+                            <option value="other" <?php if($row['type'] == 'other') echo 'selected'; ?>>Other</option>
+                        </select>
+                        
+                        <label for="editProductManufacturer<?php echo $row['id']; ?>" class="form-label">Manufacturer</label>
+                        <select class="form-select" id="editProductManufacturer<?php echo $row['id']; ?>" name="editProductManufacturer" required>
+                            <option disabled>Select Here</option>
+                            <option value="Nike" <?php if($row['manufacturer'] == 'Nike') echo 'selected'; ?>>Nike</option>
+                            <option value="Dickies" <?php if($row['manufacturer'] == 'Dickies') echo 'selected'; ?>>Dickies</option>
+                            <option value="UNIQLO" <?php if($row['manufacturer'] == 'UNIQLO') echo 'selected'; ?>>UNIQLO</option>
+                        </select>
+                        
+                        <label for="editProductStatus<?php echo $row['id']; ?>" class="form-label">Status</label>
+                        <select class="form-select" id="editProductStatus<?php echo $row['id']; ?>" name="editProductStatus" required>
+                            <option disabled>Select Here</option>
+                            <option value="Restock" <?php if($row['status'] == 'Restock') echo 'selected'; ?>>Restock</option>
+                            <option value="Low Stock" <?php if($row['status'] == 'Low Stock') echo 'selected'; ?>>Low Stock</option>
+                            <option value="Instock" <?php if($row['status'] == 'Instock') echo 'selected'; ?>>Instock</option>
+                        </select>
+                        
+                     <label for="editDescription<?php echo $row['id']; ?>" class="form-label">Description</label>
+                       <textarea class="form-control" id="editDescription<?php echo $row['id']; ?>" name="editDescription" required><?php echo $row['description']; ?></textarea>
+
+
+                        <div style="position: relative;">
     <label for="editImage<?php echo $row['id']; ?>" class="form-label">Image</label>
-    <input type="file" class="form-control" id="editImage<?php echo $row['id']; ?>" name="image_path" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;">
-    <input type="text" class="form-control" id="currentImagePath" value="<?php echo $row['image_path']; ?>" readonly>
-    <button type="button" class="btn btn-secondary" onclick="document.getElementById('editImage<?php echo $row['id']; ?>').click()" style="position: absolute; top: 30; right: 0;">Choose File</button>
-    
+    <input type="file" class="form-control" id="editImage<?php echo $row['id']; ?>" name="image_front" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;">
+    <input type="text" class="form-control" id="currentImagePath<?php echo $row['id']; ?>" value="<?php echo $row['image_front']; ?>" readonly> 
+    <button type="button" class="btn btn-secondary" onclick="document.getElementById('editImage<?php echo $row['id']; ?>').click()" style="position: absolute; top: 30px; right: 0;">Choose File</button>
 </div>
 
-
-            <label for="editPrice<?php echo $row['id']; ?>" class="form-label">Price</label>
-            <input type="text" class="form-control" id="editPrice<?php echo $row['id']; ?>" name="price" value="<?php echo $row['price']; ?>" required>
-        
-                            </div>
+                        
+                        <label for="editPrice<?php echo $row['id']; ?>" class="form-label">Discount</label>
+                        <input type="text" class="form-control" id="editPrice<?php echo $row['id']; ?>" name="editDiscount" value="<?php echo $row['discount']; ?>" required>
+                        
+                        <label for="editPrice<?php echo $row['id']; ?>" class="form-label">Price</label>
+                        <input type="text" class="form-control" id="editPrice<?php echo $row['id']; ?>" name="editPrice" value="<?php echo $row['price']; ?>" required>
+                    </div>
                             <!-- Add more input fields for other details if needed -->
 
                             <input type="hidden" name="productID" value="<?php echo $row['id']; ?>">
@@ -205,35 +235,78 @@
                             <input type="text" class="form-control" id="productName" name="productName" required>
                         </div>
                         <div class="mb-3">
-                            <label for="genre" class="form-label">Genre</label>
-                            <input type="text" class="form-control" id="genre" name="genre" required>
+                            <label for="color" class="form-label">Color</label>
+                            <input type="text" class="form-control" id="color" name="color" required>
                         </div>
+                        <!--GAGAWIN SELECT ITO -->
                         <div class="mb-3">
-                            <label for="platform" class="form-label">Platform</label>
-                            <input type="text" class="form-control" id="platform" name="platform" required>
-                        </div>
+                          <label for="platform" class="form-label">Size</label>
+                             <select class="form-select" id="size" name="size" required>
+                             <option disbaled>Select Here</option>
+                           
+                             <option value="small">Small</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+        <!-- Add more options as needed -->
+                           </select>
+                       </div>
+
                         <div class="mb-3">
-                            <label for="developer" class="form-label">Developer</label>
-                            <input type="text" class="form-control" id="developer" name="developer" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="publisher" class="form-label">Publisher</label>
-                            <input type="text" class="form-control" id="publisher" name="publisher" required>
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" name="category">
+                                  <option disbaled>Select Here</option>
+                                  <option value="T-SHIRT">T-SHIRT</option>
+                                  <option value="SHORTS">SHORTS</option>
+                                  <option value="JACKETS">JACKETS</option>
+                            </select>
                         </div>
 
                         <div class="mb-3">
-                            <label for="release_date" class="form-label">Release Date</label>
-                            <input type="date" class="form-control"   name="release_date" />
+                            <label for="publisher" class="form-label">Quantity</label>
+                            <input type="number" class="form-control" id="quantity" name="quantity" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="release_date" class="form-label">type</label>
+                                  <select class="form-select" name="type">
+                                  <option disbaled>Select Here</option>
+                                  <option value="male">Male</option>
+                                  <option value="female">Female</option>
+                                  <option value="other">Other</option>
+                            </select>
+                       </div>
+                        <div class="mb-3">
+                            <label for="manufacture" class="form-label">Manufacturer</label>
+                            <select class="form-select" name="manufacturer">
+                                  <option disbaled>Select Here</option>
+                                  <option value="Nike">Nike</option>
+                                  <option value="Dickies">Dickies</option>
+                                  <option value="UNIQLO">UNIQLO</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="manufacture" class="form-label">Status</label>
+                            <select class="form-select" name="status">
+                                  <option disbaled>Select Here</option>
+                                  <option value="Restock">Restock</option>
+                                  <option value="Low Stock">Stock</option>
+                                  <option value="Instock">Instock</option>
+                            </select>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="release_date" class="form-label">Mature Content</label>
-                            <input type="number" class="form-control"   name="mature_content" />
-                        </div>
+        <label for="image" class="form-label">Image Product</label>
+        <input type="file" class="form-control" name="image_front">
+    </div>
+
 
                         <div class="mb-3">
-                            <label for="image" class="form-label">Banner</label>
-                            <input type="file" class="form-control" id="image" name="image">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" name="description"></textarea>
+    </div>
+                       <div class="mb-3">
+                            <label for="discount" class="form-label">Discount</label>
+                            <input type="number" class="form-control" id="discount" name="discount" required>
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
@@ -246,7 +319,18 @@
         </div>
     </div>
    
-   
+
+   <script>
+    <?php if (isset($_SESSION['success_message'])): ?>
+    var successMessage = "<?php echo $_SESSION['success_message']; ?>";
+    alert(successMessage);
+    <?php unset($_SESSION['success_message']); ?>
+<?php elseif (isset($_SESSION['error_message'])): ?>
+    var errorMessage = "<?php echo $_SESSION['error_message']; ?>";
+    alert(errorMessage);
+    <?php unset($_SESSION['error_message']); ?>
+<?php endif; ?>
+</script>
     <!-- Bootstrap Bundle with Popper -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables -->
