@@ -90,7 +90,7 @@ $_SESSION['user_id'] = $user_id;
               <a href="index.html" class="nav-link">Home</a>
             </li>
             <li class="nav-item">
-              <a href="product.html" class="nav-link">Shop</a>
+              <a href="product.php" class="nav-link">Shop</a>
             </li>
             <li class="nav-item">
             <a href="#terms" class="nav-link">Terms</a>
@@ -233,7 +233,8 @@ $_SESSION['user_id'] = $user_id;
       </div>
       <div class="product-info">
         <span><?php echo $product['type']; ?></span>
-        <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo $product['name_item']; ?></a>
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo htmlspecialchars($product['name_item']); ?></a>
+
         <h4>Php <?php echo $product['price']; ?></h4>
       </div>
       <ul class="icons">
