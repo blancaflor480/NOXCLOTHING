@@ -14,7 +14,7 @@ include 'dbconn/conn.php';
 $uname = $_SESSION['uname'];
 
 // Subukan kung mayroong resulta sa query
-$stmt = $conn->prepare("SELECT * FROM user WHERE uname = ?");
+$stmt = $conn->prepare("SELECT * FROM customer WHERE uname = ?");
 $stmt->bind_param("s", $uname);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -33,7 +33,7 @@ if ($result->num_rows > 0) {
 $_SESSION['user_id'] = $user_id;
 ?>
 
-<?php
+<!--< ?php
     $totalItems = 0; // Initialize total items count
 
     $sql = "SELECT addcart.*, products.price AS product_price FROM addcart INNER JOIN products ON addcart.products_id = products.id";
@@ -44,7 +44,7 @@ $_SESSION['user_id'] = $user_id;
             $totalItems++; // Increment total items count
         }
     }
-?>
+?>-->
 
 
 <!DOCTYPE html>
@@ -134,6 +134,10 @@ $_SESSION['user_id'] = $user_id;
               <i class="bx bx-cart"></i>
               <span class="d-flex">0</span>
             </a>
+            <a href="logout.php" class="icon">
+              <i class="bx bx-log-out"></i>
+            </a>
+          
           </div>
 
           <div class="hamburger">
@@ -202,156 +206,45 @@ $_SESSION['user_id'] = $user_id;
       </div>
     </section>
 
-    <!-- New Arrivals -->
-    <section class="section new-arrival">
-      <div class="title">
-        <h1>NEW ARRIVALS</h1>
-        <p>All the latest picked from designer of our store</p>
-      </div>
 
-      <div class="product-center">
-        <div class="product-item">
-          <div class="overlay">
-            <a href="productDetails.html" class="product-thumb">
-              <img src="./images/product-1.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="productDetails.html">Quis Nostrud Exercitation</a>
-            <h4>$700</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-3.jpg" alt="" />
-            </a>
-            <span class="discount">50%</span>
-          </div>
+<!-- New Arrivals -->
+<?php 
+  $stmt = $conn->prepare("SELECT id, name_item, type, discount, price, image_front FROM products WHERE YEAR(date_insert) = 2024 LIMIT 8");
+  $stmt->execute();
+  $new = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+?>
 
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Sonata White Men’s Shirt</a>
-            <h4>$800</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-2.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-4.jpg" alt="" />
-            </a>
-            <span class="discount">50%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$900</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-5.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$100</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-6.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$500</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-7.jpg" alt="" />
-            </a>
-            <span class="discount">50%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$200</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-2.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$560</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
+<section class="section new-arrival">
+  <div class="title">
+    <h1>NEW ARRIVALS</h1>
+    <p>All the latest picked from designer of our store</p>
+  </div>
+
+  <div class="product-center">
+    <?php foreach ($new as $product): ?>
+    <div class="product-item">
+      <div class="overlay">
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>" class="product-thumb">
+          <img src="../admin/uploads/<?php echo $product['image_front']; ?>" alt="<?php echo $product['name_item']; ?>" />
+        </a>
+        <?php if ($product['discount'] > 0): ?>
+        <span class="discount"><?php echo $product['discount']; ?>%</span>
+        <?php endif; ?>
       </div>
-    </section>
+      <div class="product-info">
+        <span><?php echo $product['type']; ?></span>
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo $product['name_item']; ?></a>
+        <h4>Php <?php echo $product['price']; ?></h4>
+      </div>
+      <ul class="icons">
+        <li><i class="bx bx-heart"></i></li>
+        <li><i class="bx bx-search"></i></li>
+        <li><i class="bx bx-cart"></i></li>
+      </ul>
+    </div>
+    <?php endforeach; ?>
+  </div>
+</section>
 
 
     <!-- Promo -->
@@ -371,89 +264,45 @@ $_SESSION['user_id'] = $user_id;
 
 
 
-    <!-- Featured -->
-  
-    <section class="section new-arrival">
-      <div class="title">
-        <h1>Featured</h1>
-        <p>All the latest picked from designer of our store</p>
+<!-- Featured -->
+<?php 
+  // Adjust the query to select featured products, assuming there is a column named 'is_featured'
+  $stmt = $conn->prepare("SELECT id, name_item, type, discount, price, image_front FROM products WHERE YEAR(date_insert) = 2024 LIMIT 4 ");
+  $stmt->execute();
+  $featured = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+?>
+
+<section class="section new-arrival">
+  <div class="title">
+    <h1>Featured</h1>
+    <p>All the latest picked from designer of our store</p>
+  </div>
+
+  <div class="product-center">
+    <?php foreach ($featured as $product): ?>
+    <div class="product-item">
+      <div class="overlay">
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>" class="product-thumb">
+          <img src="./images/<?php echo $product['image_front']; ?>" alt="<?php echo $product['name_item']; ?>" />
+        </a>
+        <?php if ($product['discount'] > 0): ?>
+        <span class="discount"><?php echo $product['discount']; ?>%</span>
+        <?php endif; ?>
       </div>
-
-      <div class="product-center">
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-7.jpg" alt="" />
-            </a>
-            <span class="discount">50%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Quis Nostrud Exercitation</a>
-            <h4>$700</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-4.jpg" alt="" />
-            </a>
-          </div>
-
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Sonata White Men’s Shirt</a>
-            <h4>$800</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-1.jpg" alt="" />
-            </a>
-            <span class="discount">40%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-6.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Edor do eiusmod tempor</a>
-            <h4>$900</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-
-    </section>
-
+      <div class="product-info">
+        <span><?php echo $product['type']; ?></span>
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo $product['name_item']; ?></a>
+        <h4>$<?php echo $product['price']; ?></h4>
+      </div>
+      <ul class="icons">
+        <li><i class="bx bx-heart"></i></li>
+        <li><i class="bx bx-search"></i></li>
+        <li><i class="bx bx-cart"></i></li>
+      </ul>
+    </div>
+    <?php endforeach; ?>
+  </div>
+</section>
     <!-- Contact -->
     <section class="section contact">
       <div class="row">

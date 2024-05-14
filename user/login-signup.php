@@ -30,7 +30,7 @@
 		$uname = mysqli_real_escape_string($conn, $_POST['uname']);
 		$password = mysqli_real_escape_string($conn, md5($_POST['password']));
 
-		$sql = "SELECT * FROM user WHERE uname ='{$uname}' AND password = '{$password}'";
+		$sql = "SELECT * FROM customer WHERE uname ='{$uname}' AND password = '{$password}'";
 		$result = mysqli_query($conn, $sql);
 	
 		if(mysqli_num_rows($result) === 1){
@@ -110,7 +110,7 @@ if (isset($_POST['submit'])) {
 
     $check_email_query = "SELECT * FROM customer WHERE email='$email'";
     $check_email_result = mysqli_query($conn, $check_email_query);
-    $check_uname_query = "SELECT * FROM user WHERE uname='$uname'";
+    $check_uname_query = "SELECT * FROM customer WHERE uname='$uname'";
     $check_uname_result = mysqli_query($conn, $check_uname_query);
 
     if (mysqli_num_rows($check_email_result) > 0) {
@@ -124,7 +124,7 @@ if (isset($_POST['submit'])) {
         // Hashing password with MD5
         $hashed_password = md5($password);
 
-        $query = "INSERT into customer (uname,fname,email,password,bday) VALUES ('$uname','$fullname','$email','$hashed_password','$bday')";
+        $query = "INSERT into customer (uname,fname,email,password,bday) VALUES ('$uname','$fname','$email','$hashed_password','$bday')";
         $result = mysqli_query($conn, $query);
 
         if ($result) {
@@ -174,9 +174,10 @@ if (isset($_POST['submit'])) {
 				<?php if (isset($errors['email'])) echo '<span style ="color: red; font-size: 0.5rem; text-align: left;">' . $errors['email'] . '</span>'; ?>
 				</span>
 				
-				<input type="text" name = "fullname" placeholder="Name" value="<?php if (isset($_POST['submit'])) { echo $fullname; } ?>" required />
+				<input type="text" name = "fname" placeholder="Name" value="<?php if (isset($_POST['submit'])) { echo $fname; } ?>" required />
 				
 				<input type="text" name ="uname" placeholder="Username" value="<?php if (isset($_POST['submit'])) { echo $uname; } ?>" required />
+				
 				<span style = "display: flex; margin-right: 239px;">
 				<?php if (isset($errors['uname'])) echo '<span style ="color: red; font-size: 0.5rem; text-align: left;">' . $errors['uname'] . '</span>'; ?>
 				</span>
