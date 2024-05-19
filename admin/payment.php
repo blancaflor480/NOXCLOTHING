@@ -26,33 +26,28 @@ if (!$result) {
 <main class="content px-3 py-2">
     <div class="container-fluid">
         <div class="mb-3">
-            <h4><small>Product > </small> Orders</h4>
+            <h4><small>Product > </small> Payment Orders</h4>
         </div>
         
         <!-- Table Element -->
         <div class="card border-0">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title">
-                    List of Orders
+                    List of Payment
                 </h5>
                 <div class="d-flex justify-content-end align-items-center">
-                 <!--   <a href="complaint.php" style="font-size: 17px;" class="btn btn-warning btn-sm me-2">Complaint</a>
-                    <a href="history_transaction.php" style="font-size: 17px;" class="btn btn-primary btn-sm me-2">History</a>
-                -->
+                   
                 </div>
             </div>
             <div class="card-body table-responsive">
-                 <table id="dataTable" class="table table-hover table-striped table-bordered">
+                <table id="dataTable" class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Customer Name</th>
                             <th>Innovoice</th>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Size</th>
-                            <th>Order Date</th>
-                            <th>Total Amount</th>
+                            <th>Mode Payment</th>
+                            <th>Payment Date</th>
+                            <th>Amount Paid</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -60,12 +55,10 @@ if (!$result) {
 
                     <tbody>
                     <?php
-                        $sql = "SELECT orders.id, customer.fname AS customer_name, products.name_item AS productname,  orders.innovoice, orders.quantity, orders.total_amount, orders.order_date, orders.status, orders.size
-                                FROM orders 
-                                INNER JOIN customer 
-                                ON orders.customer_id = customer.id
-                                INNER JOIN products
-                                ON orders.products_id = products.id";
+                        $sql = "SELECT payment.id, orders.innovoice, payment.mode_payment, payment.payment_date, payment.amount_paid,  payment.status 
+                                FROM payment 
+                                JOIN orders
+                                ON payment.orders_id = orders.id";
              
                         $result = mysqli_query($conn, $sql);
 
@@ -74,18 +67,14 @@ if (!$result) {
                         ?>
                         <tr>
                             <td><?php echo $row['id']; ?></td>
-                            <td><?php echo isset($row['customer_name']) ? $row['customer_name'] : 'N/A'; ?></td>
                             <td><?php echo $row['innovoice']; ?></td>
-                            <td><?php echo $row['productname']; ?></td>
-                            <td><?php echo $row['quantity']; ?></td>
-                            <td><?php echo $row['size']; ?></td>
-                            <td><?php echo $row['order_date']; ?></td>
-                            <td><?php echo $row['total_amount']; ?></td>
+                            <td><?php echo $row['mode_payment']; ?></td>
+                            <td><?php echo $row['payment_date']; ?></td>
+                            <td><?php echo $row['amount_paid']; ?></td>
                             <td><?php echo $row['status']; ?></td>
                             
                             <td>
-                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProductModal<?php echo $row['id']; ?>"><i class="fas fa-edit"></i></button>
-            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProductModal<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></button>
+                                  <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProductModal<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></button>
                             </td>
                         </tr>
                         <?php

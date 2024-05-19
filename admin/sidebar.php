@@ -67,7 +67,7 @@ $role  = $row['role'];
                         </ul>
                         <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item "style="padding-left: 25px;">
-                                <a href="orders.php" class="sidebar-link"><i class="fa-solid fa-scroll pe-2"></i> Transactions</a>
+                                <a href="payment.php" class="sidebar-link"><i class="fa-solid fa-scroll pe-2"></i> Payment</a>
                             </li>
                             <!--<li class="sidebar-item">
                                 <a href="#" class="sidebar-link">Page 2</a>
@@ -76,7 +76,7 @@ $role  = $row['role'];
                        
                         <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item " style="padding-left: 25px;">
-                                <a href="" class="sidebar-link"><i class="fa-solid fa-scroll pe-2"></i> History</a>
+                                <a href="orders.php" class="sidebar-link"><i class="fa-solid fa-scroll pe-2"></i> Orders</a>
                             </li>
                             <!--<li class="sidebar-item">
                                 <a href="#" class="sidebar-link">Page 2</a>
