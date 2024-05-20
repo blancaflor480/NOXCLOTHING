@@ -2,7 +2,7 @@
 session_start();
 
 // Check if the user is logged in
-if (!isset($_SESSION['uname'])) {
+if (!isset($_SESSION['email'])) {
     header("Location: index.php?error=Login%20First");
     exit();
 }

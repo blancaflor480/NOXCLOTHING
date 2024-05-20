@@ -2,7 +2,7 @@
 session_start();
 
 // Check kung may session na itinakda para sa 'uname'
-if (!isset($_SESSION['uname'])) {
+if (!isset($_SESSION['email'])) {
     header("Location: index.php?error=Login%20First");
     exit();
 }
@@ -11,11 +11,11 @@ if (!isset($_SESSION['uname'])) {
 include 'dbconn/conn.php';
 
 // Kunin ang 'uname' mula sa session
-$uname = $_SESSION['uname'];
+$email = $_SESSION['email'];
 
 // Subukan kung mayroong resulta sa query
-$stmt = $conn->prepare("SELECT * FROM customer WHERE uname = ?");
-$stmt->bind_param("s", $uname);
+$stmt = $conn->prepare("SELECT * FROM customer WHERE email = ?");
+$stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -87,7 +87,7 @@ $_SESSION['user_id'] = $user_id;
 
           <ul class="nav-list d-flex">
             <li class="nav-item">
-              <a href="index.html" class="nav-link">Home</a>
+              <a href="index.php" class="nav-link">Home</a>
             </li>
             <li class="nav-item">
               <a href="product.php" class="nav-link">Shop</a>
@@ -112,7 +112,7 @@ $_SESSION['user_id'] = $user_id;
               <i class="bx bx-heart"></i>
               <span class="d-flex">0</span>
             </div>
-            <a href="cart.html" class="icon">
+            <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
               <span class="d-flex">0</span>
             </a>
@@ -126,11 +126,10 @@ $_SESSION['user_id'] = $user_id;
             <div class="icon">
               <i class="bx bx-search"></i>
             </div>
-            <div class="icon">
+            <a href="cart.php" class="icon">
               <i class="bx bx-heart"></i>
               <span class="d-flex">0</span>
-            </div>
-            <a href="cart.html" class="icon">
+            <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
               <span class="d-flex">0</span>
             </a>

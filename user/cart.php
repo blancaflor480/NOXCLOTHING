@@ -1,3 +1,38 @@
+<?php
+session_start();
+
+// Check kung may session na itinakda para sa 'uname'
+if (!isset($_SESSION['email'])) {
+    header("Location: index.php?error=Login%20First");
+    exit();
+}
+
+// Include ng database connection
+include 'dbconn/conn.php';
+
+// Kunin ang 'uname' mula sa session
+$email = $_SESSION['email'];
+
+// Subukan kung mayroong resulta sa query
+$stmt = $conn->prepare("SELECT * FROM customer WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Siguraduhing may resulta bago kunin ang data
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+    $user_id = $user['id']; // Kunin ang 'id' ng user
+} else {
+    // Kung wala, i-redirect sa login page
+    header("Location: login-signup.php?error=Login%20First");
+    exit();
+}
+
+// I-set ang 'user_id' sa session para magamit sa ibang mga pahina
+$_SESSION['user_id'] = $user_id;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -25,27 +60,27 @@
       </div>
     </div>
     <div class="navigation">
-      <div class="nav-center container d-flex">
-        <a href="index.html" class="logo"><h1>Dans</h1></a>
+        <div class="nav-center container d-flex">
+        <a href="/" class="logo"><h1>Nox</h1></a>
 
-        <ul class="nav-list d-flex">
-          <li class="nav-item">
-            <a href="/" class="nav-link">Home</a>
-          </li>
-          <li class="nav-item">
-            <a href="product.html" class="nav-link">Shop</a>
-          </li>
-          <li class="nav-item">
+          <ul class="nav-list d-flex">
+            <li class="nav-item">
+              <a href="index.php" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="product.php" class="nav-link">Shop</a>
+            </li>
+            <li class="nav-item">
             <a href="#terms" class="nav-link">Terms</a>
-          </li>
-          <li class="nav-item">
-            <a href="#about" class="nav-link">About</a>
-          </li>
-          <li class="nav-item">
-            <a href="#contact" class="nav-link">Contact</a>
-          </li>
-          <li class="icons d-flex">
-            <a href="login.html" class="icon">
+            </li>
+            <li class="nav-item">
+              <a href="#about" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="#contact" class="nav-link">Contact</a>
+            </li>
+            <li class="icons d-flex">
+            <a href="login-signup.php" class="icon">
               <i class="bx bx-user"></i>
             </a>
             <div class="icon">
@@ -55,35 +90,38 @@
               <i class="bx bx-heart"></i>
               <span class="d-flex">0</span>
             </div>
-            <a href="cart.html" class="icon">
+            <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
               <span class="d-flex">0</span>
             </a>
           </li>
-        </ul>
+          </ul>
 
-        <div class="icons d-flex">
-          <a href="login.html" class="icon">
-            <i class="bx bx-user"></i>
-          </a>
-          <div class="icon">
-            <i class="bx bx-search"></i>
+          <div class="icons d-flex">
+            <a href="login-signup.php" class="icon">
+              <i class="bx bx-user"></i>
+            </a>
+            <div class="icon">
+              <i class="bx bx-search"></i>
+            </div>
+            <a href="cart.php" class="icon">
+              <i class="bx bx-heart"></i>
+              <span class="d-flex">0</span>
+            <a href="cart.php" class="icon">
+              <i class="bx bx-cart"></i>
+              <span class="d-flex">0</span>
+            </a>
+            <a href="logout.php" class="icon">
+              <i class="bx bx-log-out"></i>
+            </a>
+          
           </div>
-          <div class="icon">
-            <i class="bx bx-heart"></i>
-            <span class="d-flex">0</span>
-          </div>
-          <a href="cart.html" class="icon">
-            <i class="bx bx-cart"></i>
-            <span class="d-flex">0</span>
-          </a>
-        </div>
 
-        <div class="hamburger">
-          <i class="bx bx-menu-alt-left"></i>
+          <div class="hamburger">
+            <i class="bx bx-menu-alt-left"></i>
+          </div>
         </div>
       </div>
-    </div>
 
     <!-- Cart Items -->
     <div class="container cart">

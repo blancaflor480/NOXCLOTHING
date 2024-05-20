@@ -198,19 +198,11 @@ if (isset($_POST['submit'])) {
 
 		<div class="form-container sign-in-container">
 			<form action="" method = "post">
-		<h1>WELCOME BACK!</h1>
+		<h1>EMAIL VERIFICATION</h1>
 				<span style="padding-bottom: 20px;">We're so excited to see you again!</span>
-				<input type="email" name="email" placeholder="Email" / required >
-				<input type="password" name="password" placeholder="Password" / required >
+				<input type="number" name="otp_code" placeholder="Otp Verification" / required >
 				
-				<a href="#" style="font-size: 10px; color: darkred; margin-top: -3px; margin-left: -260px;">Forgot your password?</a>
-				<button name="login" style="margin-bottom: 40px; margin-top: 10px; padding: 12px 140px;">Sign In</button>
-				<span style="margin-bottom: 20px;">------ or continue with ------</span>
-				<div class="social-container">
-					<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-					<a href="#" class="social"><i class="fab fa-google"></i></a>
-					<a href="#" class="social"><i class="fab fa-apple"></i></a>
-				</div>
+				<button name="verify" style="margin-bottom: 40px; margin-top: 10px; padding: 12px 140px;">VERIFY</button>
 			
 				
 			</form>
@@ -230,8 +222,7 @@ if (isset($_POST['submit'])) {
 					
 					<!--<img src="images/main-logo.png" style="width: 250px; height: 105px; margin-bottom: -15px;">-->
 					<p>New to GameVault? Sign up below to create<br> your account and start journey with us.</p>
-					<button class="ghost" id="signUp">Create an Account</button>
-				</div>
+					</div>
 			</div>
 		</div>
 	</div>
