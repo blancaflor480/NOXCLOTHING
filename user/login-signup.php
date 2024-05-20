@@ -164,9 +164,7 @@ if (isset($_POST['submit'])) {
 					<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
 					<a href="#" class="social"><i class="fab fa-google"></i></a>
 					<a href="#" class="social"><i class="fab fa-apple"></i></a>
-					<a href="#" class="social"><i class="fab fa-steam"></i></a>
-					<a href="#" class="social"><i class="fab fa-playstation"></i></a>
-				</div>
+						</div>
 				<input type="email" name = "email" value="<?php if (isset($_POST['submit'])) { echo $email; } ?>" placeholder="Email" required />
 				
 				<span style = "display: flex; margin-right: 265px;">
@@ -229,7 +227,7 @@ if (isset($_POST['submit'])) {
 					<h3 style="font-size: 2rem;">NOX CLOTHING</h3>
 					
 					<!--<img src="images/main-logo.png" style="width: 250px; height: 105px; margin-bottom: -15px;">-->
-					<p>New to GameVault? Sign up below to create<br> your account and start journey with us.</p>
+					<p>If you create an account, it takes less time to go through checkout and complete your orders. Register today for free!</p>
 					<button class="ghost" id="signUp">Create an Account</button>
 				</div>
 			</div>
