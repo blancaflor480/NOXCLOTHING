@@ -88,7 +88,14 @@ function showAlert(title, message, icon, type) {
 		<div class="form-container sign-up-container">
 			<form action="" method="post">
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+
 include 'dbconn/conn.php';
+require 'vendor/autoload.php'; // Include PHPMailer via Composer
+
 
 if (isset($_POST['submit'])) {
     $uname = stripcslashes($_REQUEST['uname']);
@@ -102,10 +109,9 @@ if (isset($_POST['submit'])) {
     $bday = stripcslashes($_REQUEST['bday']);
     $bday = mysqli_real_escape_string($conn, $bday);
 
-	if ((strlen($password) < 8)) {
-		$errors['password'] = 'Password must be at least 8 characters long. Please try again.';
-	}
-	
+    if (strlen($password) < 8) {
+        $errors['password'] = 'Password must be at least 8 characters long. Please try again.';
+    }
 
     $check_email_query = "SELECT * FROM customer WHERE email='$email'";
     $check_email_result = mysqli_query($conn, $check_email_query);
@@ -120,41 +126,75 @@ if (isset($_POST['submit'])) {
     }
 
     if (empty($errors)) {
-        // Hashing password with MD5
         $hashed_password = md5($password);
 
-        $query = "INSERT into customer (uname,fname,email,password,bday) VALUES ('$uname','$fname','$email','$hashed_password','$bday')";
+        $query = "INSERT INTO customer (uname, fname, email, password, bday) VALUES ('$uname', '$fname', '$email', '$hashed_password', '$bday')";
         $result = mysqli_query($conn, $query);
 
         if ($result) {
-            echo "<script>
-        alertify.set('notifier','position', 'top-center');
-        alertify.success('Registered Successfully');
-        document.querySelector('.alertify-notifier .ajs-message').style.backgroundColor = '#42ba96';
-        setTimeout(function() {
-            window.location.href = 'login-signup.php';
-        }, 500); // 1000 milliseconds = 1 seconds
-        </script>";
-    exit();
+            // Generate OTP
+            $otp = rand(100000, 999999);
+
+            // Store OTP in the database (optional step to ensure OTP is validated)
+            $otp_query = "UPDATE customer SET otp='$otp' WHERE email='$email'";
+            mysqli_query($conn, $otp_query);
+
+            // Send OTP via Gmail
+            $mail = new PHPMailer(true);
+            try {
+                // Server settings
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'billinghoa@gmail.com'; // Replace with your Gmail address
+                $mail->Password = 'sqtrxkdxrkbalgfu'; // Replace with your Gmail password
+                $mail->SMTPSecure = 'ssl';
+                $mail->Port = 465;
+
+                // Recipients
+                $mail->setFrom('billinghoa@gmail.com', 'NOX CLOTHING SHOP');
+                $mail->addAddress($email);
+
+                // Content
+                $mail->isHTML(true);
+                $mail->Subject = 'Your OTP Code';
+                $mail->Body    = "Your OTP code is <b>$otp</b>";
+
+                $mail->send();
+                echo "<script>
+                    alertify.set('notifier','position', 'top-center');
+                    alertify.success('Registered Successfully. OTP has been sent to your email.');
+                    document.querySelector('.alertify-notifier .ajs-message').style.backgroundColor = '#42ba96';
+                    setTimeout(function() {
+                        window.location.href = 'verification.php'; // Redirect to OTP verification page
+                    }, 500); // 1000 milliseconds = 1 second
+                    </script>";
+                exit();
+            } catch (Exception $e) {
+                echo "<script>
+                    alertify.set('notifier','position', 'top-center');
+                    alertify.error('Message could not be sent. Mailer Error: {$mail->ErrorInfo}');
+                    </script>";
+            }
         } else {
             echo "<script>
                 alertify.set('notifier','position', 'top-center');
                 alertify.error('Failed. Try again');
                 </script>";
         }
-	} else {
-       foreach($errors as $error){
-		echo "<script>
-		alertify.set('notifier','position', 'top-center');
-		alertify.error( '$error');
-		document.querySelector('.alertify-notifier .ajs-message').style.fontSize = '0.7rem';
-		document.querySelector('.alertify-notifier .ajs-message').style.padding = '30px';
-		document.querySelector('.alertify-notifier .ajs-message').style.width = '400px';
-		document.querySelector('.alertify-notifier .ajs-message').style.backgroundColor = '#fc5555';
-		document.querySelector('.alertify-notifier .ajs-modal').style.border = '2px solid red';
-		</script>";
-	   }
-	}
+    } else {
+        foreach ($errors as $error) {
+            echo "<script>
+            alertify.set('notifier','position', 'top-center');
+            alertify.error('$error');
+            document.querySelector('.alertify-notifier .ajs-message').style.fontSize = '0.7rem';
+            document.querySelector('.alertify-notifier .ajs-message').style.padding = '30px';
+            document.querySelector('.alertify-notifier .ajs-message').style.width = '400px';
+            document.querySelector('.alertify-notifier .ajs-message').style.backgroundColor = '#fc5555';
+            document.querySelector('.alertify-notifier .ajs-modal').style.border = '2px solid red';
+            </script>";
+        }
+    }
 }
 ?>
 
