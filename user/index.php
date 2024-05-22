@@ -33,19 +33,6 @@ if ($result->num_rows > 0) {
 $_SESSION['user_id'] = $user_id;
 ?>
 
-<!--< ?php
-    $totalItems = 0; // Initialize total items count
-
-    $sql = "SELECT addcart.*, products.price AS product_price FROM addcart INNER JOIN products ON addcart.products_id = products.id";
-    $result = mysqli_query($conn, $sql);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $totalItems++; // Increment total items count
-        }
-    }
-?>-->
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -95,6 +82,25 @@ if ($result && $result->num_rows > 0) {
     $numberofproduct = $row['numberofproduct'];
 } else {
     $numberofproduct = 0;
+}
+?>
+
+<?php
+// Make sure to properly escape $_SESSION['uname'] to prevent SQL injection
+$user_id = $_SESSION['user_id'];
+
+// Query to count the number of items in the user's cart
+$query = $conn->prepare("SELECT COUNT(id) AS numberwish  FROM wishlist WHERE customer_id = ?");
+$query->bind_param("s", $user_id);
+$query->execute();
+$result = $query->get_result();
+
+// Check if there are items in the cart
+if ($result && $result->num_rows > 0) { 
+    $row = $result->fetch_assoc();
+    $numberwish  = $row['numberwish'];
+} else {
+    $numberwish  = 0;
 }
 ?>
   <body>
@@ -158,8 +164,8 @@ if ($result && $result->num_rows > 0) {
             </div>
             <a href="cart.php" class="icon">
               <i class="bx bx-heart"></i>
-              <span class="d-flex">0</span>
-              
+              <span id="wishlistCount" class="d-flex"><?php echo $numberwish; ?></span>
+              </a>
             <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
               <span id="count" class="d-flex"><?php echo $numberofproduct; ?></span>
@@ -268,7 +274,7 @@ if ($result && $result->num_rows > 0) {
         <h4>Php <?php echo $product['price']; ?></h4>
       </div>
       <ul class="icons">
-        <li><i class="bx bx-heart"></i></li>
+         <li><i class="bx bx-heart add-to-wishlist" data-product-id="<?php echo $product['id']; ?>"></i></li>
         <li><i class="bx bx-search"></i></li>
         <li><i class="bx bx-cart add-to-cart" data-product-id="<?php echo $product['id']; ?>"></i></li>
       </ul>
@@ -326,9 +332,9 @@ if ($result && $result->num_rows > 0) {
         <h4>$<?php echo $product['price']; ?></h4>
       </div>
       <ul class="icons">
-        <li><i class="bx bx-heart"></i></li>
+        <li><i class="bx bx-heart add-to-wishlist" data-product-id="<?php echo $product['id']; ?>"></i></li>
         <li><i class="bx bx-search"></i></li>
-        <li><i class="bx bx-cart"></i></li>
+        <li><i class="bx bx-cart add-to-cart" data-product-id="<?php echo $product['id']; ?>"></i></li>
       </ul>
     </div>
     <?php endforeach; ?>
@@ -410,7 +416,60 @@ if ($result && $result->num_rows > 0) {
   </body>
 
 <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var addToWishlistButtons = document.querySelectorAll(".add-to-wishlist");
+
+    addToWishlistButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            var productId = this.dataset.productId;
+            addToWishlist(productId);
+        });
+    });
+
+    function addToWishlist(productId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "function/addtowhishlist.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    alert(response.message);
+                    updateWishlistIndicator();
+                } else {
+                    alert(response.message);
+                }
+            }
+        };
+
+        var data = "productId=" + productId;
+        xhr.send(data);
+    }
+
+    function updateWishlistIndicator() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "function/getwishlistcount.php", true);
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var wishlistCount = xhr.responseText;
+                var wishlistIndicator = document.querySelector("#wishlistCount");
+                wishlistIndicator.innerText = wishlistCount;
+            }
+        };
+
+        xhr.send();
+    }
+
+});
+
+</script>
+
+
+<script>
         document.addEventListener("DOMContentLoaded", function() {
+
             var addToCartButtons = document.querySelectorAll(".add-to-cart");
 
             addToCartButtons.forEach(function(button) {

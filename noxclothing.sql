@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2024 at 04:08 PM
+-- Generation Time: May 22, 2024 at 06:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,9 +30,10 @@ SET time_zone = "+00:00";
 CREATE TABLE `addcart` (
   `id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
-  `whishlist_id` int(11) DEFAULT NULL,
+  `wishlist_id` int(11) DEFAULT NULL,
   `products_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
+  `size` varchar(50) NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `status` varchar(50) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT current_timestamp()
@@ -42,9 +43,8 @@ CREATE TABLE `addcart` (
 -- Dumping data for table `addcart`
 --
 
-INSERT INTO `addcart` (`id`, `customer_id`, `whishlist_id`, `products_id`, `quantity`, `price`, `status`, `datetime`) VALUES
-(1, 4, NULL, 3, 1, 399.00, '', '2024-05-22 22:05:30'),
-(2, 4, NULL, 2, 1, 299.00, '', '2024-05-22 22:05:36');
+INSERT INTO `addcart` (`id`, `customer_id`, `wishlist_id`, `products_id`, `quantity`, `size`, `price`, `status`, `datetime`) VALUES
+(1, 4, NULL, 3, 1, '', 399.00, '', '2024-05-22 23:48:31');
 
 -- --------------------------------------------------------
 
@@ -207,15 +207,23 @@ CREATE TABLE `ratings` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `whishlist`
+-- Table structure for table `wishlist`
 --
 
-CREATE TABLE `whishlist` (
+CREATE TABLE `wishlist` (
   `id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `products_id` int(11) NOT NULL,
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `wishlist`
+--
+
+INSERT INTO `wishlist` (`id`, `customer_id`, `products_id`, `date`) VALUES
+(1, 4, 3, '0000-00-00'),
+(2, 4, 8, '0000-00-00');
 
 --
 -- Indexes for dumped tables
@@ -228,7 +236,7 @@ ALTER TABLE `addcart`
   ADD PRIMARY KEY (`id`),
   ADD KEY `customer_id` (`customer_id`),
   ADD KEY `products_id` (`products_id`),
-  ADD KEY `whishlist_id` (`whishlist_id`);
+  ADD KEY `wishlist_id` (`wishlist_id`);
 
 --
 -- Indexes for table `admin`
@@ -273,9 +281,9 @@ ALTER TABLE `ratings`
   ADD KEY `product_id` (`products_id`);
 
 --
--- Indexes for table `whishlist`
+-- Indexes for table `wishlist`
 --
-ALTER TABLE `whishlist`
+ALTER TABLE `wishlist`
   ADD PRIMARY KEY (`id`),
   ADD KEY `custom_id` (`customer_id`),
   ADD KEY `pro_id` (`products_id`);
@@ -288,7 +296,7 @@ ALTER TABLE `whishlist`
 -- AUTO_INCREMENT for table `addcart`
 --
 ALTER TABLE `addcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -327,10 +335,10 @@ ALTER TABLE `ratings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `whishlist`
+-- AUTO_INCREMENT for table `wishlist`
 --
-ALTER TABLE `whishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `wishlist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -342,7 +350,7 @@ ALTER TABLE `whishlist`
 ALTER TABLE `addcart`
   ADD CONSTRAINT `customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `products_id` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `whishlist_id` FOREIGN KEY (`whishlist_id`) REFERENCES `whishlist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `wishlist_id` FOREIGN KEY (`wishlist_id`) REFERENCES `wishlist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `orders`
@@ -366,9 +374,9 @@ ALTER TABLE `ratings`
   ADD CONSTRAINT `user_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`Id`);
 
 --
--- Constraints for table `whishlist`
+-- Constraints for table `wishlist`
 --
-ALTER TABLE `whishlist`
+ALTER TABLE `wishlist`
   ADD CONSTRAINT `custom_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `pro_id` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;

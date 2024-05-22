@@ -45,6 +45,57 @@ if ($result->num_rows > 0) {
     <link rel="stylesheet" href="./css/styles.css"/>
     <title>NOX CLOTHING - <?php echo htmlspecialchars($product['name_item']); ?></title>
 </head>
+ <?php
+    $totalItems = 0; // Initialize total items count
+
+    $sql = "SELECT addcart.*, products.price AS product_price FROM addcart INNER JOIN products ON addcart.products_id = products.id";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $totalItems++; // Increment total items count
+        }
+    }
+?>
+  <?php
+// Make sure to properly escape $_SESSION['uname'] to prevent SQL injection
+$email = $_SESSION['email'];
+
+// Query to count the number of items in the user's cart
+$query = $conn->prepare("SELECT COUNT(id) AS numberofproduct FROM addcart WHERE customer_id = ? AND status != 'Paid'");
+$query->bind_param("s", $user_id);
+$query->execute();
+$result = $query->get_result();
+
+// Check if there are items in the cart
+if ($result && $result->num_rows > 0) { 
+    $row = $result->fetch_assoc();
+    $numberofproduct = $row['numberofproduct'];
+} else {
+    $numberofproduct = 0;
+}
+?>
+
+<?php
+// Make sure to properly escape $_SESSION['uname'] to prevent SQL injection
+$user_id = $_SESSION['user_id'];
+
+// Query to count the number of items in the user's cart
+$query = $conn->prepare("SELECT COUNT(id) AS numberwish  FROM wishlist WHERE customer_id = ?");
+$query->bind_param("s", $user_id);
+$query->execute();
+$result = $query->get_result();
+
+// Check if there are items in the cart
+if ($result && $result->num_rows > 0) { 
+    $row = $result->fetch_assoc();
+    $numberwish  = $row['numberwish'];
+} else {
+    $numberwish  = 0;
+}
+?>
+
+
 <body>
     <!-- Navigation -->
     <div class="top-nav">
@@ -74,11 +125,26 @@ if ($result->num_rows > 0) {
                 </li>
             </ul>
             <div class="icons d-flex">
-                <a href="login.html" class="icon"><i class="bx bx-user"></i></a>
-                <div class="icon"><i class="bx bx-search"></i></div>
-                <div class="icon"><i class="bx bx-heart"></i><span class="d-flex">0</span></div>
-                <a href="cart.html" class="icon"><i class="bx bx-cart"></i><span class="d-flex">0</span></a>
+            <a href="login-signup.php" class="icon">
+              <i class="bx bx-user"></i>
+            </a>
+            <div class="icon">
+              <i class="bx bx-search"></i>
             </div>
+           <a href="cart.php" class="icon">
+              <i class="bx bx-heart"></i>
+              <span id="wishlistCount" class="d-flex"><?php echo $numberwish; ?></span>
+              </a>
+            <a href="cart.php" class="icon">
+              <i class="bx bx-cart"></i>
+              <span id="count" class="d-flex"><?php echo $numberofproduct; ?></span>
+            </a>
+            <a href="logout.php" class="icon">
+              <i class="bx bx-log-out"></i>
+            </a>
+          
+          </div>
+
             <div class="hamburger"><i class="bx bx-menu-alt-left"></i></div>
         </div>
     </div>
@@ -229,6 +295,108 @@ if ($result->num_rows > 0) {
         </div>
     </footer>
     <!-- Custom Script -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var addToWishlistButtons = document.querySelectorAll(".add-to-wishlist");
+
+    addToWishlistButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            var productId = this.dataset.productId;
+            addToWishlist(productId);
+        });
+    });
+
+    function addToWishlist(productId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "function/addtowhishlist.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    alert(response.message);
+                    updateWishlistIndicator();
+                } else {
+                    alert(response.message);
+                }
+            }
+        };
+
+        var data = "productId=" + productId;
+        xhr.send(data);
+    }
+
+    function updateWishlistIndicator() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "function/getwishlistcount.php", true);
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var wishlistCount = xhr.responseText;
+                var wishlistIndicator = document.querySelector("#wishlistCount");
+                wishlistIndicator.innerText = wishlistCount;
+            }
+        };
+
+        xhr.send();
+    }
+
+});
+
+</script>
+
+
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            var addToCartButtons = document.querySelectorAll(".add-to-cart");
+
+            addToCartButtons.forEach(function(button) {
+                button.addEventListener("click", function() {
+                    var productId = this.dataset.productId;
+                    addToCart(productId);
+                });
+            });
+
+            function addToCart(productId) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "function/addtocart.php", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            alert(response.message);
+                            updateCartIndicator();
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                };
+
+                var data = "productId=" + productId;
+                xhr.send(data);
+            }
+
+            function updateCartIndicator() {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "function/getcartcount.php", true);
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var cartCount = xhr.responseText;
+                        var cartIndicator = document.querySelector("#count");
+                        cartIndicator.innerText = cartCount;
+                    }
+                };
+
+                xhr.send();
+            }
+        });
+    </script>
     <script src="./js/index.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha384-JUMjoW8OzDJw4oFpWIB2Bu/c6768ObEthBMVSiIx4ruBIEdyNSUQAjJNFqT5pnJ6" crossorigin="anonymous"></script>
     <script src="./js/zoomsl.min.js"></script>
