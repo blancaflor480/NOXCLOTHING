@@ -1,36 +1,7 @@
 <?php
-session_start();
-
-// Check kung may session na itinakda para sa 'uname'
-if (!isset($_SESSION['email'])) {
-    header("Location: index.php?error=Login%20First");
-    exit();
-}
 
 // Include ng database connection
 include 'dbconn/conn.php';
-
-// Kunin ang 'uname' mula sa session
-$email = $_SESSION['email'];
-
-// Subukan kung mayroong resulta sa query
-$stmt = $conn->prepare("SELECT * FROM customer WHERE email = ?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Siguraduhing may resulta bago kunin ang data
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-    $user_id = $user['id']; // Kunin ang 'id' ng user
-} else {
-    // Kung wala, i-redirect sa login page
-    header("Location: login-signup.php?error=Login%20First");
-    exit();
-}
-
-// I-set ang 'user_id' sa session para magamit sa ibang mga pahina
-$_SESSION['user_id'] = $user_id;
 ?>
 
 <!--< ?php
@@ -67,36 +38,6 @@ $_SESSION['user_id'] = $user_id;
     <link rel="stylesheet" href="./css/styles.css" />
     <title>NOX CLOTHING</title>
   </head>
-<?php
-    $totalItems = 0; // Initialize total items count
-
-    $sql = "SELECT addcart.*, products.price AS product_price FROM addcart INNER JOIN products ON addcart.products_id = products.id";
-    $result = mysqli_query($conn, $sql);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $totalItems++; // Increment total items count
-        }
-    }
-?>
-  <?php
-// Make sure to properly escape $_SESSION['uname'] to prevent SQL injection
-$email = $_SESSION['email'];
-
-// Query to count the number of items in the user's cart
-$query = $conn->prepare("SELECT COUNT(id) AS numberofproduct FROM addcart WHERE customer_id = ? AND status != 'Paid'");
-$query->bind_param("s", $user_id);
-$query->execute();
-$result = $query->get_result();
-
-// Check if there are items in the cart
-if ($result && $result->num_rows > 0) { 
-    $row = $result->fetch_assoc();
-    $numberofproduct = $row['numberofproduct'];
-} else {
-    $numberofproduct = 0;
-}
-?>
   <body>
     <!-- Header -->
     <header class="header" id="header">
@@ -150,7 +91,7 @@ if ($result && $result->num_rows > 0) {
           </ul>
 
           <div class="icons d-flex">
-            <a href="login-signup.php" class="icon">
+            <a href="user/login-signup.php" class="icon">
               <i class="bx bx-user"></i>
             </a>
             <div class="icon">
@@ -159,15 +100,11 @@ if ($result && $result->num_rows > 0) {
             <a href="cart.php" class="icon">
               <i class="bx bx-heart"></i>
               <span class="d-flex">0</span>
-              
             <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
-              <span id="count" class="d-flex"><?php echo $numberofproduct; ?></span>
+              <span class="d-flex">0</span>
             </a>
-            <a href="logout.php" class="icon">
-              <i class="bx bx-log-out"></i>
-            </a>
-          
+            
           </div>
 
           <div class="hamburger">
@@ -255,7 +192,7 @@ if ($result && $result->num_rows > 0) {
     <div class="product-item">
       <div class="overlay">
         <a href="productDetails.php?id=<?php echo $product['id']; ?>" class="product-thumb">
-          <img src="../admin/uploads/<?php echo $product['image_front']; ?>" alt="<?php echo $product['name_item']; ?>" />
+          <img src="admin/uploads/<?php echo $product['image_front']; ?>" alt="<?php echo $product['name_item']; ?>" />
         </a>
         <?php if ($product['discount'] > 0): ?>
         <span class="discount"><?php echo $product['discount']; ?>%</span>
@@ -270,7 +207,7 @@ if ($result && $result->num_rows > 0) {
       <ul class="icons">
         <li><i class="bx bx-heart"></i></li>
         <li><i class="bx bx-search"></i></li>
-        <li><i class="bx bx-cart add-to-cart" data-product-id="<?php echo $product['id']; ?>"></i></li>
+        <li><i class="bx bx-cart"></i></li>
       </ul>
     </div>
     <?php endforeach; ?>
@@ -408,55 +345,6 @@ if ($result && $result->num_rows > 0) {
   </div>
 
   </body>
-
-<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var addToCartButtons = document.querySelectorAll(".add-to-cart");
-
-            addToCartButtons.forEach(function(button) {
-                button.addEventListener("click", function() {
-                    var productId = this.dataset.productId;
-                    addToCart(productId);
-                });
-            });
-
-            function addToCart(productId) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "function/addtocart.php", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        var response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            alert(response.message);
-                            updateCartIndicator();
-                        } else {
-                            alert(response.message);
-                        }
-                    }
-                };
-
-                var data = "productId=" + productId;
-                xhr.send(data);
-            }
-
-            function updateCartIndicator() {
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "function/getcartcount.php", true);
-
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        var cartCount = xhr.responseText;
-                        var cartIndicator = document.querySelector("#count");
-                        cartIndicator.innerText = cartCount;
-                    }
-                };
-
-                xhr.send();
-            }
-        });
-    </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>
   <script src="./js/slider.js"></script>
   <script src="./js/index.js"></script>
