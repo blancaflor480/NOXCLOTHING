@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2024 at 06:10 PM
+-- Generation Time: May 23, 2024 at 04:01 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,7 +44,8 @@ CREATE TABLE `addcart` (
 --
 
 INSERT INTO `addcart` (`id`, `customer_id`, `wishlist_id`, `products_id`, `quantity`, `size`, `price`, `status`, `datetime`) VALUES
-(1, 4, NULL, 3, 1, '', 399.00, '', '2024-05-22 23:48:31');
+(1, 4, NULL, 3, 1, '', 399.00, '', '2024-05-22 23:48:31'),
+(2, 1, NULL, 4, 1, '', 599.00, '', '2024-05-23 09:59:04');
 
 -- --------------------------------------------------------
 
@@ -93,8 +94,8 @@ CREATE TABLE `customer` (
   `bday` date DEFAULT NULL,
   `image` longblob NOT NULL,
   `password` varchar(250) NOT NULL,
-  `otp` varchar(11) NOT NULL,
-  `email_verified` varchar(11) NOT NULL,
+  `otp` varchar(11) DEFAULT NULL,
+  `email_verified` tinyint(6) NOT NULL DEFAULT 0,
   `datereg` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -103,7 +104,7 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `address`, `city`, `zipcode`, `contactnumber`, `bday`, `image`, `password`, `otp`, `email_verified`, `datereg`) VALUES
-(4, 'Jade ', '', '', 'blancaflor480@gmail.com', 'jade123', '', '', 0, 0, '2024-05-20', '', 'b220e82dde8abcb5dfe247ff49606009', '452277', '', '2024-05-20');
+(1, 'Jade ', '', '', 'blancaflor480@gmail.com', 'jade123', '', '', 0, 0, '2024-05-23', '', 'b220e82dde8abcb5dfe247ff49606009', NULL, 1, '2024-05-23');
 
 -- --------------------------------------------------------
 
@@ -223,7 +224,8 @@ CREATE TABLE `wishlist` (
 
 INSERT INTO `wishlist` (`id`, `customer_id`, `products_id`, `date`) VALUES
 (1, 4, 3, '0000-00-00'),
-(2, 4, 8, '0000-00-00');
+(2, 4, 8, '0000-00-00'),
+(3, 1, 4, '0000-00-00');
 
 --
 -- Indexes for dumped tables
@@ -296,7 +298,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `addcart`
 --
 ALTER TABLE `addcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -308,7 +310,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -338,7 +340,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
