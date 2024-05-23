@@ -20,16 +20,17 @@
 	session_start();
 	require 'dbconn/conn.php';
 	
-	if(isset($_SESSION['email'])){
+	if(!isset($_SESSION['email'])){
 		header("Location: login-signup.php");
 		exit(); // Make sure to exit after redirection
 	}
-	
+
 	if (isset($_POST['login'])) {
 		$email = mysqli_real_escape_string($conn, $_POST['email']);
 		$password = mysqli_real_escape_string($conn, md5($_POST['password']));
 
-		$sql = "SELECT * FROM customer WHERE email ='{$email}' AND password = '{$password}'";
+		// Check if the email is verified and the OTP is NULL
+		$sql = "SELECT * FROM customer WHERE email ='{$email}' AND password = '{$password}' AND otp IS NULL AND email_verified = 1";
 		$result = mysqli_query($conn, $sql);
 	
 		if(mysqli_num_rows($result) === 1){
@@ -38,16 +39,32 @@
 			header("Location: index.php?email=$email");
 			exit();	
 		} else {
-			// Display error message using Alertify
-			echo "<script>
-					alertify.set('notifier','position', 'top-center');
-					alertify.error('<i class=\"fas fa-exclamation-circle\"></i> Username and Password doesn\'t match, please try again.');
-					document.querySelector('.alertify-notifier .ajs-message').style.fontSize = '0.7rem';
-					document.querySelector('.alertify-notifier .ajs-message').style.padding = '30px';
-					document.querySelector('.alertify-notifier .ajs-message').style.width = '400px';
-					document.querySelector('.alertify-notifier .ajs-message').style.backgroundColor = '#fc5555';
-					document.querySelector('.alertify-notifier .ajs-modal').style.border = '2px solid red';
-				</script>";
+			// Check if the email exists but is not verified
+			$sql_verify = "SELECT * FROM customer WHERE email ='{$email}'";
+			$result_verify = mysqli_query($conn, $sql_verify);
+			if(mysqli_num_rows($result_verify) === 1){
+				// Display error message for unverified email
+				echo "<script>
+						alertify.set('notifier','position', 'top-center');
+						alertify.error('<i class=\"fas fa-exclamation-circle\"></i> Your email is not verified yet.');
+						document.querySelector('.alertify-notifier .ajs-message').style.fontSize = '0.7rem';
+						document.querySelector('.alertify-notifier .ajs-message').style.padding = '30px';
+						document.querySelector('.alertify-notifier .ajs-message').style.width = '400px';
+						document.querySelector('.alertify-notifier .ajs-message').style.backgroundColor = '#fc5555';
+						document.querySelector('.alertify-notifier .ajs-modal').style.border = '2px solid red';
+					</script>";
+			} else {
+				// Display error message for incorrect username/password
+				echo "<script>
+						alertify.set('notifier','position', 'top-center');
+						alertify.error('<i class=\"fas fa-exclamation-circle\"></i> Username and Password doesn\'t match.');
+						document.querySelector('.alertify-notifier .ajs-message').style.fontSize = '0.7rem';
+						document.querySelector('.alertify-notifier .ajs-message').style.padding = '30px';
+						document.querySelector('.alertify-notifier .ajs-message').style.width = '400px';
+						document.querySelector('.alertify-notifier .ajs-message').style.backgroundColor = '#fc5555';
+						document.querySelector('.alertify-notifier .ajs-modal').style.border = '2px solid red';
+					</script>";
+			}
 		}	
 	}		
 ?>
@@ -89,25 +106,21 @@ function showAlert(title, message, icon, type) {
 			<form action="" method="post">
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-
 
 include 'dbconn/conn.php';
 require 'vendor/autoload.php'; // Include PHPMailer via Composer
 
 
+
 if (isset($_POST['submit'])) {
-    $uname = stripcslashes($_REQUEST['uname']);
-    $uname = mysqli_real_escape_string($conn, $uname);
-    $fname = stripcslashes($_REQUEST['fname']);
-    $fname = mysqli_real_escape_string($conn, $fname);
-    $email = stripcslashes($_REQUEST['email']);
-    $email = mysqli_real_escape_string($conn, $email);
-    $password = stripcslashes($_REQUEST['password']);
-    $password = mysqli_real_escape_string($conn, $password);
-    $bday = stripcslashes($_REQUEST['bday']);
-    $bday = mysqli_real_escape_string($conn, $bday);
+    $uname = mysqli_real_escape_string($conn, stripcslashes($_REQUEST['uname']));
+    $fname = mysqli_real_escape_string($conn, stripcslashes($_REQUEST['fname']));
+    $email = mysqli_real_escape_string($conn, stripcslashes($_REQUEST['email']));
+    $password = mysqli_real_escape_string($conn, stripcslashes($_REQUEST['password']));
+    $bday = mysqli_real_escape_string($conn, stripcslashes($_REQUEST['bday']));
+
+    $errors = array();
 
     if (strlen($password) < 8) {
         $errors['password'] = 'Password must be at least 8 characters long. Please try again.';
@@ -135,7 +148,7 @@ if (isset($_POST['submit'])) {
             // Generate OTP
             $otp = rand(100000, 999999);
 
-            // Store OTP in the database (optional step to ensure OTP is validated)
+            // Store OTP in the database
             $otp_query = "UPDATE customer SET otp='$otp' WHERE email='$email'";
             mysqli_query($conn, $otp_query);
 
@@ -161,13 +174,17 @@ if (isset($_POST['submit'])) {
                 $mail->Body    = "Your OTP code is <b>$otp</b>";
 
                 $mail->send();
+
+                // Set session email and redirect to verification page
+                $_SESSION['email'] = $email;
+
                 echo "<script>
                     alertify.set('notifier','position', 'top-center');
                     alertify.success('Registered Successfully. OTP has been sent to your email.');
                     document.querySelector('.alertify-notifier .ajs-message').style.backgroundColor = '#42ba96';
                     setTimeout(function() {
                         window.location.href = 'verification.php'; // Redirect to OTP verification page
-                    }, 500); // 1000 milliseconds = 1 second
+                    }, 500);
                     </script>";
                 exit();
             } catch (Exception $e) {
