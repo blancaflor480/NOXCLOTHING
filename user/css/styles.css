@@ -1161,7 +1161,7 @@ th {
   text-align: left;
   padding: 0.5rem;
   color: #fff;
-  background-color: var(--green);
+  background-color: var(--black);
   font-weight: normal;
 }
 
@@ -1194,7 +1194,7 @@ td img {
 }
 
 .total-price table {
-  border-top: 3px solid var(--green);
+  border-top: 3px solid var(--black-gray);
   width: 100%;
   max-width: 35rem;
 }

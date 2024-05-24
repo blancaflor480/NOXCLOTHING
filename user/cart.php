@@ -46,6 +46,88 @@ $_SESSION['user_id'] = $user_id;
     <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="./css/styles.css" />
     <title>Your Cart</title>
+
+        <style>
+        .cart-container {
+            width: 80%;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .cart-info {
+            display: flex;
+            align-items: center;
+        }
+        .cart-info img {
+            width: 100px;
+            height: auto;
+            margin-right: 20px;
+        }
+        .cart-info div {
+            flex-grow: 1;
+        }
+        table {
+            width: 95%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background-color: #222831;
+            color: #fff;
+        }
+        .checkout {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #222831;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .checkout:hover {
+            background: #444;
+        }
+        .container.cart {
+    display: flex;
+    justify-content: space-between;
+}
+
+.container.cart .cart-items {
+    width: 85%; /* Adjust width as needed */
+}
+
+.container.cart .order-summary {
+    width: 30%; /* Adjust width as needed */
+    background-color: whitesmoke;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.container.cart .order-summary table {
+    width: 100%;
+}
+
+.container.cart .order-summary table td {
+    padding: 15px;
+    text-align: left;
+}
+
+.container.cart .order-summary .checkout {
+    display: block;
+    padding: 10px 20px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+    </style>
   </head>
   <?php
     $totalItems = 0; // Initialize total items count
@@ -96,7 +178,54 @@ if ($result && $result->num_rows > 0) {
     $numberwish  = 0;
 }
 ?>
+<?php
+// Initialize total items count and total price
+$totalItems = 0;
+$totalPrice = 0.00;
 
+// Fetch cart items for the user
+$sql = "SELECT addcart.*, products.price AS product_price, products.name_item, products.image_front 
+        FROM addcart 
+        INNER JOIN products ON addcart.products_id = products.id 
+        WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Generate HTML for cart items
+$cartItemsHtml = '';
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $totalItems++;
+        $subtotal = $row['product_price'] * $row['quantity'];
+        $totalPrice += $subtotal;
+
+        $cartItemsHtml .= "
+        <tr>
+            <td>
+                <div class='cart-info'>
+                    <img src='./images/{$row['image_front']}' alt='{$row['name_item']}' />
+                    <div>
+                        <p>{$row['name_item']}</p>
+                        <span>Price: ₱{$row['product_price']}</span> <br />
+                        <a href='remove.php?id={$row['id']}'>remove</a>
+                    </div>
+                </div>
+            </td>
+            <td><input type='number' value='{$row['quantity']}' min='1' /></td>
+            <td>₱{$subtotal}</td>
+        </tr>";
+    }
+} else {
+    $cartItemsHtml = "<tr><td colspan='3'>Your cart is empty.</td></tr>";
+}
+
+// Calculate discount and final total
+$discountRate = 0.1; // Assuming a 10% discount
+$discount = $totalPrice * $discountRate;
+$finalTotal = $totalPrice - $discount;
+?>
 
   <body>
     <!-- Navigation -->
@@ -177,102 +306,45 @@ if ($result && $result->num_rows > 0) {
       </div>
 
     <!-- Cart Items -->
-    <div class="container cart">
-      <table>
-        <tr>
-          <th>Product</th>
-          <th>Quantity</th>
-          <th>Subtotal</th>
-        </tr>
-        <tr>
-          <td>
-            <div class="cart-info">
-              <img src="./images/product-2.jpg" alt="" />
-              <div>
-                <p>Boy’s T-Shirt</p>
-                <span>Price: $50.00</span> <br />
-                <a href="#">remove</a>
-              </div>
-            </div>
-          </td>
-          <td><input type="number" value="1" min="1" /></td>
-          <td>$50.00</td>
-        </tr>
-        <tr>
-          <td>
-            <div class="cart-info">
-              <img src="./images/product-3.jpg" alt="" />
-              <div>
-                <p>Boy’s T-Shirt</p>
-                <span>Price: $90.00</span> <br />
-                <a href="#">remove</a>
-              </div>
-            </div>
-          </td>
-          <td><input type="number" value="1" min="1" /></td>
-          <td>$90.00</td>
-        </tr>
-        <tr>
-          <td>
-            <div class="cart-info">
-              <img src="./images/product-4.jpg" alt="" />
-              <div>
-                <p>Boy’s T-Shirt</p>
-                <span>Price: $60.00</span> <br />
-                <a href="#">remove</a>
-              </div>
-            </div>
-          </td>
-          <td><input type="number" value="1" min="1" /></td>
-          <td>$60.00</td>
-        </tr>
-        <tr>
-          <td>
-            <div class="cart-info">
-              <img src="./images/product-5.jpg" alt="" />
-              <div>
-                <p>Boy’s T-Shirt</p>
-                <span>Price: $60.00</span> <br />
-                <a href="#">remove</a>
-              </div>
-            </div>
-          </td>
-          <td><input type="number" value="1" min="1" /></td>
-          <td>$60.00</td>
-        </tr>
-        <tr>
-          <td>
-            <div class="cart-info">
-              <img src="./images/product-6.jpg" alt="" />
-              <div>
-                <p>Boy’s T-Shirt</p>
-                <span>Price: $60.00</span> <br />
-                <a href="#">remove</a>
-              </div>
-            </div>
-          </td>
-          <td><input type="number" value="1" min="1" /></td>
-          <td>$60.00</td>
-        </tr>
-      </table>
-      <div class="total-price">
+<div class="container cart">
+    <div class="cart-items">
         <table>
-          <tr>
-            <td>Subtotal</td>
-            <td>$200</td>
-          </tr>
-          <tr>
-            <td>Tax</td>
-            <td>$50</td>
-          </tr>
-          <tr>
-            <td>Total</td>
-            <td>$250</td>
-          </tr>
+            <tr>
+                <th style="background-color: #222831;">Product</th>
+                <th style="background-color: #222831;">Quantity</th>
+                <th style="background-color: #222831;">Subtotal</th>
+            </tr>
+            <?php echo $cartItemsHtml; ?>
         </table>
-        <a href="#" class="checkout btn">Proceed To Checkout</a>
-      </div>
     </div>
+    <div class="order-summary">
+        <h3>ORDER SUMMARY</h3>
+        <table>            
+            <tr>
+                <td>Subtotal</td>
+                <td>₱ <?php echo number_format($totalPrice, 2); ?></td>
+            </tr>
+            <tr>
+                <td>Discount</td>
+                <td>₱ <?php echo number_format($discount, 2); ?></td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td>₱ <?php echo number_format($finalTotal, 2); ?></td>
+            </tr>
+        </table>
+        <a href="checkout.php" class="checkout btn" style="background-color: #222831;">Proceed To Checkout</a>
+    </div>
+</div>
+
+
+<!-- Featured -->
+<?php 
+  // Adjust the query to select featured products, assuming there is a column named 'is_featured'
+  $stmt = $conn->prepare("SELECT id, name_item, type, discount, price, image_front FROM products WHERE YEAR(date_insert) = 2024 LIMIT 4 ");
+  $stmt->execute();
+  $featured = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+?>
 
     <!-- Latest Products -->
     <section class="section featured">
@@ -280,77 +352,30 @@ if ($result && $result->num_rows > 0) {
         <h1>Latest Products</h1>
         <a href="#" class="view-more">View more</a>
       </div>
-      <div class="product-center container">
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-6.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-1.jpg" alt="" />
-            </a>
-            <span class="discount">40%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-3.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-2.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
+      <div class="product-center">
+    <?php foreach ($featured as $product): ?>
+    <div class="product-item">
+      <div class="overlay">
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>" class="product-thumb">
+          <img src="./images/<?php echo $product['image_front']; ?>" alt="<?php echo $product['name_item']; ?>" />
+        </a>
+        <?php if ($product['discount'] > 0): ?>
+        <span class="discount"><?php echo $product['discount']; ?>%</span>
+        <?php endif; ?>
       </div>
+      <div class="product-info">
+        <span><?php echo $product['type']; ?></span>
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo $product['name_item']; ?></a>
+        <h4>$<?php echo $product['price']; ?></h4>
+      </div>
+      <ul class="icons">
+        <li><i class="bx bx-heart add-to-wishlist" data-product-id="<?php echo $product['id']; ?>"></i></li>
+        <li><i class="bx bx-search"></i></li>
+        <li><i class="bx bx-cart add-to-cart" data-product-id="<?php echo $product['id']; ?>"></i></li>
+      </ul>
+    </div>
+    <?php endforeach; ?>
+  </div>
     </section>
 
     <!-- Footer -->

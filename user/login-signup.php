@@ -20,11 +20,6 @@
 	session_start();
 	require 'dbconn/conn.php';
 	
-	if(!isset($_SESSION['email'])){
-		header("Location: login-signup.php");
-		exit(); // Make sure to exit after redirection
-	}
-
 	if (isset($_POST['login'])) {
 		$email = mysqli_real_escape_string($conn, $_POST['email']);
 		$password = mysqli_real_escape_string($conn, md5($_POST['password']));
@@ -110,7 +105,6 @@ use PHPMailer\PHPMailer\Exception;
 
 include 'dbconn/conn.php';
 require 'vendor/autoload.php'; // Include PHPMailer via Composer
-
 
 
 if (isset($_POST['submit'])) {
