@@ -178,55 +178,6 @@ if ($result && $result->num_rows > 0) {
     $numberwish  = 0;
 }
 ?>
-<?php
-// Initialize total items count and total price
-$totalItems = 0;
-$totalPrice = 0.00;
-
-// Fetch cart items for the user
-$sql = "SELECT addcart.*, products.price AS product_price, products.name_item, products.image_front 
-        FROM addcart 
-        INNER JOIN products ON addcart.products_id = products.id 
-        WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Generate HTML for cart items
-$cartItemsHtml = '';
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $totalItems++;
-        $subtotal = $row['product_price'] * $row['quantity'];
-        $totalPrice += $subtotal;
-
-        $cartItemsHtml .= "
-        <tr>
-            <td>
-                <div class='cart-info'>
-                    <img src='./images/{$row['image_front']}' alt='{$row['name_item']}' />
-                    <div>
-                        <p>{$row['name_item']}</p>
-                        <span>Price: ₱{$row['product_price']}</span> <br />
-                        <a href='remove.php?id={$row['id']}'>remove</a>
-                    </div>
-                </div>
-            </td>
-            <td><input type='number' value='{$row['quantity']}' min='1' /></td>
-            <td>₱{$subtotal}</td>
-        </tr>";
-    }
-} else {
-    $cartItemsHtml = "<tr><td colspan='3'>Your cart is empty.</td></tr>";
-}
-
-// Calculate discount and final total
-$discountRate = 0.1; // Assuming a 10% discount
-$discount = $totalPrice * $discountRate;
-$finalTotal = $totalPrice - $discount;
-?>
-
   <body>
     <!-- Navigation -->
     <div class="top-nav">
@@ -306,37 +257,97 @@ $finalTotal = $totalPrice - $discount;
       </div>
 
     <!-- Cart Items -->
-<div class="container cart">
-    <div class="cart-items">
-        <table>
-            <tr>
-                <th style="background-color: #222831;">Product</th>
-                <th style="background-color: #222831;">Quantity</th>
-                <th style="background-color: #222831;">Subtotal</th>
-            </tr>
-            <?php echo $cartItemsHtml; ?>
-        </table>
-    </div>
-    <div class="order-summary">
-        <h3>ORDER SUMMARY</h3>
-        <table>            
-            <tr>
-                <td>Subtotal</td>
-                <td>₱ <?php echo number_format($totalPrice, 2); ?></td>
-            </tr>
-            <tr>
-                <td>Discount</td>
-                <td>₱ <?php echo number_format($discount, 2); ?></td>
-            </tr>
-            <tr>
-                <td>Total</td>
-                <td>₱ <?php echo number_format($finalTotal, 2); ?></td>
-            </tr>
-        </table>
-        <a href="checkout.php" class="checkout btn" style="background-color: #222831;">Proceed To Checkout</a>
-    </div>
-</div>
+<!-- Cart Items -->
+    <div class="container cart">
+        <div class="cart-items">
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+     <?php
+$totalItems = 0;
+$totalPrice = 0.00;
 
+$sql = "SELECT addcart.*, products.price AS product_price, products.name_item, products.image_front, products.discount 
+        FROM addcart 
+        INNER JOIN products ON addcart.products_id = products.id 
+        WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $totalItems++;
+        $subtotal = $row['product_price'] * $row['quantity'];
+        $totalPrice += $subtotal;
+
+        echo "
+        <tr>
+            <td>
+                <div class='cart-info'>
+                    <img src='./images/" . htmlspecialchars($row['image_front']) . "' alt='" . htmlspecialchars($row['name_item']) . "' />
+                    <div>
+                        <p>" . htmlspecialchars($row['name_item']) . "</p>
+                        <span class='product-price'>₱" . number_format($row['product_price'], 2) . "</span> <br />
+                        <a href='javascript:void(0);' onclick='removeFromCart(" . $row['id'] . ")'>remove</a>
+                    </div>
+                </div>
+            </td>
+            <td><input type='number' value='" . $row['quantity'] . "' min='1' class='quantity' data-product-id='" . $row['id'] . "' /></td>
+            <td class='subtotal'>₱" . number_format($subtotal, 2) . "</td>
+        </tr>";
+    }
+} else {
+    echo "<tr><td colspan='3'>Your cart is empty.</td></tr>";
+}
+
+// Retrieve discount rate from database
+$discountRate = 0.0; // Initialize to 0.0 to avoid undefined variable warning
+
+if ($result && $result->num_rows > 0) {
+    $result->data_seek(0); // Reset the result pointer to the first row
+    $firstRow = $result->fetch_assoc(); // Get the first row again
+    if ($firstRow !== null && array_key_exists('discount', $firstRow)) {
+        // Convert percentage discount to decimal
+        $discountRate = $firstRow['discount'] / 100;
+    }
+}
+
+$discount = $totalPrice * $discountRate;
+$finalTotal = $totalPrice - $discount;
+?>
+
+
+
+            </table>
+        </div>
+        <div class="order-summary">
+            <h3>ORDER SUMMARY</h3>
+            <table>            
+                <tr>
+                    <td>Subtotal</td>
+                    <td id="total-price">₱ <?php echo number_format($totalPrice, 2); ?></td>
+                </tr>
+                <tr>
+                    <td>Total Items</td>
+                    <td id="total-items"><?php echo $totalItems; ?></td>
+                </tr>
+                <tr>
+                    <td>Discount</td>
+                    <td id="discount">₱ <?php echo number_format($discount, 2); ?></td>
+                </tr>
+                <tr>
+                    <td>Final Total</td>
+                    <td id="final-total">₱ <?php echo number_format($finalTotal, 2); ?></td>
+                </tr>
+            </table>
+            <a href="checkout.php" class="checkout">Proceed to Checkout</a>
+        </div>
+    </div>
 
 <!-- Featured -->
 <?php 
@@ -457,6 +468,29 @@ $finalTotal = $totalPrice - $discount;
 
 </script>
 
+<script>
+    // Function to remove item from cart
+    function removeFromCart(cartItemId) {
+        // Send an AJAX request to the backend to remove the item
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "function/remove_addcart.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                if (this.responseText === "success") {
+                    // Show alert if removal is successful
+                    alert("Item removed successfully.");
+                    // Reload the page to reflect changes after successful removal
+                    location.reload();
+                } else {
+                    // Show alert if there is an error
+                    alert("Error: " + this.responseText);
+                }
+            }
+        };
+        xhr.send("cartItemId=" + cartItemId);
+    }
+</script>
 
 <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -506,6 +540,109 @@ $finalTotal = $totalPrice - $discount;
                 xhr.send();
             }
         });
+    </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Function to update the order summary
+        function updateOrderSummary() {
+            // Get all quantity input elements
+            var quantities = document.querySelectorAll(".quantity");
+            var totalItems = 0;
+            var totalPrice = 0.00;
+
+            quantities.forEach(function(quantityInput) {
+                var quantity = parseInt(quantityInput.value);
+                var productId = quantityInput.dataset.productId;
+                var price = parseFloat(quantityInput.closest("tr").querySelector(".product-price").innerText.replace('₱', ''));
+
+                totalItems += quantity;
+                totalPrice += (quantity * price);
+            });
+
+            var discountRate = 0.1; // Assuming a 10% discount
+            var discount = totalPrice * discountRate;
+            var finalTotal = totalPrice - discount;
+
+            // Update the order summary
+            document.getElementById("total-items").innerText = totalItems;
+            document.getElementById("total-price").innerText = "₱" + totalPrice.toFixed(2);
+            document.getElementById("discount").innerText = "₱" + discount.toFixed(2);
+            document.getElementById("final-total").innerText = "₱" + finalTotal.toFixed(2);
+        }
+
+        // Add event listeners to all quantity input fields
+        var quantityInputs = document.querySelectorAll(".quantity");
+        quantityInputs.forEach(function(input) {
+            input.addEventListener("change", function() {
+                if (this.value < 1) {
+                    this.value = 1; // Ensure the quantity is at least 1
+                }
+                updateOrderSummary();
+            });
+        });
+
+        // Initial order summary update
+        updateOrderSummary();
+    });
+</script>
+<script>
+        document.querySelectorAll('.quantity').forEach(item => {
+            item.addEventListener('input', event => {
+                let quantity = event.target.value;
+                let productId = event.target.dataset.productId;
+
+                if (quantity < 1) {
+                    alert('Quantity must be at least 1');
+                    event.target.value = 1;
+                    return;
+                }
+
+                fetch('update_cart.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `id=${productId}&quantity=${quantity}`,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateCart();
+                    } else {
+                        alert('Error updating cart');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+
+        function updateCart() {
+            let totalItems = 0;
+            let totalPrice = 0.0;
+
+            document.querySelectorAll('.quantity').forEach(item => {
+                let quantity = parseInt(item.value);
+                let price = parseFloat(item.closest('tr').querySelector('.product-price').textContent.replace('₱', ''));
+                let subtotalElement = item.closest('tr').querySelector('.subtotal');
+                let subtotal = quantity * price;
+
+                subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
+                totalItems += quantity;
+                totalPrice += subtotal;
+            });
+
+            let discountRate = 0.1;
+            let discount = totalPrice * discountRate;
+            let finalTotal = totalPrice - discount;
+
+            document.getElementById('total-items').textContent = totalItems;
+            document.getElementById('total-price').textContent = `₱${totalPrice.toFixed(2)}`;
+            document.getElementById('discount').textContent = `₱${discount.toFixed(2)}`;
+            document.getElementById('final-total').textContent = `₱${finalTotal.toFixed(2)}`;
+        }
+
+        
     </script>
     <!-- Custom Script -->
     <script src="./js/index.js"></script>
