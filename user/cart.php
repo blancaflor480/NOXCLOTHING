@@ -126,7 +126,13 @@ $_SESSION['user_id'] = $user_id;
     margin-top: 20px;
     text-align: center;
 }
-
+.product-price{
+    display: none;
+}
+.name{
+    color: black;
+    font-size: 1.6rem;
+}
     </style>
   </head>
   <?php
@@ -264,9 +270,9 @@ if ($result && $result->num_rows > 0) {
                 <tr>
                     <th>Product</th>
                     <th>Quantity</th>
-                    <th>Subtotal</th>
+                    <th>Unit Price</th>
                 </tr>
-     <?php
+    <?php
 $totalItems = 0;
 $totalPrice = 0.00;
 
@@ -291,7 +297,9 @@ if ($result && $result->num_rows > 0) {
                 <div class='cart-info'>
                     <img src='./images/" . htmlspecialchars($row['image_front']) . "' alt='" . htmlspecialchars($row['name_item']) . "' />
                     <div>
-                        <p>" . htmlspecialchars($row['name_item']) . "</p>
+                        <a href='productDetails.php?id=" . $row['products_id'] . "'>
+                            <p class='name'><b>" . htmlspecialchars($row['name_item']) . "</b></p>
+                        </a>
                         <span class='product-price'>₱" . number_format($row['product_price'], 2) . "</span> <br />
                         <a href='javascript:void(0);' onclick='removeFromCart(" . $row['id'] . ")'>remove</a>
                     </div>
@@ -333,7 +341,7 @@ $finalTotal = $totalPrice - $discount;
                     <td id="total-price">₱ <?php echo number_format($totalPrice, 2); ?></td>
                 </tr>
                 <tr>
-                    <td>Total Items</td>
+                    <td>Items</td>
                     <td id="total-items"><?php echo $totalItems; ?></td>
                 </tr>
                 <tr>
@@ -341,7 +349,7 @@ $finalTotal = $totalPrice - $discount;
                     <td id="discount">₱ <?php echo number_format($discount, 2); ?></td>
                 </tr>
                 <tr>
-                    <td>Final Total</td>
+                    <td>Total Amount</td>
                     <td id="final-total">₱ <?php echo number_format($finalTotal, 2); ?></td>
                 </tr>
             </table>
