@@ -173,7 +173,8 @@ if ($result && $result->num_rows > 0) {
         </div>
     </div>
 
-    <!-- Product Details -->
+
+<!-- Product Details -->
 <section class="section product-detail">
     <div class="details container">
         <div class="left image-container">
@@ -199,16 +200,59 @@ if ($result && $result->num_rows > 0) {
                     <span class="select-icon"><i class="bx bx-chevron-down"></i></span>
                 </span>
                 </div>
-            </form><br><br>
+            </form><br>
+                 <form id="color-form">
+    <div class="color-container">
+        <label>Color:</label>
+        <div class="color-options">
+            <label for="color-blue">
+                <input type="radio" id="color-blue" name="color" value="blue">
+                <span class="color-box blue"></span> Blue
+            </label>
+            <label for="color-red">
+                <input type="radio" id="color-red" name="color" value="red">
+                <span class="color-box red"></span> Red
+            </label>
+            <!-- Add more color options here as needed -->
+        </div>
+    </div>
+</form>
+            <br>
             
             <!-- Second Form (Add to Cart) -->
-            <form class="form">
-                <label>Quantity</label>
-                <input type="number" placeholder="1" style="width: 50px;" min="1" max="<?php echo $product['quantity']; ?>"/>
-                <a href="" class="addCart">Add To Cart</a>
-            </form>
+                <form class="form">
+                    <label>Quantity</label>
+                    <input type="number" placeholder="1" style="width: 50px;" min="1" max="<?php echo $product['quantity']; ?>"/>
+                 <!--   <span><?php echo $product['quantity']; ?></span>-->
+                 <br><br><br>       
+                    <a href="" class="addCart">Buy Now</a>
+                    <a href="" class="addCart">Add To Cart</a>
+                </form>
             
             <h3>Product Detail</h3>
+            <p><?php echo htmlspecialchars($product['description']); ?></p>
+        </div>
+    </div>
+</section>
+
+<!-- Product Rating -->
+<section class="section product-rating" style="margin-top: -100px;">
+    <div class="container">
+        <h3 class="section-title">Product Rating</h3>
+        <div class="rating-details">
+            <div class="rating-stars">
+                <!-- Add your star rating display here -->
+                <!-- For example, you can use font awesome icons or any other rating system -->
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <i class="far fa-star"></i>
+            </div>
+            <span class="rating-value">4.5</span> <!-- Display the average rating value here -->
+            <span class="rating-count">(250 reviews)</span> <!-- Display the total number of reviews here -->
+        </div>
+        <div class="rating-description">
             <p><?php echo htmlspecialchars($product['description']); ?></p>
         </div>
     </div>
