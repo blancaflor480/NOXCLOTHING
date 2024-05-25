@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2024 at 06:29 PM
+-- Generation Time: May 25, 2024 at 06:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,14 +38,6 @@ CREATE TABLE `addcart` (
   `status` varchar(50) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `addcart`
---
-
-INSERT INTO `addcart` (`id`, `customer_id`, `wishlist_id`, `products_id`, `quantity`, `size`, `price`, `status`, `datetime`) VALUES
-(1, 4, NULL, 3, 1, '', 399.00, '', '2024-05-22 23:48:31'),
-(13, 1, NULL, 4, 1, '', 0.00, 'Pending', '2024-05-25 11:06:04');
 
 -- --------------------------------------------------------
 
@@ -145,13 +137,6 @@ CREATE TABLE `payment` (
   `payment_date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `payment`
---
-
-INSERT INTO `payment` (`id`, `orders_id`, `amount_paid`, `mode_payment`, `cardnumber`, `cvv`, `exp_date`, `status`, `payment_date`) VALUES
-(1, 1, 299.00, 'Credit Card', 111, 111, '2024-05-19', 'Process', '2024-05-19');
-
 -- --------------------------------------------------------
 
 --
@@ -217,14 +202,6 @@ CREATE TABLE `wishlist` (
   `products_id` int(11) NOT NULL,
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `wishlist`
---
-
-INSERT INTO `wishlist` (`id`, `customer_id`, `products_id`, `date`) VALUES
-(1, 4, 3, '0000-00-00'),
-(2, 4, 8, '0000-00-00');
 
 --
 -- Indexes for dumped tables
@@ -297,7 +274,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `addcart`
 --
 ALTER TABLE `addcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -321,7 +298,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -339,7 +316,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -349,37 +326,30 @@ ALTER TABLE `wishlist`
 -- Constraints for table `addcart`
 --
 ALTER TABLE `addcart`
-  ADD CONSTRAINT `customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `products_id` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `wishlist_id` FOREIGN KEY (`wishlist_id`) REFERENCES `wishlist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `customerid` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
+  ADD CONSTRAINT `productid` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `wishlistid` FOREIGN KEY (`wishlist_id`) REFERENCES `wishlist` (`id`);
 
 --
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `add_id` FOREIGN KEY (`addcart_id`) REFERENCES `addcart` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `customers_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `prod_id` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`);
+  ADD CONSTRAINT `addcartid` FOREIGN KEY (`addcart_id`) REFERENCES `addcart` (`id`),
+  ADD CONSTRAINT `customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
+  ADD CONSTRAINT `product_id` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`);
 
 --
 -- Constraints for table `payment`
 --
 ALTER TABLE `payment`
-  ADD CONSTRAINT `orders_fbk` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `ratings`
---
-ALTER TABLE `ratings`
-  ADD CONSTRAINT `product_id` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`),
-  ADD CONSTRAINT `user_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`Id`);
+  ADD CONSTRAINT `ordersid` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`);
 
 --
 -- Constraints for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  ADD CONSTRAINT `custom_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `pro_id` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `customer_id_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
+  ADD CONSTRAINT `products_id_1` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
