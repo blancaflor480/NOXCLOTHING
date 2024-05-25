@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2024 at 04:01 AM
+-- Generation Time: May 25, 2024 at 06:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,7 +45,7 @@ CREATE TABLE `addcart` (
 
 INSERT INTO `addcart` (`id`, `customer_id`, `wishlist_id`, `products_id`, `quantity`, `size`, `price`, `status`, `datetime`) VALUES
 (1, 4, NULL, 3, 1, '', 399.00, '', '2024-05-22 23:48:31'),
-(2, 1, NULL, 4, 1, '', 599.00, '', '2024-05-23 09:59:04');
+(13, 1, NULL, 4, 1, '', 0.00, 'Pending', '2024-05-25 11:06:04');
 
 -- --------------------------------------------------------
 
@@ -72,7 +72,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `password`, `role`, `image`, `datereg`, `logintime`) VALUES
-(1, 'admin', '', '', 'admin@gmail.com', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', '', '2024-05-07', '2024-05-20 02:54:10');
+(1, 'admin', '', '', 'admin@gmail.com', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', '', '2024-05-07', '2024-05-25 06:02:00');
 
 -- --------------------------------------------------------
 
@@ -104,7 +104,7 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `address`, `city`, `zipcode`, `contactnumber`, `bday`, `image`, `password`, `otp`, `email_verified`, `datereg`) VALUES
-(1, 'Jade ', '', '', 'blancaflor480@gmail.com', 'jade123', '', '', 0, 0, '2024-05-23', '', 'b220e82dde8abcb5dfe247ff49606009', NULL, 1, '2024-05-23');
+(1, 'Jade ', '', '', 'blancaflor480@gmail.com', 'jade123', '', '', 0, 0, '2024-05-24', '', 'b220e82dde8abcb5dfe247ff49606009', NULL, 1, '2024-05-24');
 
 -- --------------------------------------------------------
 
@@ -181,10 +181,10 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name_item`, `type`, `color`, `size`, `manufacturer`, `description`, `category`, `quantity`, `status`, `image_front`, `image_back`, `discount`, `price`, `date_insert`) VALUES
-(1, 'Ghirl Tshirt', 'female', 'Pink', 'medium', 'Dickies', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d312e6a7067, '', 10.00, 399.00, '2024-05-14'),
-(2, 'Hoodie X', 'female', 'Purple', 'large', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'JACKETS', 12, 'Low Stock', 0x70726f647563742d332e6a7067, '', 10.00, 299.00, '2024-05-14'),
+(1, 'Ghirl Tshirt', 'female', 'Pink', 'medium', 'Dickies', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d312e6a7067, '', 28.00, 399.00, '2024-05-14'),
+(2, 'Hoodie X', 'female', 'Purple', 'large', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 12, 'Low Stock', 0x70726f647563742d332e6a7067, '', 50.00, 299.00, '2024-05-14'),
 (3, 'Hoodie X', 'male', 'Gray', 'medium', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'JACKETS', 10, 'Low Stock', 0x70726f647563742d342e6a7067, '', 38.00, 399.00, '2024-05-14'),
-(4, 'Hoodie M', 'male', 'Black', 'large', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'JACKETS', 10, 'Instock', 0x70726f647563742d352e6a7067, '', 10.00, 599.00, '2024-05-14'),
+(4, 'Hoodie M', 'male', 'Black', 'large', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Instock', 0x70726f647563742d352e6a7067, '', 100.00, 599.00, '2024-05-14'),
 (5, 'Boy\'s Greeny', 'male', 'Green', 'medium', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d362e6a7067, '', 38.00, 299.00, '2024-05-14'),
 (6, 'Sky Cloud', 'female', 'Sky Blue', 'small', 'Nike', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d382e6a7067, '', 38.00, 199.00, '2024-05-14'),
 (7, 'Jansport', 'other', 'Red', 'medium', 'Nike', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'SHORTS', 10, 'Restock', 0x70726f647563742d322e6a7067, '', 10.00, 599.00, '2024-05-14'),
@@ -224,8 +224,7 @@ CREATE TABLE `wishlist` (
 
 INSERT INTO `wishlist` (`id`, `customer_id`, `products_id`, `date`) VALUES
 (1, 4, 3, '0000-00-00'),
-(2, 4, 8, '0000-00-00'),
-(3, 1, 4, '0000-00-00');
+(2, 4, 8, '0000-00-00');
 
 --
 -- Indexes for dumped tables
@@ -298,7 +297,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `addcart`
 --
 ALTER TABLE `addcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -340,7 +339,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
