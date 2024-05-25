@@ -1,14 +1,36 @@
 <?php
 session_start();
 
-// Check if the user is logged in
+// Check kung may session na itinakda para sa 'uname'
 if (!isset($_SESSION['email'])) {
     header("Location: index.php?error=Login%20First");
     exit();
 }
 
-// Include the database connection
+// Include ng database connection
 include 'dbconn/conn.php';
+
+// Kunin ang 'uname' mula sa session
+$email = $_SESSION['email'];
+
+// Subukan kung mayroong resulta sa query
+$stmt = $conn->prepare("SELECT * FROM customer WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Siguraduhing may resulta bago kunin ang data
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+    $user_id = $user['id']; // Kunin ang 'id' ng user
+} else {
+    // Kung wala, i-redirect sa login page
+    header("Location: login-signup.php?error=Login%20First");
+    exit();
+}
+
+// I-set ang 'user_id' sa session para magamit sa ibang mga pahina
+$_SESSION['user_id'] = $user_id;
 
 // Get the 'id' parameter from the URL
 if (isset($_GET['id'])) {
@@ -33,7 +55,9 @@ if ($result->num_rows > 0) {
     header("Location: index.php?error=Product%20Not%20Found");
     exit();
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -131,7 +155,7 @@ if ($result && $result->num_rows > 0) {
             <div class="icon">
               <i class="bx bx-search"></i>
             </div>
-           <a href="cart.php" class="icon">
+           <a href="wishlist.php" class="icon">
               <i class="bx bx-heart"></i>
               <span id="wishlistCount" class="d-flex"><?php echo $numberwish; ?></span>
               </a>
@@ -179,8 +203,9 @@ if ($result && $result->num_rows > 0) {
             
             <!-- Second Form (Add to Cart) -->
             <form class="form">
+                <label>Quantity</label>
                 <input type="number" placeholder="1" style="width: 50px;" min="1" max="<?php echo $product['quantity']; ?>"/>
-                <a href="cart.html" class="addCart">Add To Cart</a>
+                <a href="" class="addCart">Add To Cart</a>
             </form>
             
             <h3>Product Detail</h3>

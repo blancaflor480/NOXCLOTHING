@@ -68,7 +68,7 @@ $_SESSION['user_id'] = $user_id;
             flex-grow: 1;
         }
         table {
-            width: 95%;
+            width: 100%;
             border-collapse: collapse;
         }
         table th, table td {
@@ -98,7 +98,7 @@ $_SESSION['user_id'] = $user_id;
 }
 
 .container.cart .cart-items {
-    width: 85%; /* Adjust width as needed */
+    width: 100%; /* Adjust width as needed */
 }
 
 .container.cart .order-summary {
@@ -133,6 +133,24 @@ $_SESSION['user_id'] = $user_id;
     color: black;
     font-size: 1.6rem;
 }
+.btn-add{
+  background-color: #3498DB;
+  font-size: 2.5rem;
+ color: white;
+ border: none;
+ border-radius: 5px;
+width: 60px;
+}
+.btn-remove{
+  background-color: #EC7063;
+  font-size: 2.5rem;
+  color: white;
+  border: none;
+border-radius: 5px;
+width: 60px;
+
+}
+
     </style>
   </head>
   <?php
@@ -220,16 +238,13 @@ if ($result && $result->num_rows > 0) {
             <a href="login-signup.php" class="icon">
               <i class="bx bx-user"></i>
             </a>
-            
             <div class="icon">
               <i class="bx bx-search"></i>
             </div>
-            
+            <div class="icon">
               <i class="bx bx-heart"></i>
-            <a href="wishlist.php" class="icon">
               <span class="d-flex">0</span>
-            </a>
-
+            </div>
             <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
               <span class="d-flex">0</span>
@@ -258,7 +273,6 @@ if ($result && $result->num_rows > 0) {
           
           </div>
 
-
           <div class="hamburger">
             <i class="bx bx-menu-alt-left"></i>
           </div>
@@ -268,95 +282,58 @@ if ($result && $result->num_rows > 0) {
     <!-- Cart Items -->
 <!-- Cart Items -->
     <div class="container cart">
+
         <div class="cart-items">
             <table>
                 <tr>
                     <th>Product</th>
-                    <th>Quantity</th>
                     <th>Unit Price</th>
+                    <th>Action</th>
+                    
                 </tr>
-    <?php
-$totalItems = 0;
-$totalPrice = 0.00;
+   <?php
+                $sql = "SELECT wishlist.*, products.price AS product_price, products.name_item, products.image_front 
+                        FROM wishlist 
+                        INNER JOIN products ON wishlist.products_id = products.id 
+                        WHERE wishlist.customer_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $user_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
 
-$sql = "SELECT addcart.*, products.price AS product_price, products.name_item, products.image_front, products.discount 
-        FROM addcart 
-        INNER JOIN products ON addcart.products_id = products.id 
-        WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $totalItems++;
-        $subtotal = $row['product_price'] * $row['quantity'];
-        $totalPrice += $subtotal;
-
-        echo "
-        <tr>
-            <td>
-                <div class='cart-info'>
-                    <img src='./images/" . htmlspecialchars($row['image_front']) . "' alt='" . htmlspecialchars($row['name_item']) . "' />
-                    <div>
-                        <a href='productDetails.php?id=" . $row['products_id'] . "'>
-                            <p class='name'><b>" . htmlspecialchars($row['name_item']) . "</b></p>
-                        </a>
-                        <span class='product-price'>₱" . number_format($row['product_price'], 2) . "</span> <br />
-                        <a href='javascript:void(0);' onclick='removeFromCart(" . $row['id'] . ")'>remove</a>
-                    </div>
-                </div>
-            </td>
-            <td><input type='number' value='" . $row['quantity'] . "' min='1' class='quantity' data-product-id='" . $row['id'] . "' /></td>
-            <td class='subtotal'>₱" . number_format($subtotal, 2) . "</td>
-        </tr>";
-    }
-} else {
-    echo "<tr><td colspan='3'>Your cart is empty.</td></tr>";
-}
-
-// Retrieve discount rate from database
-$discountRate = 0.0; // Initialize to 0.0 to avoid undefined variable warning
-
-if ($result && $result->num_rows > 0) {
-    $result->data_seek(0); // Reset the result pointer to the first row
-    $firstRow = $result->fetch_assoc(); // Get the first row again
-    if ($firstRow !== null && array_key_exists('discount', $firstRow)) {
-        // Convert percentage discount to decimal
-        $discountRate = $firstRow['discount'] / 100;
-    }
-}
-
-$discount = $totalPrice * $discountRate;
-$finalTotal = $totalPrice - $discount;
-?>
+                if ($result && $result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "
+                        <tr>
+                            <td>
+                                <div class='cart-info'>
+                                    <img src='./images/" . htmlspecialchars($row['image_front']) . "' alt='" . htmlspecialchars($row['name_item']) . "' />
+                                    <div>
+                                        <a href='productDetails.php?id=" . $row['products_id'] . "'>
+                                            <p class='name'><b>" . htmlspecialchars($row['name_item']) . "</b></p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class='subtotal'>₱" . htmlspecialchars($row['product_price']) . "</td>
+                            <td>
+                                <button class='btn-add' data-product-id='" . $row['products_id'] . "'>
+                                    <i class='bx bx-cart-add'></i>
+                                </button> 
+                                <button class='btn-remove' data-wishlist-id='" . $row['id'] . "'>
+                                    <i class='bx bx-trash'></i>
+                                </button>
+                            </td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='3'><center>Your wishlist is empty.</center></td></tr>";
+                }
+                ?>
 
 
 
             </table>
-        </div>
-        <div class="order-summary">
-            <h3>ORDER SUMMARY</h3>
-            <table>            
-                <tr>
-                    <td>Subtotal</td>
-                    <td id="total-price">₱ <?php echo number_format($totalPrice, 2); ?></td>
-                </tr>
-                <tr>
-                    <td>Items</td>
-                    <td id="total-items"><?php echo $totalItems; ?></td>
-                </tr>
-                <tr>
-                    <td>Discount</td>
-                    <td id="discount">₱ <?php echo number_format($discount, 2); ?></td>
-                </tr>
-                <tr>
-                    <td>Total Amount</td>
-                    <td id="final-total">₱ <?php echo number_format($finalTotal, 2); ?></td>
-                </tr>
-            </table>
-            <a href="checkout.php" class="checkout">Proceed to Checkout</a>
         </div>
     </div>
 
@@ -429,79 +406,100 @@ $finalTotal = $totalPrice - $discount;
 
   
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var addToWishlistButtons = document.querySelectorAll(".add-to-wishlist");
+    document.addEventListener("DOMContentLoaded", function() {
+        // Function to remove item from wishlist
+        function removeFromWishlist(wishlistId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "function/remove_wishlist.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    addToWishlistButtons.forEach(function(button) {
-        button.addEventListener("click", function() {
-            var productId = this.dataset.productId;
-            addToWishlist(productId);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload(); // Reload page to reflect changes
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            };
+
+            var data = "wishlistId=" + wishlistId;
+            xhr.send(data);
+        }
+
+        // Event listener for remove buttons
+        var removeButtons = document.querySelectorAll(".btn-remove");
+        removeButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                var wishlistId = this.dataset.wishlistId;
+                removeFromWishlist(wishlistId);
+            });
         });
+
+        // Function to move item from wishlist to cart
+        function moveToCart(productId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "function/move_cart.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        alert(response.message);
+                        updateWishlistIndicator();
+                        updateCartIndicator();
+                        location.reload(); // Reload page to reflect changes
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            };
+
+            var data = "productId=" + productId;
+            xhr.send(data);
+        }
+
+        // Event listener for add to cart buttons
+        var addToCartButtons = document.querySelectorAll(".btn-add");
+        addToCartButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                var productId = this.dataset.productId;
+                moveToCart(productId);
+            });
+        });
+
+        // Function to update wishlist indicator
+        function updateWishlistIndicator() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "function/getwishlistcount.php", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var wishlistCount = xhr.responseText;
+                    var wishlistIndicator = document.querySelector("#wishlistCount");
+                    wishlistIndicator.innerText = wishlistCount;
+                }
+            };
+            xhr.send();
+        }
+
+        // Function to update cart indicator
+        function updateCartIndicator() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "function/getcartcount.php", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var cartCount = xhr.responseText;
+                    var cartIndicator = document.querySelector("#count");
+                    cartIndicator.innerText = cartCount;
+                }
+            };
+            xhr.send();
+        }
     });
-
-    function addToWishlist(productId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "function/addtowhishlist.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var response = JSON.parse(xhr.responseText);
-                if (response.success) {
-                    alert(response.message);
-                    updateWishlistIndicator();
-                } else {
-                    alert(response.message);
-                }
-            }
-        };
-
-        var data = "productId=" + productId;
-        xhr.send(data);
-    }
-
-    function updateWishlistIndicator() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "function/getwishlistcount.php", true);
-
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var wishlistCount = xhr.responseText;
-                var wishlistIndicator = document.querySelector("#wishlistCount");
-                wishlistIndicator.innerText = wishlistCount;
-            }
-        };
-
-        xhr.send();
-    }
-
-});
-
-</script>
-
-<script>
-    // Function to remove item from cart
-    function removeFromCart(cartItemId) {
-        // Send an AJAX request to the backend to remove the item
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "function/remove_addcart.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function() {
-            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                if (this.responseText === "success") {
-                    // Show alert if removal is successful
-                    alert("Item removed successfully.");
-                    // Reload the page to reflect changes after successful removal
-                    location.reload();
-                } else {
-                    // Show alert if there is an error
-                    alert("Error: " + this.responseText);
-                }
-            }
-        };
-        xhr.send("cartItemId=" + cartItemId);
-    }
-</script>
+    </script>
 
 <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -553,108 +551,7 @@ $finalTotal = $totalPrice - $discount;
         });
     </script>
 
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Function to update the order summary
-        function updateOrderSummary() {
-            // Get all quantity input elements
-            var quantities = document.querySelectorAll(".quantity");
-            var totalItems = 0;
-            var totalPrice = 0.00;
-
-            quantities.forEach(function(quantityInput) {
-                var quantity = parseInt(quantityInput.value);
-                var productId = quantityInput.dataset.productId;
-                var price = parseFloat(quantityInput.closest("tr").querySelector(".product-price").innerText.replace('₱', ''));
-
-                totalItems += quantity;
-                totalPrice += (quantity * price);
-            });
-
-            var discountRate = 0.1; // Assuming a 10% discount
-            var discount = totalPrice * discountRate;
-            var finalTotal = totalPrice - discount;
-
-            // Update the order summary
-            document.getElementById("total-items").innerText = totalItems;
-            document.getElementById("total-price").innerText = "₱" + totalPrice.toFixed(2);
-            document.getElementById("discount").innerText = "₱" + discount.toFixed(2);
-            document.getElementById("final-total").innerText = "₱" + finalTotal.toFixed(2);
-        }
-
-        // Add event listeners to all quantity input fields
-        var quantityInputs = document.querySelectorAll(".quantity");
-        quantityInputs.forEach(function(input) {
-            input.addEventListener("change", function() {
-                if (this.value < 1) {
-                    this.value = 1; // Ensure the quantity is at least 1
-                }
-                updateOrderSummary();
-            });
-        });
-
-        // Initial order summary update
-        updateOrderSummary();
-    });
-</script>
-<script>
-        document.querySelectorAll('.quantity').forEach(item => {
-            item.addEventListener('input', event => {
-                let quantity = event.target.value;
-                let productId = event.target.dataset.productId;
-
-                if (quantity < 1) {
-                    alert('Quantity must be at least 1');
-                    event.target.value = 1;
-                    return;
-                }
-
-                fetch('update_cart.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `id=${productId}&quantity=${quantity}`,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        updateCart();
-                    } else {
-                        alert('Error updating cart');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        });
-
-        function updateCart() {
-            let totalItems = 0;
-            let totalPrice = 0.0;
-
-            document.querySelectorAll('.quantity').forEach(item => {
-                let quantity = parseInt(item.value);
-                let price = parseFloat(item.closest('tr').querySelector('.product-price').textContent.replace('₱', ''));
-                let subtotalElement = item.closest('tr').querySelector('.subtotal');
-                let subtotal = quantity * price;
-
-                subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
-                totalItems += quantity;
-                totalPrice += subtotal;
-            });
-
-            let discountRate = 0.1;
-            let discount = totalPrice * discountRate;
-            let finalTotal = totalPrice - discount;
-
-            document.getElementById('total-items').textContent = totalItems;
-            document.getElementById('total-price').textContent = `₱${totalPrice.toFixed(2)}`;
-            document.getElementById('discount').textContent = `₱${discount.toFixed(2)}`;
-            document.getElementById('final-total').textContent = `₱${finalTotal.toFixed(2)}`;
-        }
-
-        
-    </script>
+    
     <!-- Custom Script -->
     <script src="./js/index.js"></script>
   </body>

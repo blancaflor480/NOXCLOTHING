@@ -158,7 +158,7 @@ if ($result && $result->num_rows > 0) {
             <div class="icon">
               <i class="bx bx-search"></i>
             </div>
-           <a href="cart.php" class="icon">
+           <a href="wishlist.php" class="icon">
               <i class="bx bx-heart"></i>
               <span id="wishlistCount" class="d-flex"><?php echo $numberwish; ?></span>
               </a>
