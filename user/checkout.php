@@ -105,8 +105,8 @@ if ($result && $result->num_rows > 0) {
 <!-- Navigation -->
     <div class="top-nav">
       <div class="container d-flex">
-        <p>Order Online Or Call Us: (001) 2222-55555</p>
-        <ul class="d-flex">
+        <p style="margin-top: 10px">Order Online Or Call Us: (001) 2222-55555</p>
+        <ul class="d-flex" style="margin-top: 10px">
           <li><a href="#">About Us</a></li>
           <li><a href="#">FAQ</a></li>
           <li><a href="#">Contact</a></li>
@@ -115,9 +115,9 @@ if ($result && $result->num_rows > 0) {
     </div>
     <div class="navigation">
         <div class="nav-center container d-flex">
-        <a href="/" class="logo"><h1>Nox</h1></a>
+        <a href="/" class="logo" style="margin-top: -10px;"><h1 style="font-size: 3rem; font-weigh: 700;">Nox</h1></a>
 
-          <ul class="nav-list d-flex">
+          <ul class="nav-list d-flex" style="margin-top: -10px;">
             <li class="nav-item">
               <a href="index.php" class="nav-link">Home</a>
             </li>
@@ -138,7 +138,7 @@ if ($result && $result->num_rows > 0) {
           </li>
           </ul>
 
-          <div class="icons d-flex">
+          <div class="icons d-flex" style="margin-top: -16px;">
             <a href="login-signup.php" class="icon">
               <i class="bx bx-user"></i>
             </a>
@@ -168,12 +168,12 @@ if ($result && $result->num_rows > 0) {
 
       <section class="section" style="margin-top: -100px">
 
-      <div class="container mt-5">
-    <h1>Check Out</h1>
+<div class="container mt-5">
+    <h1><small style="font-size: 1.7rem;">Home > </small>Check Out</h1>
     <div class="row">
       <div class="col-lg-8">
         <form novalidate>
-          <h5 class="mb-3" style="background-color: aquamarine;">Customer</h5>
+          <h5 class="mb-3">Customer</h5>
           <div class="row" style="background-color: aquamarine;">
             <div class="col-sm-6">
               <label for="firstname" id="form-label">First name</label>
@@ -248,13 +248,16 @@ if ($result && $result->num_rows > 0) {
       <!-- Order Summary Column -->
       <div class="col-lg-4">
         <div class="card" style="width: 100%;">
-          <div class="card-body">
-            <h5 class="card-title">Order Summary</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-          </div>
+        <div class="card-header">
+    Order Summary
+  </div>  
+        <div class="card-body">
+        <ul class="list-group list-group-flush">
+    <li class="list-group-item">An item</li>
+    <li class="list-group-item">A second item</li>
+    <li class="list-group-item">A third item</li>
+  </ul>       
+    </div>
         </div>
       </div>
     </div>
