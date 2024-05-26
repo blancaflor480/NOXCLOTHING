@@ -162,11 +162,16 @@
 
             
                             </div>
+                            <hr class="my-3 mt-3">
+                    
                             <!-- Add more input fields for other details if needed -->
 
                             <input type="hidden" name="productID" value="<?php echo $row['id']; ?>">
-<br>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+
+<div class="text-center d-flex justify-content-center">
+    <button type="submit" class="btn btn-primary me-2">Update</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>
                         </form>
                     </div>
                 </div>

@@ -141,7 +141,9 @@
                         <input type="file" class="form-control" id="editImage<?php echo $row['id']; ?>" name="image">
                         <input type="hidden" class="form-control" id="currentImagePath" name="currentImagePath" value="<?php echo $row['image']; ?>">
                     </div>
-
+                    <hr class="my-3 mt-2">
+                    <h6 class="mb-3 fw-bold">Address</h6>
+          
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="mb-3">
@@ -177,7 +179,9 @@
                             </div>
                         </div>
                     </div>
-
+                    <hr class="my-3 mt-2">
+                    <h6 class="mb-3 fw-bold">Account</h6>
+          
                     <div class="mb-3">
                         <label for="editemail<?php echo $row['id']; ?>" class="form-label">Email</label>
                         <input type="email" class="form-control" id="editemail<?php echo $row['id']; ?>" name="email" value="<?php echo $row['email']; ?>" required>
@@ -192,11 +196,13 @@
                         <label for="editpassword<?php echo $row['id']; ?>" class="form-label">Password</label>
                         <input type="password" class="form-control" id="editpassword<?php echo $row['id']; ?>" name="password" value="<?php echo $row['password']; ?>" required>
                     </div>
-
+                    <hr class="my-3 mt-4">
                     <!-- Hidden input field to store customer ID -->
                     <input type="hidden" name="customerId" value="<?php echo $row['id']; ?>">
-
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <div class="text-center d-flex justify-content-center">
+    <button type="submit" class="btn btn-primary me-2">Update</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>
                 </form>
             </div>
         </div>
