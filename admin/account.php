@@ -47,8 +47,7 @@
                     </h5>
                     <div class="d-flex justify-content-end align-items-center">
                         <button type="button" class="btn btn-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addProductModal">Add</button>
-                        <a href="history_transaction.php" style="font-size: 17px;" class="btn btn-primary btn-sm me-2">History</a>
-                    </div>
+                       </div>
                 
                 </div>
                 
@@ -129,17 +128,16 @@
             <input type="text" class="form-control" id="edituname<?php echo $row['id']; ?>" name="uname" value="<?php echo $row['uname']; ?>" required>
            
             <label for="editpassword<?php echo $row['id']; ?>" class="form-label">Password</label>
-            <input type="password" class="form-control" id="editpassword<?php echo $row['id']; ?>" name="password" value="<?php echo $row['password']; ?>" required>
-   
+                        <div class="input-group">
+                        <input type="password" class="form-control" id="editpasswordInput<?php echo $row['id']; ?>" name="password" value="<?php echo $row['password']; ?>" required>
+                        </div>
+
             <label for="editrole<?php echo $row['id']; ?>" class="form-label">Role</label>
 <select class="form-select" id="editrole<?php echo $row['id']; ?>" name="role" required>
     <option value="Admin" <?php if($row['role'] == 'Admin') echo 'selected'; ?>>Admin</option>
     <option value="Staff" <?php if($row['role'] == 'Staff') echo 'selected'; ?>>Staff</option>
 </select>
 
-          <!--  <label for="editImage<?php echo $row['id']; ?>" class="form-label">Image</label>
-            <input type="file" class="form-control" id="editImage<?php echo $row['id']; ?>" name="image" value="<?php echo $row['image_path']; ?>" >
-            -->
             
                             </div>
                             <!-- Add more input fields for other details if needed -->

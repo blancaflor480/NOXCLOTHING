@@ -83,6 +83,9 @@ $role  = $row['role'];
                             </li>-->
                         </ul>
                     </li>
+                    <a href="voucher.php" class="sidebar-link collapsed"><i class="fa-solid fa-scroll pe-2"></i>
+                            Voucher
+                        </a>
                     <?php if ($role == 'Admin'): ?>
                     <li class="sidebar-item">
                         <a href="customer.php" class="sidebar-link collapsed"><i class="fa-solid fa-user pe-2"></i>

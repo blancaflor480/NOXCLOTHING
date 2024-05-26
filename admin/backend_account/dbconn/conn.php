@@ -1,6 +1,6 @@
 <?php
 
-$conn = mysqli_connect("localhost", "root", "", "game_os");
+$conn = mysqli_connect("localhost", "root", "", "noxclothing");
 
 if (!$conn) {
     echo "Connection Failed";
