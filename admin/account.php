@@ -80,7 +80,7 @@
         <img src="uploads/default.jpg" style="width: 80px; height: 80px;">
     <?php endif; ?>
 </td>
-            <td><?php echo $row['fname'] , $row['mname'] , $row['lname']; ?></td>
+            <td><?php echo $row['fname'] . ' ' . $row['mname'] . ' ' . $row['lname']; ?></td>
             <td><?php echo $row['uname']; ?></td>
             <td><?php echo $row['email']; ?></td>
             <td><?php echo $row['role']; ?></td>
@@ -104,19 +104,38 @@
                         <!-- Edit Product Form -->
                         <form action="backend_account/edit_account.php" method="POST" enctype="multipart/form-data">
                             <!-- Input fields for editing product details -->
-                            <div class="mb-3">
-            <label for="editfname<?php echo $row['id']; ?>" class="form-label">First name</label>
-            <input type="text" class="form-control" id="editfname<?php echo $row['id']; ?>" name="fname" value="<?php echo $row['fname']; ?>" required>
-           
-            <label for="editmname<?php echo $row['id']; ?>" class="form-label">Middle name</label>
-            <input type="text" class="form-control" id="editmname<?php echo $row['id']; ?>" name="mname" value="<?php echo $row['mname']; ?>" required>
-           
-            <label for="editlname<?php echo $row['id']; ?>" class="form-label">Last name</label>
-            <input type="text" class="form-control" id="editfname<?php echo $row['id']; ?>" name="lname" value="<?php echo $row['lname']; ?>" required>
-           
+                            <div class="md-3">
+                            <div class="row">
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="editfname<?php echo $row['id']; ?>" class="form-label">First name</label>
+                    <input type="text" class="form-control" id="editfname<?php echo $row['id']; ?>" name="fname" value="<?php echo $row['fname']; ?>" required>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="editmname<?php echo $row['id']; ?>" class="form-label">Middle name</label>
+                    <input type="text" class="form-control" id="editmname<?php echo $row['id']; ?>" name="mname" value="<?php echo $row['mname']; ?>" required>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="editlname<?php echo $row['id']; ?>" class="form-label">Last name</label>
+                    <input type="text" class="form-control" id="editfname<?php echo $row['id']; ?>" name="lname" value="<?php echo $row['lname']; ?>" required>
+                </div>
+            </div>
+        </div>
+
+
+    
             <label for="editemail<?php echo $row['id']; ?>" class="form-label">Email</label>
             <input type="email" class="form-control" id="editemail<?php echo $row['id']; ?>" name="email" value="<?php echo $row['email']; ?>" required>
            
+
+
+
+
+
             <div style="position: relative;">
     <label for="editImage<?php echo $row['id']; ?>" class="form-label">Image</label>
     <input type="file" class="form-control" id="editImage<?php echo $row['id']; ?>" name="image" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0;">
@@ -143,7 +162,7 @@
                             <!-- Add more input fields for other details if needed -->
 
                             <input type="hidden" name="productID" value="<?php echo $row['id']; ?>">
-
+<br>
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                         </form>
                     </div>
@@ -196,18 +215,26 @@
                 <div class="modal-body">
                     <!-- Add Product Form -->
                     <form action="backend_account/add_account.php" method="POST"  enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="productName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="productName" name="fname" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="productName" class="form-label">Middle Name</label>
-                            <input type="text" class="form-control" id="productName" name="mname" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="productName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="productName" name="lname" required>
-                        </div>
+                    <div class="row">
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="fname" required>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="middleName" class="form-label">Middle Name</label>
+                    <input type="text" class="form-control" id="middleName" name="mname" required>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" name="lname" required>
+                </div>
+            </div>
+        </div>
                         <div class="mb-3">
                             <label for="pfp" class="form-label">Profile Image</label>
                             <input type="file" class="form-control" id="image" name="image" required>

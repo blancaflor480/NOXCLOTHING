@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2024 at 06:50 PM
+-- Generation Time: May 26, 2024 at 09:02 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,7 +64,9 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `password`, `role`, `image`, `datereg`, `logintime`) VALUES
-(1, 'admin', '', '', 'admin@gmail.com', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', '', '2024-05-07', '2024-05-25 06:02:00');
+(1, 'admin', '', '', 'admin@gmail.com', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', '', '2024-05-07', '2024-05-26 08:32:19'),
+(4, 'Ma. Angelica', 'M.', 'Rubrico', 'ghelle@gmail.com', 'ghelle', '2978c10efddd879133c9644f16ac570a', 'Staff', 0x2e2e2f75706c6f6164732f36363532623231326363653166352e38313139383839352e6a7067, '2024-05-26', '2024-05-26 11:52:50'),
+(5, 'Jade Ryan', 'L.', 'Blancaflor', 'bryanblancaflor007@gmail.com', 'jade123', 'b220e82dde8abcb5dfe247ff49606009', 'Staff', 0x2e2e2f75706c6f6164732f36363532633431663030633262322e31343533383035322e706e67, '2024-05-26', '2024-05-26 13:09:51');
 
 -- --------------------------------------------------------
 
@@ -79,9 +81,12 @@ CREATE TABLE `customer` (
   `lname` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `uname` varchar(250) NOT NULL,
-  `address` varchar(100) NOT NULL,
+  `region` varchar(100) NOT NULL,
+  `province` varchar(100) NOT NULL,
+  `barangay` varchar(100) NOT NULL,
   `city` varchar(50) NOT NULL,
   `zipcode` int(15) NOT NULL,
+  `street` varchar(100) NOT NULL,
   `contactnumber` int(15) NOT NULL,
   `bday` date DEFAULT NULL,
   `image` longblob NOT NULL,
@@ -95,8 +100,8 @@ CREATE TABLE `customer` (
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `address`, `city`, `zipcode`, `contactnumber`, `bday`, `image`, `password`, `otp`, `email_verified`, `datereg`) VALUES
-(1, 'Jade ', '', '', 'blancaflor480@gmail.com', 'jade123', '', '', 0, 0, '2024-05-24', '', 'b220e82dde8abcb5dfe247ff49606009', NULL, 1, '2024-05-24');
+INSERT INTO `customer` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `region`, `province`, `barangay`, `city`, `zipcode`, `street`, `contactnumber`, `bday`, `image`, `password`, `otp`, `email_verified`, `datereg`) VALUES
+(3, 'Jade ', 'L.', 'Blancaflor', 'blancaflor480@gmail.com', 'jade123', 'IV', 'Cavite', '', 'Bacoor', 5012, 'Kaingen, Tramo st.', 0, '2024-05-26', '', 'b220e82dde8abcb5dfe247ff49606009', NULL, 1, '2024-05-26');
 
 -- --------------------------------------------------------
 
@@ -114,6 +119,7 @@ CREATE TABLE `orders` (
   `quantity` int(11) NOT NULL,
   `color` varchar(11) NOT NULL,
   `size` varchar(11) NOT NULL,
+  `voucher_id` int(11) NOT NULL,
   `status` varchar(11) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
   `order_date` date NOT NULL DEFAULT current_timestamp()
@@ -193,6 +199,41 @@ CREATE TABLE `ratings` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `uservoucher`
+--
+
+CREATE TABLE `uservoucher` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `voucher_id` int(11) NOT NULL,
+  `used` tinyint(1) NOT NULL DEFAULT 1,
+  `dateused` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `voucher`
+--
+
+CREATE TABLE `voucher` (
+  `id` int(11) NOT NULL,
+  `vouchercode` varchar(50) NOT NULL,
+  `discount` decimal(5,2) NOT NULL,
+  `expirydate` date NOT NULL,
+  `date` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `voucher`
+--
+
+INSERT INTO `voucher` (`id`, `vouchercode`, `discount`, `expirydate`, `date`) VALUES
+(1, '123000', 25.00, '2024-05-26', '2024-05-26');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `wishlist`
 --
 
@@ -235,7 +276,8 @@ ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
   ADD KEY `customers_id` (`customer_id`),
   ADD KEY `prod_id` (`products_id`),
-  ADD KEY `add_id` (`addcart_id`);
+  ADD KEY `add_id` (`addcart_id`),
+  ADD KEY `voucher_id_1` (`voucher_id`);
 
 --
 -- Indexes for table `payment`
@@ -259,6 +301,20 @@ ALTER TABLE `ratings`
   ADD KEY `product_id` (`products_id`);
 
 --
+-- Indexes for table `uservoucher`
+--
+ALTER TABLE `uservoucher`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `voucher_id_2` (`voucher_id`),
+  ADD KEY `customer_id_2` (`customer_id`);
+
+--
+-- Indexes for table `voucher`
+--
+ALTER TABLE `voucher`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `wishlist`
 --
 ALTER TABLE `wishlist`
@@ -274,19 +330,19 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `addcart`
 --
 ALTER TABLE `addcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -313,6 +369,18 @@ ALTER TABLE `ratings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `uservoucher`
+--
+ALTER TABLE `uservoucher`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `voucher`
+--
+ALTER TABLE `voucher`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
@@ -326,7 +394,7 @@ ALTER TABLE `wishlist`
 -- Constraints for table `addcart`
 --
 ALTER TABLE `addcart`
-  ADD CONSTRAINT `customerid` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
+  ADD CONSTRAINT `customerid` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `productid` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`),
   ADD CONSTRAINT `wishlistid` FOREIGN KEY (`wishlist_id`) REFERENCES `wishlist` (`id`);
 
@@ -335,14 +403,22 @@ ALTER TABLE `addcart`
 --
 ALTER TABLE `orders`
   ADD CONSTRAINT `addcartid` FOREIGN KEY (`addcart_id`) REFERENCES `addcart` (`id`),
-  ADD CONSTRAINT `customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
-  ADD CONSTRAINT `product_id` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`);
+  ADD CONSTRAINT `customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `product_id` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `voucher_id_1` FOREIGN KEY (`voucher_id`) REFERENCES `voucher` (`id`);
 
 --
 -- Constraints for table `payment`
 --
 ALTER TABLE `payment`
   ADD CONSTRAINT `ordersid` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`);
+
+--
+-- Constraints for table `uservoucher`
+--
+ALTER TABLE `uservoucher`
+  ADD CONSTRAINT `customer_id_2` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `voucher_id_2` FOREIGN KEY (`voucher_id`) REFERENCES `voucher` (`id`);
 
 --
 -- Constraints for table `wishlist`

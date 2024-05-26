@@ -36,8 +36,7 @@
                     </h5>
                     <div class="d-flex justify-content-end align-items-center">
                         <button type="button" class="btn btn-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addProductModal">Add</button>
-                        <a href="history_transaction.php" style="font-size: 17px;" class="btn btn-primary btn-sm me-2">History</a>
-                    </div>
+                        </div>
                 
                 </div>
                 
@@ -47,7 +46,6 @@
                             <tr>
                                 <th>Account No.</th>
                                 <th>Name</th>
-                                <th>Username</th>
                                 <th>Email</th>
                                 <th>Birthday</th>
                                 <th>Action</th>
@@ -60,67 +58,126 @@
                             $meta = mysqli_query($conn, $sql);
 
                             if (mysqli_num_rows($meta) > 0) {
-                                while($result = mysqli_fetch_assoc($meta)) {
+                                while($row = mysqli_fetch_assoc($meta)) {
                           ?>
        <tr>
-                            <td><?php echo $result['id']; ?></td>
-                            <td><?php echo $result['fname']; ?></td>
-                            <td><?php echo $result['uname']; ?></td>
-                            <td><?php echo $result['email']; ?></td>
-                            <td><?php echo $result['bday']; ?></td>
+                            <td><?php echo $row['id']; ?></td>
+                            <td><?php echo $row['fname']; ?></td>
+                            <td><?php echo $row['email']; ?></td>
+                            <td><?php echo $row['bday']; ?></td>
                             <td>
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProductModal<?php echo $result['id']; ?>"><i class="fas fa-edit"></i></button>
-                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProductModal<?php echo $result['id']; ?>"><i class="fas fa-trash-alt"></i></button>
-                            </td>
+                               
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCustomerModal<?php echo $row['id']; ?>"><i class="fas fa-edit"></i></button>
+           
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProductModal<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></button>
+
+                        </td>
                         </tr>
-
-        <!-- Edit Product Modal -->
-        <div class="modal fade" id="editProductModal<?php echo $result['id']; ?>" tabindex="-1" aria-labelledby="editProductModalLabel<?php echo $result['id']; ?>" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editProductModalLabel<?php echo $result['id']; ?>">Edit Admin Profile</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Edit Product Form -->
-                        <form action="backend_account/edit_account.php" method="POST">
-                            <!-- Input fields for editing product details -->
+ <!-- Edit Customer Modal -->
+<div class="modal fade" id="editCustomerModal<?php echo $row['id']; ?>" tabindex="-1" aria-labelledby="editCustomerModalLabel<?php echo $row['id']; ?>" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCustomerModalLabel<?php echo $row['id']; ?>">Edit Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Edit Customer Form -->
+                <form action="backend_customer/edit_account.php" method="POST" enctype="multipart/form-data">
+                    <!-- Input fields for editing customer details -->
+                    <div class="row">
+                        <div class="col-sm-4">
                             <div class="mb-3">
-            <label for="editfullname<?php echo $result['id']; ?>" class="form-label">Full Name</label>
-            <input type="text" class="form-control" id="editfname<?php echo $result['id']; ?>" name="fname" value="<?php echo $result['fullname']; ?>" required>
-           
-            <label for="editemail<?php echo $result['id']; ?>" class="form-label">Email</label>
-            <input type="email" class="form-control" id="editemail<?php echo $result['id']; ?>" name="email" value="<?php echo $result['email']; ?>" required>
-           
-            <label for="editbday<?php echo $result['id']; ?>" class="form-label">Birth Day</label>
-            <input type="date" class="form-control" id="edituname<?php echo $result['id']; ?>" name="uname" value="<?php echo $result['bday']; ?>" required>
-           
-
-            <label for="edituname<?php echo $result['id']; ?>" class="form-label">Username</label>
-            <input type="text" class="form-control" id="edituname<?php echo $result['id']; ?>" name="uname" value="<?php echo $result['uname']; ?>" required>
-           
-            
-            <label for="editpassword<?php echo $result['id']; ?>" class="form-label">Password</label>
-            <input type="password" class="form-control" id="editpassword<?php echo $result['id']; ?>" name="password" value="<?php echo $result['password']; ?>" required>
-   
-            
-
-          <!--  <label for="editImage<?php echo $row['id']; ?>" class="form-label">Image</label>
-            <input type="file" class="form-control" id="editImage<?php echo $row['id']; ?>" name="image" value="<?php echo $row['image_path']; ?>" >
-            -->
-            
+                                <label for="editfname<?php echo $row['id']; ?>" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="editfname<?php echo $row['id']; ?>" name="fname" value="<?php echo $row['fname']; ?>" required>
                             </div>
-                            <!-- Add more input fields for other details if needed -->
-
-                            <input type="hidden" name="productID" value="<?php echo $result['id']; ?>">
-
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </form>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="mb-3">
+                                <label for="editmname<?php echo $row['id']; ?>" class="form-label">Middle Name</label>
+                                <input type="text" class="form-control" id="editmname<?php echo $row['id']; ?>" name="mname" value="<?php echo $row['mname']; ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="mb-3">
+                                <label for="editlname<?php echo $row['id']; ?>" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="editlname<?php echo $row['id']; ?>" name="lname" value="<?php echo $row['lname']; ?>" required>
+                            </div>
+                        </div>
                     </div>
-                </div>
+
+                    <div class="mb-3">
+                        <label for="editbday<?php echo $row['id']; ?>" class="form-label">Birth Day</label>
+                        <input type="date" class="form-control" id="editbday<?php echo $row['id']; ?>" name="bday" value="<?php echo $row['bday']; ?>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editImage<?php echo $row['id']; ?>" class="form-label">Profile Image</label>
+                        <input type="file" class="form-control" id="editImage<?php echo $row['id']; ?>" name="image">
+                        <input type="hidden" class="form-control" id="currentImagePath" name="currentImagePath" value="<?php echo $row['image']; ?>">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="mb-3">
+                                <label for="editregion<?php echo $row['id']; ?>" class="form-label">Region</label>
+                                <input type="text" class="form-control" id="editregion<?php echo $row['id']; ?>" name="region" value="<?php echo $row['region']; ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="mb-3">
+                                <label for="editprovince<?php echo $row['id']; ?>" class="form-label">Province</label>
+                                <input type="text" class="form-control" id="editprovince<?php echo $row['id']; ?>" name="province" value="<?php echo $row['province']; ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="mb-3">
+                                <label for="editcity<?php echo $row['id']; ?>" class="form-label">City</label>
+                                <input type="text" class="form-control" id="editcity<?php echo $row['id']; ?>" name="city" value="<?php echo $row['city']; ?>" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label for="editstreet<?php echo $row['id']; ?>" class="form-label">Street</label>
+                                <input type="text" class="form-control" id="editstreet<?php echo $row['id']; ?>" name="street" value="<?php echo $row['street']; ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label for="editzipcode<?php echo $row['id']; ?>" class="form-label">Zip Code</label>
+                                <input type="text" class="form-control" id="editzipcode<?php echo $row['id']; ?>" name="zipcode" value="<?php echo $row['zipcode']; ?>" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editemail<?php echo $row['id']; ?>" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editemail<?php echo $row['id']; ?>" name="email" value="<?php echo $row['email']; ?>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edituname<?php echo $row['id']; ?>" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="edituname<?php echo $row['id']; ?>" name="uname" value="<?php echo $row['uname']; ?>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editpassword<?php echo $row['id']; ?>" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="editpassword<?php echo $row['id']; ?>" name="password" value="<?php echo $row['password']; ?>" required>
+                    </div>
+
+                    <!-- Hidden input field to store customer ID -->
+                    <input type="hidden" name="customerId" value="<?php echo $row['id']; ?>">
+
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
             </div>
         </div>
+    </div>
+</div>
+
 
         <!-- Delete Product Modal -->
         <div class="modal fade" id="deleteProductModal<?php echo $row['id']; ?>" tabindex="-1" aria-labelledby="deleteProductModalLabel<?php echo $row['id']; ?>" aria-hidden="true">
@@ -133,7 +190,7 @@
                     <div class="modal-body">
                         <!-- Delete Product Form -->
                         <p>Are you sure you want to delete this account?</p>
-                        <form action="backend_account/delete_account.php" method="POST">
+                        <form action="backend_customer/delete_account.php" method="POST">
                             <input type="hidden" name="productID" value="<?php echo $row['id']; ?>">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
@@ -156,30 +213,83 @@
         </div>
     </main>
 
-    <!-- Add Product Modal -->
-    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <!-- Add Product Modal -->
+        <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addProductModalLabel">Add Admin Account</h5>
+                    <h5 class="modal-title" id="addProductModalLabel">Add Customer</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Add Product Form -->
-                    <form action="backend_account/add_account.php" method="POST"  enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="productName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="productName" name="fname" required>
+                    <form action="backend_customer/add_account.php" method="POST"  enctype="multipart/form-data">
+                    <div class="row">
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="fname" required>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="middleName" class="form-label">Middle Name</label>
+                    <input type="text" class="form-control" id="middleName" name="mname" required>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" name="lname" required>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+                            <label for="genre" class="form-label">Birth Day</label>
+                            <input type="date" class="form-control" id="bday" name="bday" required>
                         </div>
                         <div class="mb-3">
-                            <label for="productName" class="form-label">Middle Name</label>
-                            <input type="text" class="form-control" id="productName" name="mname" required>
+                            <label for="pfp" class="form-label">Profile Image</label>
+                            <input type="file" class="form-control" id="image" name="image" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="productName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="productName" name="lname" required>
-                        </div>
-                        
+        <div class="row">
+
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">Region</label>
+                    <input type="text" class="form-control" id="region" name="region" required>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="middleName" class="form-label">Province</label>
+                    <input type="text" class="form-control" id="province" name="province" required>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" name="city" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-6">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">Street</label>
+                    <input type="text" class="form-control" id="street" name="street" required>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="mb-3">
+                    <label for="middleName" class="form-label">Zip Code</label>
+                    <input type="text" class="form-control" id="zipcode" name="zipcode" required>
+                </div>
+            </div>
+        </div>
+
                         <div class="mb-3">
                             <label for="genre" class="form-label">Username</label>
                             <input type="text" class="form-control" id="uname" name="uname" required>
@@ -192,13 +302,6 @@
                             <label for="developer" class="form-label">Password</label>
                             <input type="password" class="form-control" id="developer" name="password" required>
                         </div>
-                        <div class="mb-3">
-    <label for="role" class="form-label">Role</label>
-    <select class="form-select" id="role" name="role" required>
-        <option value="admin">Admin</option>
-        <option value="staff">Staff</option>
-    </select>
-</div>
 
                         <button type="submit" class="btn btn-primary">Add Account</button>
                     </form>
@@ -206,7 +309,8 @@
             </div>
         </div>
     </div>
-   
+
+
     <footer class="footer">
         <div class="container-fluid">
             <div class="row text-muted">
