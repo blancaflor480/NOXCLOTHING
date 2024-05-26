@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     // Execute the query
                     if ($stmt->execute()) {
-                        echo '<script>alert("Customer added successfully"); window.location.href = "../customers.php";</script>';
+                        echo '<script>alert("Customer added successfully"); window.location.href = "../customer.php";</script>';
                     } else {
                         echo "Error: " . $stmt->error;
                     }

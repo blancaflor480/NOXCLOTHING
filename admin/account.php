@@ -102,6 +102,9 @@
                     </div>
                     <div class="modal-body">
                         <!-- Edit Product Form -->
+                        <div class="text-center mb-3">
+                    <img src="uploads/<?php echo $row['image']; ?>" alt="User Image" class="img-thumbnail" style="max-width: 150px;">
+                </div>
                         <form action="backend_account/edit_account.php" method="POST" enctype="multipart/form-data">
                             <!-- Input fields for editing product details -->
                             <div class="md-3">

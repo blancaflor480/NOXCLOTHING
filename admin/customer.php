@@ -44,10 +44,11 @@
                 <table id="dataTable" class="table table-hover table-striped table-bordered">
                 <thead>
                             <tr>
-                                <th>Account No.</th>
+                                <th>Profile</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Birthday</th>
+                                <th>Verified</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -61,10 +62,28 @@
                                 while($row = mysqli_fetch_assoc($meta)) {
                           ?>
        <tr>
-                            <td><?php echo $row['id']; ?></td>
+                            <td style="text-align: center;">
+    <?php if ($row['image'] != ""): ?>
+        <img src="uploads/<?php echo $row['image']; ?>" style="width: 80px; height: 80px;">
+    <?php else: ?>
+        <img src="uploads/default.jpg" style="width: 80px; height: 80px;">
+    <?php endif; ?>
+</td>
                             <td><?php echo $row['fname']; ?></td>
                             <td><?php echo $row['email']; ?></td>
                             <td><?php echo $row['bday']; ?></td>
+                            <td class="text-center">
+        <?php if ($row['email_verified'] == 1): ?>
+            <button class="btn btn-success" style="font-size: 0.8rem;">
+                <i class='bx bx-check-circle'></i> Verified
+            </button>
+        <?php else: ?>
+            <button class="btn btn-danger" style="font-size: 0.8rem;">
+                <i class='bx bx-x-circle'></i> Not Verified
+            </button>
+        <?php endif; ?>
+    </td>
+                            
                             <td>
                                
                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editCustomerModal<?php echo $row['id']; ?>"><i class="fas fa-edit"></i></button>
@@ -83,6 +102,12 @@
             </div>
             <div class="modal-body">
                 <!-- Edit Customer Form -->
+
+                <div class="text-center mb-3">
+                    <img src="uploads/<?php echo $row['image']; ?>" alt="User Image" class="img-thumbnail" style="max-width: 150px;">
+                </div>
+
+
                 <form action="backend_customer/edit_account.php" method="POST" enctype="multipart/form-data">
                     <!-- Input fields for editing customer details -->
                     <div class="row">

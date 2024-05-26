@@ -9,10 +9,12 @@
     <link rel="icon" href="images/main.png"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css">
     
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <!-- Include Alertify CSS for styling -->
    
     <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="css/style.css">
      
 </head>
