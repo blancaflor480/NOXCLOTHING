@@ -137,7 +137,6 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                     
                     <div class="row mt-2">
                       <div class="col-sm-6">   
-                      
                         <label for="editProductQuantity<?php echo $row['id']; ?>" class="form-label">Quantity</label>
                         <input type="text" class="form-control" id="editProductQuantity<?php echo $row['id']; ?>" name="editProductQuantity" value="<?php echo $row['quantity']; ?>" required>
                       </div>
