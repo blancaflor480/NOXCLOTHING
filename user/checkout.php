@@ -241,6 +241,10 @@ if ($result && $result->num_rows > 0) {
               <input type="radio" id="cashondelivery" class="form-check-input" name="paymentMethod">
               <label for="cashondelivery" id="form-label">Cash on delivery</label>
             </div>
+            <div class="form-check col-md-3">
+              <input type="radio" id="gcash" class="form-check-input" name="paymentMethod">
+              <label for="gcash" id="form-label">G-Cash</label>
+            </div>
           </div>
         </form>
       </div>
@@ -271,7 +275,8 @@ if ($result && $result->num_rows > 0) {
                     <td id="final-total">₱ <?php echo number_format($finalTotal, 2); ?></td>
                 </tr>
             </table>
-            <a href="checkout.php" class="checkout">Proceed to Checkout</a>
+            <center>
+            <a href="checkout.php" class="checkout" style= "color: white" , "background-color: black";>Checkout</a>
   </ul>       
     </div>
         </div>
@@ -279,8 +284,7 @@ if ($result && $result->num_rows > 0) {
     </div>
   </div>
 </section>
-  
-
+</center>
       <!-- Footer -->
     <footer class="footer">
       <div class="row">

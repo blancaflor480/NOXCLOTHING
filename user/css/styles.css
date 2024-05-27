@@ -1209,7 +1209,7 @@ th:last-child {
 
 .checkout {
   display: inline-block;
-  background-color: var(--green);
+  background-color:black;
   color: white;
   padding: 1rem;
   margin-top: 1rem;
