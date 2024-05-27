@@ -111,16 +111,20 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                         <label for="editProductName<?php echo $row['id']; ?>" class="form-label">Product Name</label>
                         <input type="text" class="form-control" id="editProductName<?php echo $row['id']; ?>" name="editProductName" value="<?php echo $row['name_item']; ?>" required>
                         
+                    <div class="row mt-2">
+                        <div class="col-sm-4">  
                         <label for="editProductColor<?php echo $row['id']; ?>" class="form-label">Color</label>
                         <input type="text" class="form-control" id="editProductColor<?php echo $row['id']; ?>" name="editProductColor" value="<?php echo $row['color']; ?>" required>
-                        
-                        <label for="editProductSize<?php echo $row['id']; ?>" class="form-label">Size</label>
+                      </div> 
+                      <div class="col-sm-4">  
+                      <label for="editProductSize<?php echo $row['id']; ?>" class="form-label">Size</label>
                         <select class="form-control" id="editProductSize<?php echo $row['id']; ?>" name="editProductSize" required>
                             <option value="small" <?php if($row['size'] == 'small') echo 'selected'; ?>>Small</option>
                             <option value="medium" <?php if($row['size'] == 'medium') echo 'selected'; ?>>Medium</option>
                             <option value="large" <?php if($row['size'] == 'large') echo 'selected'; ?>>Large</option>
                         </select>
-
+                     </div>
+                     <div class="col-sm-4">   
                         <label for="editProductCategory<?php echo $row['id']; ?>" class="form-label">Category</label>
                         <select class="form-select" id="editProductCategory<?php echo $row['id']; ?>" name="editProductCategory" required>
                             <option disabled>Select Here</option>
@@ -128,10 +132,16 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                             <option value="SHORTS" <?php if($row['category'] == 'SHORT') echo 'selected'; ?>>SHORTS</option>
                             <option value="JACKETS" <?php if($row['category'] == 'JACKET') echo 'selected'; ?>>JACKETS</option>
                         </select>
-                        
+                      </div>
+                      </div>
+                    
+                    <div class="row mt-2">
+                      <div class="col-sm-6">   
+                      
                         <label for="editProductQuantity<?php echo $row['id']; ?>" class="form-label">Quantity</label>
                         <input type="text" class="form-control" id="editProductQuantity<?php echo $row['id']; ?>" name="editProductQuantity" value="<?php echo $row['quantity']; ?>" required>
-                        
+                      </div>
+                      <div class="col-sm-6">   
                         <label for="editProductType<?php echo $row['id']; ?>" class="form-label">Type</label>
                         <select class="form-select" id="editProductType<?php echo $row['id']; ?>" name="editProductType" required>
                             <option disabled>Select Here</option>
@@ -139,7 +149,10 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                             <option value="female" <?php if($row['type'] == 'female') echo 'selected'; ?>>Female</option>
                             <option value="other" <?php if($row['type'] == 'other') echo 'selected'; ?>>Other</option>
                         </select>
-                        
+                      </div>
+                      </div>
+                      <div class="row mt-2">  
+                      <div class="col-sm-6">   
                         <label for="editProductManufacturer<?php echo $row['id']; ?>" class="form-label">Manufacturer</label>
                         <select class="form-select" id="editProductManufacturer<?php echo $row['id']; ?>" name="editProductManufacturer" required>
                             <option disabled>Select Here</option>
@@ -147,15 +160,17 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                             <option value="Dickies" <?php if($row['manufacturer'] == 'Dickies') echo 'selected'; ?>>Dickies</option>
                             <option value="UNIQLO" <?php if($row['manufacturer'] == 'UNIQLO') echo 'selected'; ?>>UNIQLO</option>
                         </select>
-                        
-                        <label for="editProductStatus<?php echo $row['id']; ?>" class="form-label">Status</label>
+                      </div>   
+                      <div class="col-sm-6">     
+                      <label for="editProductStatus<?php echo $row['id']; ?>" class="form-label">Status</label>
                         <select class="form-select" id="editProductStatus<?php echo $row['id']; ?>" name="editProductStatus" required>
                             <option disabled>Select Here</option>
                             <option value="Restock" <?php if($row['status'] == 'Restock') echo 'selected'; ?>>Restock</option>
                             <option value="Low Stock" <?php if($row['status'] == 'Low Stock') echo 'selected'; ?>>Low Stock</option>
                             <option value="Instock" <?php if($row['status'] == 'Instock') echo 'selected'; ?>>Instock</option>
                         </select>
-                        
+                      </div>
+                      </div>    
                      <label for="editDescription<?php echo $row['id']; ?>" class="form-label">Description</label>
                        <textarea class="form-control" id="editDescription<?php echo $row['id']; ?>" name="editDescription" required><?php echo $row['description']; ?></textarea>
 
@@ -234,11 +249,16 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                             <label for="productName" class="form-label">Product Name</label>
                             <input type="text" class="form-control" id="productName" name="productName" required>
                         </div>
+                        
+                    <div class="row">
+                        <div class="col-sm-4">
                         <div class="mb-3">
                             <label for="color" class="form-label">Color</label>
                             <input type="text" class="form-control" id="color" name="color" required>
                         </div>
+              </div>
                         <!--GAGAWIN SELECT ITO -->
+                        <div class="col-sm-4">
                         <div class="mb-3">
                           <label for="platform" class="form-label">Size</label>
                              <select class="form-select" id="size" name="size" required>
@@ -250,7 +270,9 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
         <!-- Add more options as needed -->
                            </select>
                        </div>
-
+              </div>
+    
+                 <div class="col-sm-4">
                         <div class="mb-3">
                             <label for="category" class="form-label">Category</label>
                             <select class="form-select" name="category">
@@ -260,13 +282,18 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                                   <option value="JACKETS">JACKETS</option>
                             </select>
                         </div>
-
+                    </div>
+                </div>
+                        
+                <div class="row">
+                   <div class="col-sm-6">    
                         <div class="mb-3">
                             <label for="publisher" class="form-label">Quantity</label>
                             <input type="number" class="form-control" id="quantity" name="quantity" required>
                         </div>
-
-                        <div class="mb-3">
+                    </div>
+                    <div class="col-sm-6">        
+                    <div class="mb-3">
                             <label for="release_date" class="form-label">type</label>
                                   <select class="form-select" name="type">
                                   <option disbaled>Select Here</option>
@@ -275,7 +302,11 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                                   <option value="other">Other</option>
                             </select>
                        </div>
-                        <div class="mb-3">
+    </div>
+    </div>
+    <div class="row">
+                    <div class="col-sm-6">        
+                       <div class="mb-3">
                             <label for="manufacture" class="form-label">Manufacturer</label>
                             <select class="form-select" name="manufacturer">
                                   <option disbaled>Select Here</option>
@@ -284,6 +315,8 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                                   <option value="UNIQLO">UNIQLO</option>
                             </select>
                         </div>
+    </div>
+           <div class="col-sm-6">         
                         <div class="mb-3">
                             <label for="manufacture" class="form-label">Status</label>
                             <select class="form-select" name="status">
@@ -293,7 +326,8 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                                   <option value="Instock">Instock</option>
                             </select>
                         </div>
-                        
+                    </div>
+    </div>   
                         <div class="mb-3">
         <label for="image" class="form-label">Image Product</label>
         <input type="file" class="form-control" name="image_front">
@@ -312,7 +346,12 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                             <label for="price" class="form-label">Price</label>
                             <input type="number" class="form-control" id="price" name="price" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add Product</button>
+                       
+                     <hr class="my-3 mt-1">
+                        <div class="text-center d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary">Add Product</button>&nbsp;
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      </div>
                     </form>
                 </div>
             </div>

@@ -26,7 +26,7 @@
    <main class="content px-3 py-2">
                 <div class="container-fluid">
                     <div class="mb-3">
-                        <h4>Admin Dashboard</h4>
+                        <h4>Dashboard</h4>
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-6 d-flex">
@@ -59,7 +59,7 @@
                            $numberofpending = 2;
                           }
                         ?>
-                        <div class="col-12 col-md-3 d-flex">
+                        <div class="col-12 col-md-3 d-flex" >
                            <div class="card flex-fill border-0">
                               <div class="card-body py-4">
                                 <div class="d-flex align-items-start">
@@ -132,15 +132,12 @@
                         </div>-->
                         <?php
                            $uname = $_SESSION['uname'];
-
-                           $query = mysqli_query($conn_String, "SELECT COUNT(id) AS numberofpending FROM orders ");
+                           $query = mysqli_query($conn_String, "SELECT COUNT(id) AS numberofcustomer FROM customer ");
                            $row = mysqli_fetch_assoc($query);
 
                            if (mysqli_num_rows($query) > 0) { 
-                            $numberofpending = $row['numberofpending'];
-                           } else {
-                           $numberofpending = 2;
-                          }
+                            $numberofcustomer = $row['numberofcustomer'];
+                           } 
                         ?>
                         <div class="col-12 col-md-3 d-flex">
                            <div class="card flex-fill border-0">
@@ -151,7 +148,7 @@
                                          Customer
                                      </h4>
                                     <h4 class="mb-2" style="font-weight: bold; color: darkred;">
-                                      <?php echo $numberofpending ?>
+                                      <?php echo $numberofcustomer ?>
                                     </h4>
                                    </div>
                                    <div class="ms-2" style="margin-top: 10px;">

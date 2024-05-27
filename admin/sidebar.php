@@ -39,7 +39,6 @@ $role  = $row['role'];
             <!-- Content For Sidebar -->
             <div class="h-100">
                 <div class="sidebar-logo">
-                    <!--<a href="dashboard.php"><img src="images/main-logo.png" style="width: 213px"></a>-->
                     
                     <a href="dashboard.php"><img src="images/main.png" style="width: 70px"><span style="color: white; ">NOX CLOTHING</span></a>
                     
@@ -63,27 +62,18 @@ $role  = $row['role'];
                             <li class="sidebar-item "  style="padding-left: 25px;">
                                 <a href="games.php" class="sidebar-link"><i class="fa-solid fa-scroll pe-2"></i> Items </a>
                             </li>
-                            <!--<li class="sidebar-item">
-                                <a href="#" class="sidebar-link">Page 2</a>
-                            </li>-->
-                        </ul>
+                            </ul>
                         <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item "style="padding-left: 25px;">
                                 <a href="payment.php" class="sidebar-link"><i class="fa-solid fa-scroll pe-2"></i> Payment</a>
                             </li>
-                            <!--<li class="sidebar-item">
-                                <a href="#" class="sidebar-link">Page 2</a>
-                            </li>-->
-                        </ul>
+                           </ul>
                        
                         <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item " style="padding-left: 25px;">
                                 <a href="orders.php" class="sidebar-link"><i class="fa-solid fa-scroll pe-2"></i> Orders</a>
                             </li>
-                            <!--<li class="sidebar-item">
-                                <a href="#" class="sidebar-link">Page 2</a>
-                            </li>-->
-                        </ul>
+                            </ul>
                     </li>
                     <a href="voucher.php" class="sidebar-link collapsed"><i class="fa-solid fa-scroll pe-2"></i>
                             Voucher
@@ -102,6 +92,12 @@ $role  = $row['role'];
                     </li>
                     <?php endif; ?>
                     
+                    <li class="sidebar-item">
+                        <a href="" class="sidebar-link collapsed"><i class="fa-solid fa-file pe-2"></i>
+                           Report
+                        </a>
+                    </li>
+
                     <li class="sidebar-item">
                         <a href="" class="sidebar-link collapsed"><i class="fa-solid fa-message pe-2"></i>
                            Complaint
@@ -198,7 +194,9 @@ if (mysqli_num_rows($query) > 0){
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
                              <div class="d-flex align-items-center"> <!-- Container for image and text -->
                           
-                            <img src="image/profile.jpg" class="avatar img-fluid rounded" alt="">
+                            <!--<img src="image/profile.jpg" class="avatar img-fluid rounded" alt="">-->
+                            <img src="<?php echo !empty($row['image']) ? 'uploads/' . $row['image'] : 'image/profile.jpg'; ?>" alt="Profile Image" class="avatar img-fluid rounded" style="max-width: 150px;">
+
                             <!--&nbsp;<p class="navbar-brand mb-0 me-2" style="font-size: 0.6rem">Logout</p>-->
                         </div>
                         </a>
@@ -208,9 +206,9 @@ if (mysqli_num_rows($query) > 0){
                             
                          
                             <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#profileModal">
-                               Profile
+                              <i class="bx bx-user"></i> Profile
                             </button>
-                                <a href="logout.php" class="dropdown-item">Log-out</a>
+                                <a href="logout.php" class="dropdown-item"><i class="bx bx-exit"></i>&nbsp;Log-out</a>
                             </div>
 
             

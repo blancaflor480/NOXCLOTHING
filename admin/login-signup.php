@@ -186,10 +186,7 @@ if(empty($errors)){
 				<div class="social-container">
 					<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
 					<a href="#" class="social"><i class="fab fa-google"></i></a>
-					<a href="#" class="social"><i class="fab fa-apple"></i></a>
-					<a href="#" class="social"><i class="fab fa-steam"></i></a>
-					<a href="#" class="social"><i class="fab fa-playstation"></i></a>
-				</div>
+					</div>
 				<?php echo $msg; ?>
 				
 			</form>
