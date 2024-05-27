@@ -174,7 +174,7 @@ if ($result && $result->num_rows > 0) {
       <div class="col-lg-8">
         <form novalidate>
           <h5 class="mb-3">Customer</h5>
-          <div class="row" style="background-color: aquamarine;">
+          <div class="row" style="background-color: white;">
             <div class="col-sm-6">
               <label for="firstname" id="form-label">First name</label>
               <input type="text" id="firstname" class="form-control">
@@ -194,7 +194,7 @@ if ($result && $result->num_rows > 0) {
           </div>
           
           <h5 class="mb-3 mt-2">Delivery Address</h5>
-          <div class="row" style="background-color: aquamarine;">
+          <div class="row" style="background-color: white;">
             <div class="col-md-3">
               <label for="region" id="form-label">Region</label>
               <input type="text" id="region" class="form-control">
@@ -222,7 +222,7 @@ if ($result && $result->num_rows > 0) {
           </div>
           
           <hr class="my-3">
-          <div class="row mt-2" style="background-color: aquamarine;">
+          <div class="row mt-2" style="background-color: white;">
             <h5 class="mb-3 mt-2">Voucher Code</h5>
             <div class="col-md-6 mt-2">
               <label for="voucher" id="form-label">Voucher Code</label>
@@ -231,7 +231,7 @@ if ($result && $result->num_rows > 0) {
           </div>
           
           <hr class="my-3">
-          <div class="row mt-2" style="background-color: aquamarine;">
+          <div class="row mt-2" style="background-color: white;">
             <h5 class="mb-3 mt-2">Payment Method</h5>
             <div class="form-check col-md-2">
               <input type="radio" id="creditcard" class="form-check-input" name="paymentMethod">
@@ -249,13 +249,29 @@ if ($result && $result->num_rows > 0) {
       <div class="col-lg-4">
         <div class="card" style="width: 100%;">
         <div class="card-header">
-    Order Summary
+   <h2> Order Summary </h2>
   </div>  
         <div class="card-body">
         <ul class="list-group list-group-flush">
-    <li class="list-group-item">An item</li>
-    <li class="list-group-item">A second item</li>
-    <li class="list-group-item">A third item</li>
+            <table>            
+                <tr>
+                    <td>Subtotal</td>
+                    <td id="total-price">₱ <?php echo number_format($totalPrice, 2); ?></td>
+                </tr>
+                <tr>
+                    <td>Items</td>
+                    <td id="total-items"><?php echo $totalItems; ?></td>
+                </tr>
+                <tr>
+                    <td>Discount</td>
+                    <td id="discount">₱ <?php echo number_format($discount, 2); ?></td>
+                </tr>
+                <tr>
+                    <td>Total Amount</td>
+                    <td id="final-total">₱ <?php echo number_format($finalTotal, 2); ?></td>
+                </tr>
+            </table>
+            <a href="checkout.php" class="checkout">Proceed to Checkout</a>
   </ul>       
     </div>
         </div>
@@ -264,6 +280,7 @@ if ($result && $result->num_rows > 0) {
   </div>
 </section>
   
+
       <!-- Footer -->
     <footer class="footer">
       <div class="row">
