@@ -1403,3 +1403,41 @@ th:last-child {
 .login-form form p a {
   color: dodgerblue;
 }
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+.radio-container {
+  margin-bottom: 10px;
+}
+.popup-1 {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  text-align: center;
+}
+.popup-1 p {
+  margin-bottom: 20px;
+}
+.btn-2 {
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn-2:hover:hover {
+  background-color: hsl(115, 100%, 35%);
+}
+.input-container {
+  margin-bottom: 20px;
+}

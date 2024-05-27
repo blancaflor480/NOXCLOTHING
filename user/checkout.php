@@ -3,9 +3,6 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        .radio-container {
-            margin-bottom: 10px;
-        }
         .popup {
             display: none;
             position: fixed;
@@ -22,7 +19,7 @@
         .popup p {
             margin-bottom: 20px;
         }
-        .btn {
+        .btn1 {
             padding: 10px 20px;
             background-color: black;
             color: white;
@@ -30,7 +27,7 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .btn:hover {
+        .btn1:hover {
             background-color: #0056b3;
         }
         .input-container {
