@@ -1,3 +1,43 @@
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .radio-container {
+            margin-bottom: 10px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            text-align: center;
+        }
+        .popup p {
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .input-container {
+            margin-bottom: 20px;
+        }
+    </style>
+
 <?php
 session_start();
 
@@ -233,18 +273,63 @@ if ($result && $result->num_rows > 0) {
           <hr class="my-3">
           <div class="row mt-2" style="background-color: white;">
             <h5 class="mb-3 mt-2">Payment Method</h5>
-            <div class="form-check col-md-2">
-              <input type="radio" id="creditcard" class="form-check-input" name="paymentMethod">
-              <label for="creditcard" id="form-label">Credit Card</label>
-            </div>
-            <div class="form-check col-md-3">
-              <input type="radio" id="cashondelivery" class="form-check-input" name="paymentMethod">
-              <label for="cashondelivery" id="form-label">Cash on delivery</label>
-            </div>
-            <div class="form-check col-md-3">
-              <input type="radio" id="gcash" class="form-check-input" name="paymentMethod">
-              <label for="gcash" id="form-label">G-Cash</label>
-            </div>
+
+                <div class="form-check col-md-3">
+        <input type="radio" id="creditcard" name="paymentMethod" value="Credit Card" onclick="showPopup('Credit Card')">
+          <label for="creditcard" id="form-label">Credit Card</label>
+    </div>
+    
+         <div class="form-check col-md-3">
+        <input type="radio" id="cashondelivery" name="paymentMethod" value="Cash on Delivery" onclick="showPopup('Cash on Delivery')">
+          <label for="cashondelivery" id="form-label">Cash on delivery</label>
+    </div>
+    
+         <div class="form-check col-md-4">
+        <input type="radio" id="gcash" name="paymentMethod" value="G-Cash" onclick="showPopup('G-Cash')">
+         <label for="gcash" id="form-label">G-Cash</label>
+    </div>
+
+
+    <div id="popup" class="popup">
+        <p id="popup-message"></p>
+        <div id="input-container" class="input-container"></div>
+        <button class="btn" onclick="closePopup()">Close</button>
+        <button class="btn" onclick="doneAction()" id="done-btn" style="display:none;">Done</button>
+    </div>
+
+    <script>
+        function showPopup(option) {
+            const popupMessage = document.getElementById('popup-message');
+            const inputContainer = document.getElementById('input-container');
+            const doneButton = document.getElementById('done-btn');
+
+            if (option === 'Credit Card') {
+                popupMessage.textContent = 'Credit Card Number:';
+                inputContainer.innerHTML = '<input type="text" placeholder="Enter Credit Card Number">';
+                doneButton.style.display = 'inline-block';
+            } else if (option === 'G-Cash') {
+                popupMessage.textContent = 'Enter Number:';
+                inputContainer.innerHTML = '<input type="text" placeholder="Enter G-Cash Number">';
+                doneButton.style.display = 'inline-block';
+            } else {
+                popupMessage.textContent = 'Checkout Complete!';
+                inputContainer.innerHTML = '';
+                doneButton.style.display = 'none';
+            }
+
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function doneAction() {
+            alert('Checkout Complete!');
+            closePopup();
+        }
+    </script>
+
           </div>
         </form>
       </div>
