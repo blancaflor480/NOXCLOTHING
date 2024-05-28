@@ -182,11 +182,12 @@ if ($result && $result->num_rows > 0) {
       <div class="card-body">
       <h2 class="md-3 text-left" style="margin: 8px; font-weight: bold;"><i class="fas fa-truck"></i> Delivery Address</h2>
       <div class="row mt-4">
-      <h5 class="col-5 mt-" style="margin: 8px; ">Customer: </h5>
-          <h5 class="col-5 mt-3" style="margin: 8px; ">Email: </h5>
-          <h5 class="col-5 mt-3" style="margin: 8px; ">Contact: </h5>
-          <h5 class="col-5 mt-3" style="margin: 8px; ">Address: </h5>
-          
+      <h5 class="col-5 mt-" style="margin: 8px; ">Customer: <?php echo htmlspecialchars($user['fname']); ?></h5>
+          <h5 class="col-5 mt-3" style="margin: 8px; ">Email: <?php echo htmlspecialchars($user['email']); ?></h5>
+          <h5 class="col-5 mt-3" style="margin: 8px; ">Contact: <?php echo htmlspecialchars($user['contactnumber']); ?></h5>
+          <h5 class="col-5 mt-3" style="margin: 8px; ">
+    Address: <?php echo htmlspecialchars($user['region'] . ' ' . $user['province'] . ' ' . $user['city'] . ' ' . $user['zipcode'] . ' ' . $user['barangay'] . ' ' . $user['street']); ?>
+</h5>
           </div>
   </div>
 </div>
@@ -306,7 +307,7 @@ if ($result && $result->num_rows > 0) {
         echo "<li style='text-align: center;'>";
         echo "<form action='checkout.php' method='post'>";
         echo "<button type='submit' class='btn btn-primary' style='background-color:#222831; border-color:#222831;
-        margin: 10px; width: 90px; height: 45px;'>Checkout</button>";
+        margin: 10px; width: 90px; height: 45px; font-size: 1.3rem'>Checkout</button>";
         echo "</form>";
         echo "<li>";
         
