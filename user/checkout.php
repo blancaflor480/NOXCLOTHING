@@ -241,67 +241,82 @@ if ($result && $result->num_rows > 0) {
       <!-- Order Summary Column -->
       <div class="col-lg-4 mt-5">
         <div class="card" style="width: 100%;">
-        <div class="card-header">
-   <h2> Order Summary </h2>
+        <div class="card-header" style="background-color: #222831;">
+   <h2 style="margin: 10px; font-weight: bold; color: white;" > Order Summary </h2>
   </div>  
         <div class="card-body">
         <ul class="list-group list-group-flush">
         <?php
-                // Gumawa ng query para sa order summary
-                $query = "SELECT addcart.*, products.price AS product_price FROM addcart INNER JOIN products ON addcart.products_id = products.id WHERE addcart.customer_id = $user_id";
-                $result = mysqli_query($conn, $query);
+    // Gumawa ng query para sa order summary
+    $query = "SELECT addcart.*, products.price AS product_price, products.name_item, products.discount
+    FROM addcart 
+    INNER JOIN products ON addcart.products_id = products.id WHERE addcart.customer_id = $user_id";
+    $result = mysqli_query($conn, $query);
 
-                // Variable initialization
-                $totalPrice = 0.00;
-                $totalItems = 0;
+    // Variable initialization
+    $totalPrice = 0.00;
+    $totalItems = 0;
 
-                if ($result && mysqli_num_rows($result) > 0) {
-                    // Loop through each item in the cart
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        // Display details of each item
-                        echo "<li>";
-                        echo "<p>Product: " . $row['name_item'] . "</p>";
-                        echo "<p>Quantity: " . $row['quantity'] . "</p>";
-                        echo "<p>Price: ₱" . number_format($row['product_price'], 2) . "</p>";
-                        echo "</li>";
+    if ($result && mysqli_num_rows($result) > 0) {
+        // Loop through each item in the cart
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Display details of each item
+            echo "<li class='list-group-item'>";
+            echo "<table>";
+            echo "<tr>";
+            echo "<td style='font-weight: bold;'>Product: </td>";
+            echo "<td>" . $row['name_item'] . "</td>";
+            echo "</tr>";
+            
+            
+            echo "<tr>";
+            echo "<td style='font-weight: bold;'>Subtotal: </td>";
+            echo "<td>₱" . number_format($row['product_price'], 2) . "</td>";
+            echo "</tr>";
 
-                        // Compute subtotal for each item
-                        $subtotal = $row['quantity'] * $row['product_price'];
-                        $totalPrice += $subtotal; // Add subtotal to total price
-                        $totalItems += $row['quantity']; // Increment total items count
-                    }
-                } else {
-                    echo "<li>No items in cart.</li>";
-                }
-                ?>
+            echo "<tr>";
+            echo "<td style='font-weight: bold;'>Discount: </td>";
+            echo "<td>₱" . number_format($row['discount'], 2) . "</td>";
+            echo "</tr>";
+        
+            echo "</table>";
+            echo "</li>";
 
+            // Compute subtotal for each item
+            $subtotal = $row['quantity'] * $row['product_price'];
+            $totalPrice += $subtotal; // Add subtotal to total price
+            $totalItems += $row['quantity']; // Increment total items count
+        }
 
-                <li class="list-group-item">
-                <table>
-                        <tr>
-                            <td>Subtotal</td>
-                            <td id="total-price">₱ <?php echo number_format($totalPrice, 2); ?></td>
-                        </tr>
-                        <tr>
-                            <td>Items</td>
-                            <td id="total-items"><?php echo $totalItems; ?></td>
-                        </tr>
-                        <!-- Assuming a 10% discount -->
-                        <?php
-                        $discountRate = 0.1;
-                        $discount = $totalPrice * $discountRate;
-                        $finalTotal = $totalPrice - $discount;
-                        ?>
-                        <tr>
-                            <td>Discount</td>
-                            <td id="discount">₱ <?php echo number_format($discount, 2); ?></td>
-                        </tr>
-                        <tr>
-                            <td>Total Amount</td>
-                            <td id="final-total">₱ <?php echo number_format($finalTotal, 2); ?></td>
-                        </tr>
-                    </table>
-                </li>
+        // Display total price and total items
+        echo "<li class='list-group-item'>";
+        echo "<table>";
+        
+        echo "<tr>";
+        echo "<td>Total Items:</td>";
+        echo "<td>$totalItems</td>";
+        echo "</tr>";
+        
+        echo "<td>Total Amount:</td>";
+        echo "<td>₱" . number_format($totalPrice, 2) . "</td>";
+        
+        
+        // Add checkout button
+        echo "</table>";
+        echo "<li style='text-align: center;'>";
+        echo "<form action='checkout.php' method='post'>";
+        echo "<button type='submit' class='btn btn-primary' style='background-color:#222831; border-color:#222831;
+        margin: 10px; width: 90px; height: 45px;'>Checkout</button>";
+        echo "</form>";
+        echo "<li>";
+        
+        echo "</li>";
+    } else {
+        echo "<li>No items in cart.</li>";
+    }
+?>
+
+                
             </ul>      
     </div>
         </div>
