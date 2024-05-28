@@ -112,7 +112,7 @@ if ($result && $result->num_rows > 0) {
         <ul class="d-flex" style="margin-top: 10px">
           <li><a href="#">About Us</a></li>
           <li><a href="#">FAQ</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="D:\xamp\htdocs\NOXCLOTHING\user\contact.php">Contact</a></li>
         </ul>
       </div>
     </div>
@@ -134,7 +134,7 @@ if ($result && $result->num_rows > 0) {
               <a href="#about" class="nav-link">About</a>
             </li>
             <li class="nav-item">
-              <a href="#contact" class="nav-link">Contact</a>
+              <a href="contact.php" class="nav-link">Contact</a>
             </li>
             
            
