@@ -1,39 +1,3 @@
-<style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            text-align: center;
-        }
-        .popup p {
-            margin-bottom: 20px;
-        }
-        .btn1 {
-            padding: 10px 20px;
-            background-color: black;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .btn1:hover {
-            background-color: #0056b3;
-        }
-        .input-container {
-            margin-bottom: 20px;
-        }
-    </style>
 
 <?php
 session_start();
@@ -76,6 +40,8 @@ $_SESSION['user_id'] = $user_id;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- Box icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
@@ -210,156 +176,133 @@ if ($result && $result->num_rows > 0) {
     <div class="row">
       <div class="col-lg-8">
         <form novalidate>
-          <h5 class="mb-3">Customer</h5>
-          <div class="row" style="background-color: white;">
-            <div class="col-sm-6">
-              <label for="firstname" id="form-label">First name</label>
-              <input type="text" id="firstname" class="form-control">
-            </div>
-            <div class="col-sm-6">
-              <label for="lastname" id="form-label">Last name</label>
-              <input type="text" id="lastname" class="form-control">
-            </div>
-            <div class="col-6 mt-2">
-              <label for="email" id="form-label">Email</label>
-              <input type="text" id="email" class="form-control">
-            </div>
-            <div class="col-6 mt-2">
-              <label for="contactnumber" id="form-label">Contact number</label>
-              <input type="text" id="contactnumber" class="form-control">
-            </div>
-          </div>
+         
+      <div class="card mt-5">
           
-          <h5 class="mb-3 mt-2">Delivery Address</h5>
-          <div class="row" style="background-color: white;">
-            <div class="col-md-3">
-              <label for="region" id="form-label">Region</label>
-              <input type="text" id="region" class="form-control">
-            </div>
-            <div class="col-md-3">
-              <label for="province" id="form-label">Province</label>
-              <input type="text" id="province" class="form-control">
-            </div>
-            <div class="col-md-3">
-              <label for="city" id="form-label">City</label>
-              <input type="text" id="city" class="form-control">
-            </div>
-            <div class="col-md-3">
-              <label for="postalcode" id="form-label">Postal Code</label>
-              <input type="text" id="postalcode" class="form-control">
-            </div>
-            <div class="col-md-6 mt-2">
-              <label for="barangay" id="form-label">Barangay</label>
-              <input type="text" id="barangay" class="form-control">
-            </div>
-            <div class="col-md-6 mt-2">
-              <label for="street" id="form-label">Street</label>
-              <input type="text" id="street" class="form-control">
-            </div>
-          </div>
+      <div class="card-body">
+      <h2 class="md-3 text-left" style="margin: 8px; font-weight: bold;"><i class="fas fa-truck"></i> Delivery Address</h2>
+      <div class="row mt-4">
+      <h5 class="col-5 mt-" style="margin: 8px; ">Customer: </h5>
+          <h5 class="col-5 mt-3" style="margin: 8px; ">Email: </h5>
+          <h5 class="col-5 mt-3" style="margin: 8px; ">Contact: </h5>
+          <h5 class="col-5 mt-3" style="margin: 8px; ">Address: </h5>
           
-          <hr class="my-3">
-          <div class="row mt-2" style="background-color: white;">
-            <h5 class="mb-3 mt-2">Voucher Code</h5>
-            <div class="col-md-6 mt-2">
-              <label for="voucher" id="form-label">Voucher Code</label>
-              <input type="text" id="voucher" class="form-control">
-            </div>
           </div>
+  </div>
+</div>
           
-          <hr class="my-3">
-          <div class="row mt-2" style="background-color: white;">
-            <h5 class="mb-3 mt-2">Payment Method</h5>
+<div class="card mt-3">
+        <div class="card-body">
+            <div class="row mt-2" style="background-color: white;">
+                <div class="col-lg-9 mt-2">
+                    <label for="voucher" id="form-label" style="margin: 8px; font-weight: bold;">
+                        <h2 style="font-weight: bold;"><i class="fa fa-ticket" aria-hidden="true"></i> Voucher Code</h2>
+                    </label>
+                    <div class="input-group mt-2" style="margin: 8px;">
+                        <input type="text" id="voucher" class="form-control pd-3" placeholder="Enter your code">
+                        <button class="btn btn-primary btn-redeem" style="height: 45px;">Redeem</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>          
 
-                <div class="form-check col-md-3">
+
+<div class="card mt-3">
+  <div class="card-body">
+  
+  <div class="row mt-2" style="background-color: white;">
+    <h2 style="margin: 8px; font-weight: bold;"><i class="fas fa-receipt"></i> Payment Methods</h2>
+                <div class="form-check col-md-3 mt-3">
         <input type="radio" id="creditcard" name="paymentMethod" value="Credit Card" onclick="showPopup('Credit Card')">
           <label for="creditcard" id="form-label">Credit Card</label>
     </div>
     
-         <div class="form-check col-md-3">
+         <div class="form-check col-md-3 mt-3">
         <input type="radio" id="cashondelivery" name="paymentMethod" value="Cash on Delivery" onclick="showPopup('Cash on Delivery')">
           <label for="cashondelivery" id="form-label">Cash on delivery</label>
     </div>
     
-         <div class="form-check col-md-4">
+         <div class="form-check col-md-4 mt-3 mb-3">
         <input type="radio" id="gcash" name="paymentMethod" value="G-Cash" onclick="showPopup('G-Cash')">
          <label for="gcash" id="form-label">G-Cash</label>
     </div>
 
+</div>
+</div>
 
-    <div id="popup" class="popup">
-        <p id="popup-message"></p>
-        <div id="input-container" class="input-container"></div>
-        <button class="btn" onclick="closePopup()">Close</button>
-        <button class="btn" onclick="doneAction()" id="done-btn" style="display:none;">Done</button>
-    </div>
 
-    <script>
-        function showPopup(option) {
-            const popupMessage = document.getElementById('popup-message');
-            const inputContainer = document.getElementById('input-container');
-            const doneButton = document.getElementById('done-btn');
-
-            if (option === 'Credit Card') {
-                popupMessage.textContent = 'Credit Card Number:';
-                inputContainer.innerHTML = '<input type="text" placeholder="Enter Credit Card Number">';
-                doneButton.style.display = 'inline-block';
-            } else if (option === 'G-Cash') {
-                popupMessage.textContent = 'Enter Number:';
-                inputContainer.innerHTML = '<input type="text" placeholder="Enter G-Cash Number">';
-                doneButton.style.display = 'inline-block';
-            } else {
-                popupMessage.textContent = 'Checkout Complete!';
-                inputContainer.innerHTML = '';
-                doneButton.style.display = 'none';
-            }
-
-            document.getElementById('popup').style.display = 'block';
-        }
-
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
-
-        function doneAction() {
-            alert('Checkout Complete!');
-            closePopup();
-        }
-    </script>
+    
 
           </div>
         </form>
       </div>
       
       <!-- Order Summary Column -->
-      <div class="col-lg-4">
+      <div class="col-lg-4 mt-5">
         <div class="card" style="width: 100%;">
         <div class="card-header">
    <h2> Order Summary </h2>
   </div>  
         <div class="card-body">
         <ul class="list-group list-group-flush">
-            <table>            
-                <tr>
-                    <td>Subtotal</td>
-                    <td id="total-price">₱ <?php echo number_format($totalPrice, 2); ?></td>
-                </tr>
-                <tr>
-                    <td>Items</td>
-                    <td id="total-items"><?php echo $totalItems; ?></td>
-                </tr>
-                <tr>
-                    <td>Discount</td>
-                    <td id="discount">₱ <?php echo number_format($discount, 2); ?></td>
-                </tr>
-                <tr>
-                    <td>Total Amount</td>
-                    <td id="final-total">₱ <?php echo number_format($finalTotal, 2); ?></td>
-                </tr>
-            </table>
-            <center>
-            <a href="checkout.php" class="checkout" style= "color: white" , "background-color: black";>Checkout</a>
-  </ul>       
+        <?php
+                // Gumawa ng query para sa order summary
+                $query = "SELECT addcart.*, products.price AS product_price FROM addcart INNER JOIN products ON addcart.products_id = products.id WHERE addcart.customer_id = $user_id";
+                $result = mysqli_query($conn, $query);
+
+                // Variable initialization
+                $totalPrice = 0.00;
+                $totalItems = 0;
+
+                if ($result && mysqli_num_rows($result) > 0) {
+                    // Loop through each item in the cart
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        // Display details of each item
+                        echo "<li>";
+                        echo "<p>Product: " . $row['name_item'] . "</p>";
+                        echo "<p>Quantity: " . $row['quantity'] . "</p>";
+                        echo "<p>Price: ₱" . number_format($row['product_price'], 2) . "</p>";
+                        echo "</li>";
+
+                        // Compute subtotal for each item
+                        $subtotal = $row['quantity'] * $row['product_price'];
+                        $totalPrice += $subtotal; // Add subtotal to total price
+                        $totalItems += $row['quantity']; // Increment total items count
+                    }
+                } else {
+                    echo "<li>No items in cart.</li>";
+                }
+                ?>
+
+
+                <li class="list-group-item">
+                <table>
+                        <tr>
+                            <td>Subtotal</td>
+                            <td id="total-price">₱ <?php echo number_format($totalPrice, 2); ?></td>
+                        </tr>
+                        <tr>
+                            <td>Items</td>
+                            <td id="total-items"><?php echo $totalItems; ?></td>
+                        </tr>
+                        <!-- Assuming a 10% discount -->
+                        <?php
+                        $discountRate = 0.1;
+                        $discount = $totalPrice * $discountRate;
+                        $finalTotal = $totalPrice - $discount;
+                        ?>
+                        <tr>
+                            <td>Discount</td>
+                            <td id="discount">₱ <?php echo number_format($discount, 2); ?></td>
+                        </tr>
+                        <tr>
+                            <td>Total Amount</td>
+                            <td id="final-total">₱ <?php echo number_format($finalTotal, 2); ?></td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>      
     </div>
         </div>
       </div>
