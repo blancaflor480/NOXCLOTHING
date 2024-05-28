@@ -88,7 +88,7 @@
         </div>
   <center>
   &nbsp;
-        <h1>About Us</h2>
+        <h1>Connect with us</h1>
 </center>
 </body>
 </html>
