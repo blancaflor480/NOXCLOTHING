@@ -1,38 +1,90 @@
-
 <?php
 session_start();
 
-// Check kung may session na itinakda para sa 'email'
+// Check if the user is logged in
 if (!isset($_SESSION['email'])) {
     header("Location: index.php?error=Login%20First");
     exit();
 }
 
-// Include ng database connection
+// Include the database connection file
 include 'dbconn/conn.php';
 
-// Kunin ang 'email' mula sa session
+// Get the email from the session
 $email = $_SESSION['email'];
 
-// Subukan kung mayroong resulta sa query
+// Prepare a statement to fetch user details
 $stmt = $conn->prepare("SELECT * FROM customer WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Siguraduhing may resulta bago kunin ang data
+// Check if user details were found
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
-    $user_id = $user['id']; // Kunin ang 'id' ng user
+    $user_id = $user['id']; // Get the user ID
 } else {
-    // Kung wala, i-redirect sa login page
     header("Location: login-signup.php?error=Login%20First");
     exit();
 }
 
-// I-set ang 'user_id' sa session para magamit sa ibang mga pahina
-$_SESSION['user_id'] = $user_id;
+// Process the checkout form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Fetch the voucher code if provided
+    $voucher_code = isset($_POST['voucher']) ? $_POST['voucher'] : null;
+    
+    $payment_method = $_POST['paymentMethod'];
+    
+    // Prepare the query to get the cart items for the user
+    $query = "SELECT addcart.*, products.price AS product_price, products.discount
+              FROM addcart
+              INNER JOIN products ON addcart.products_id = products.id
+              WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Variables to calculate total amount
+    $total_amount = 0.00;
+    $order_date = date('Y-m-d');
+    
+    // Insert each cart item into the orders table
+    while ($row = $result->fetch_assoc()) {
+        $addcart_id = $row['id'];
+        $products_id = $row['products_id'];
+        $quantity = $row['quantity'];
+        $color = $row['color'];
+        $size = $row['size'];
+        $price = $row['product_price'];
+        $discount = $row['discount'];
+        
+        // Calculate the total amount for this item
+        $item_total = ($price - $discount) * $quantity;
+        $total_amount += $item_total;
+        
+        // Insert into the orders table
+        $stmt = $conn->prepare("INSERT INTO orders (customer_id, products_id, addcart_id, innovoice, price, quantity, color, size, voucher_id, status, total_amount, order_date)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?, ?)");
+        $innovoice = rand(1000, 9999); // Generate a random invoice number
+        $voucher_id = null; // Assume no voucher ID, you can handle voucher application separately
+        
+        // Bind parameters and execute the statement
+        $stmt->bind_param("iiiidississ", $user_id, $products_id, $addcart_id, $innovoice, $price, $quantity, $color, $size, $voucher_id, $total_amount, $order_date);
+        $stmt->execute();
+    }
+
+    // After inserting the orders, update the status of the cart items to 'Paid'
+    $stmt = $conn->prepare("UPDATE addcart SET status = 'Paid' WHERE customer_id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+
+    // Redirect to a success page or order confirmation page
+    header("Location: order_confirmation.php");
+    exit();
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -112,7 +164,7 @@ if ($result && $result->num_rows > 0) {
         <ul class="d-flex" style="margin-top: 10px">
           <li><a href="#">About Us</a></li>
           <li><a href="#">FAQ</a></li>
-          <li><a href="D:\xamp\htdocs\NOXCLOTHING\user\contact.php">Contact</a></li>
+          <li><a href="#">Contact</a></li>
         </ul>
       </div>
     </div>
@@ -134,7 +186,7 @@ if ($result && $result->num_rows > 0) {
               <a href="#about" class="nav-link">About</a>
             </li>
             <li class="nav-item">
-              <a href="contact.php" class="nav-link">Contact</a>
+              <a href="#contact" class="nav-link">Contact</a>
             </li>
             
            
@@ -177,16 +229,16 @@ if ($result && $result->num_rows > 0) {
       <div class="col-lg-8">
         <form novalidate>
          
-      <div class="card mt-5">
+      <div class="card mt-5" style="background-color: #FEF9E7;">
           
       <div class="card-body">
-      <h2 class="md-3 text-left" style="margin: 8px; font-weight: bold;"><i class="fas fa-truck"></i> Delivery Address</h2>
+      <h2 class="md-3 text-left" style="margin: 8px; font-weight: bold;"><i class="fas fa-map-marker-alt"></i> Delivery Address</h2>
       <div class="row mt-4">
-      <h5 class="col-5 mt-" style="margin: 8px; ">Customer: <?php echo htmlspecialchars($user['fname']); ?></h5>
-          <h5 class="col-5 mt-3" style="margin: 8px; ">Email: <?php echo htmlspecialchars($user['email']); ?></h5>
-          <h5 class="col-5 mt-3" style="margin: 8px; ">Contact: <?php echo htmlspecialchars($user['contactnumber']); ?></h5>
+      <h5 class="col-5 mt-" style="margin: 8px; "><b>Customer:</b> <?php echo htmlspecialchars($user['fname']. ' ' . $user['mname'] . ' ' . $user['lname']); ?></h5>
+          <h5 class="col-5 mt-3" style="margin: 8px; "><b>Email:</b> <?php echo htmlspecialchars($user['email']); ?></h5>
+          <h5 class="col-5 mt-3" style="margin: 8px; "><b>Contact:</b> <?php echo htmlspecialchars($user['contactnumber']); ?></h5>
           <h5 class="col-5 mt-3" style="margin: 8px; ">
-    Address: <?php echo htmlspecialchars($user['region'] . ' ' . $user['province'] . ' ' . $user['city'] . ' ' . $user['zipcode'] . ' ' . $user['barangay'] . ' ' . $user['street']); ?>
+          <b>Address:</b> <?php echo htmlspecialchars($user['region'] . ', ' . $user['province'] . ', ' . $user['city'] . ', ' . $user['zipcode'] . ', ' . $user['barangay'] . ' ' . $user['street']); ?>
 </h5>
           </div>
   </div>
@@ -209,33 +261,70 @@ if ($result && $result->num_rows > 0) {
     </div>          
 
 
-<div class="card mt-3">
-  <div class="card-body">
-  
-  <div class="row mt-2" style="background-color: white;">
-    <h2 style="margin: 8px; font-weight: bold;"><i class="fas fa-receipt"></i> Payment Methods</h2>
-                <div class="form-check col-md-3 mt-3">
-        <input type="radio" id="creditcard" name="paymentMethod" value="Credit Card" onclick="showPopup('Credit Card')">
-          <label for="creditcard" id="form-label">Credit Card</label>
-    </div>
-    
-         <div class="form-check col-md-3 mt-3">
-        <input type="radio" id="cashondelivery" name="paymentMethod" value="Cash on Delivery" onclick="showPopup('Cash on Delivery')">
-          <label for="cashondelivery" id="form-label">Cash on delivery</label>
-    </div>
-    
-         <div class="form-check col-md-4 mt-3 mb-3">
-        <input type="radio" id="gcash" name="paymentMethod" value="G-Cash" onclick="showPopup('G-Cash')">
-         <label for="gcash" id="form-label">G-Cash</label>
-    </div>
+    <div class="card mt-3">
+                        <div class="card-body">
+                            <div class="row mt-2" style="background-color: white;">
+                                <h2 style="margin: 8px; font-weight: bold;"><i class="fas fa-receipt"></i> Payment Methods</h2>
+                                <div class="form-check col-md-3 mt-3">
+                                    <input type="radio" id="creditcard" name="paymentMethod" value="Credit Card" onclick="showPopup('Credit Card')">
+                                    <label for="creditcard" id="form-label">Credit Card</label>
+                                </div>
+                                <div class="form-check col-md-3 mt-3">
+                                    <input type="radio" id="cashondelivery" name="paymentMethod" value="Cash on Delivery" onclick="showPopup('Cash on Delivery')">
+                                    <label for="cashondelivery" id="form-label">Cash on delivery</label>
+                                </div>
+                                <div class="form-check col-md-4 mt-3 mb-3">
+                                    <input type="radio" id="gcash" name="paymentMethod" value="G-Cash" onclick="showPopup('G-Cash')">
+                                    <label for="gcash" id="form-label">G-Cash</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="creditCardInput" class="card mt-3" style="display: none;">
+                        <div class="card-body">
+                            <h4 class="text-left mb-3">CREDIT CARD DETAILS</h4>
+                            <div class="row mt-4">
+                                <div class="col-lg-6 mt-2">
+                                    <div class="form-floating">
+                                        <input type="number" id="creditcardnumber" style="height: 45px;" name="creditcardnumber" class="form-control" placeholder="Credit Card Number">
+                                        <label for="creditcardnumber" style="font-size: 1.2rem;">Credit Card Number</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mt-2">
+                                    <div class="form-floating">
+                                        <input type="month" id="expirationdate" name="expirationdate" style="height: 45px;" class="form-control" placeholder="Expiration Date">
+                                        <label for="expirationdate">Expiration Date</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mt-2">
+                                    <div class="form-floating">
+                                        <input type="number" id="cvv" name="cvv" class="form-control" style="height: 45px;" placeholder="CVV">
+                                        <label for="cvv" style="font-size: 1.2rem;">CVV</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-</div>
-</div>
-
-
-    
-
-          </div>
+                    <div id="gcashInput" class="card mt-3" style="display: none;">
+                        <div class="card-body">
+                            <h4 class="text-left mb-3">GCASH DETAILS</h4>
+                            <div class="row mt-4">
+                                <div class="col-lg-6 mt-2">
+                                    <div class="form-floating">
+                                        <input type="number" id="gcashNumber" name="gcashNumber" style="height: 45px;" class="form-control" placeholder="GCash Number">
+                                        <label for="gcashNumber" style="font-size: 1.2rem;">GCash Number</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 mt-2">
+                                    <div class="form-floating">
+                                        <input type="text" id="gcashName" name="gcashName" style="height: 45px;" class="form-control" placeholder="Account Name">
+                                        <label for="gcashName" style="font-size: 1.2rem;">Account Name</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
         </form>
       </div>
       
@@ -266,7 +355,7 @@ if ($result && $result->num_rows > 0) {
             echo "<table>";
             echo "<tr>";
             echo "<td style='font-weight: bold;'>Product: </td>";
-            echo "<td>" . $row['name_item'] . "</td>";
+            echo "<td> x". $row['quantity'] ." ". $row['name_item'] . "</td>";
             echo "</tr>";
             
             
@@ -353,7 +442,20 @@ if ($result && $result->num_rows > 0) {
       </div>
     </footer>
 
-  
+    <script>
+    function showPopup(paymentMethod) {
+        // Hide both input sections initially
+        document.getElementById('creditCardInput').style.display = 'none';
+        document.getElementById('gcashInput').style.display = 'none';
+
+        // Show the relevant input section based on the selected payment method
+        if (paymentMethod === 'Credit Card') {
+            document.getElementById('creditCardInput').style.display = 'block';
+        } else if (paymentMethod === 'G-Cash') {
+            document.getElementById('gcashInput').style.display = 'block';
+        }
+    }
+</script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     var addToWishlistButtons = document.querySelectorAll(".add-to-wishlist");
