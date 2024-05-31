@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2024 at 09:02 AM
+-- Generation Time: May 31, 2024 at 09:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,6 +39,17 @@ CREATE TABLE `addcart` (
   `datetime` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `addcart`
+--
+
+INSERT INTO `addcart` (`id`, `customer_id`, `wishlist_id`, `products_id`, `quantity`, `size`, `price`, `status`, `datetime`) VALUES
+(6, 3, NULL, 5, 1, '', 299.00, '', '2024-05-27 13:59:33'),
+(7, 3, NULL, 4, 1, '', 599.00, '', '2024-05-27 13:59:58'),
+(14, 1, NULL, 6, 1, '', 199.00, '', '2024-05-29 12:56:53'),
+(15, 1, NULL, 4, 1, '', 599.00, '', '2024-06-01 03:13:24'),
+(16, 1, NULL, 3, 1, '', 399.00, '', '2024-06-01 03:13:35');
+
 -- --------------------------------------------------------
 
 --
@@ -64,9 +75,9 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `password`, `role`, `image`, `datereg`, `logintime`) VALUES
-(1, 'admin', '', '', 'admin@gmail.com', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', '', '2024-05-07', '2024-05-26 08:32:19'),
-(4, 'Ma. Angelica', 'M.', 'Rubrico', 'ghelle@gmail.com', 'ghelle', '2978c10efddd879133c9644f16ac570a', 'Staff', 0x2e2e2f75706c6f6164732f36363532623231326363653166352e38313139383839352e6a7067, '2024-05-26', '2024-05-26 11:52:50'),
-(5, 'Jade Ryan', 'L.', 'Blancaflor', 'bryanblancaflor007@gmail.com', 'jade123', 'b220e82dde8abcb5dfe247ff49606009', 'Staff', 0x2e2e2f75706c6f6164732f36363532633431663030633262322e31343533383035322e706e67, '2024-05-26', '2024-05-26 13:09:51');
+(1, 'admin', '', '', 'admin@gmail.com', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', '', '2024-05-07', '2024-05-31 20:58:50'),
+(4, 'Ma. Angelica', 'M.', 'Rubrico', 'ghelle@gmail.com', 'ghelle', '0192023a7bbd73250516f069df18b500', 'Admin', 0x2e2e2f75706c6f6164732f637574656d6f6f2e6a7067, '2024-05-26', '2024-05-27 07:05:12'),
+(5, 'Jade Ryan', 'L.', 'Blancaflor', 'bryanblancaflor007@gmail.com', 'jade123', 'b220e82dde8abcb5dfe247ff49606009', 'Staff', 0x2e2e2f75706c6f6164732f36363532633431663030633262322e31343533383035322e706e67, '2024-05-26', '2024-05-29 04:21:42');
 
 -- --------------------------------------------------------
 
@@ -87,7 +98,7 @@ CREATE TABLE `customer` (
   `city` varchar(50) NOT NULL,
   `zipcode` int(15) NOT NULL,
   `street` varchar(100) NOT NULL,
-  `contactnumber` int(15) NOT NULL,
+  `contactnumber` varchar(50) NOT NULL,
   `bday` date DEFAULT NULL,
   `image` longblob NOT NULL,
   `password` varchar(250) NOT NULL,
@@ -101,7 +112,7 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `region`, `province`, `barangay`, `city`, `zipcode`, `street`, `contactnumber`, `bday`, `image`, `password`, `otp`, `email_verified`, `datereg`) VALUES
-(3, 'Jade ', 'L.', 'Blancaflor', 'blancaflor480@gmail.com', 'jade123', 'IV', 'Cavite', '', 'Bacoor', 5012, 'Kaingen, Tramo st.', 0, '2024-05-26', '', 'b220e82dde8abcb5dfe247ff49606009', NULL, 1, '2024-05-26');
+(1, 'Jade', 'Leba', 'Blancaflor', 'blancaflor480@gmail.com', 'jade123', 'IV', 'Cavite', '', 'Bacoor', 5012, 'Kaingen, Tramo st.', '09380438403', '2024-05-27', '', 'b220e82dde8abcb5dfe247ff49606009', NULL, 1, '2024-05-27');
 
 -- --------------------------------------------------------
 
@@ -245,6 +256,15 @@ CREATE TABLE `wishlist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `wishlist`
+--
+
+INSERT INTO `wishlist` (`id`, `customer_id`, `products_id`, `date`) VALUES
+(1, 3, 6, '0000-00-00'),
+(6, 1, 2, '0000-00-00'),
+(7, 1, 3, '0000-00-00');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -330,7 +350,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `addcart`
 --
 ALTER TABLE `addcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -342,7 +362,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -384,7 +404,7 @@ ALTER TABLE `voucher`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

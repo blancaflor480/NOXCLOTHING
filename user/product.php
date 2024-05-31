@@ -199,31 +199,32 @@ if ($result && $result->num_rows > 0) {
         $stmt->execute();
         $new = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         ?>
+<div class="product-center">
+    <?php foreach ($new as $product): ?>
+    <div class="product-item">
+      <div class="overlay">
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>" class="product-thumb">
+          <img src="../admin/uploads/<?php echo $product['image_front']; ?>" alt="<?php echo $product['name_item']; ?>" />
+        </a>
+        <?php if ($product['discount'] > 0): ?>
+        <span class="discount"><?php echo $product['discount']; ?>%</span>
+        <?php endif; ?>
+      </div>
+      <div class="product-info">
+        <span><?php echo $product['type']; ?></span>
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo htmlspecialchars($product['name_item']); ?></a>
 
-        <div class="product-center container">
-            <?php foreach ($new as $product) : ?>
-                <div class="product-item">
-                    <div class="overlay">
-                        <a href="productDetails.html" class="product-thumb">
-                <img src="../admin/uploads/<?php echo $product['image_front']; ?>" alt="<?php echo $product['name_item']; ?>" />
-                        </a>
-                        <?php if ($product['discount'] > 0) : ?>
-                            <span class="discount"><?php echo htmlspecialchars($product['discount']); ?>%</span>
-                        <?php endif; ?>
-                    </div>
-                    <div class="product-info">
-                        <span><?php echo htmlspecialchars($product['type']); ?></span>
-                        <a href="productDetails.html"><?php echo htmlspecialchars($product['name_item']); ?></a>
-                        <h4>₱<?php echo number_format($product['price'], 2); ?></h4>
-                    </div>
-                    <ul class="icons">
-                        <li><i class="bx bx-heart"></i></li>
-                        <li><i class="bx bx-search"></i></li>
-                        <li><i class="bx bx-cart"></i></li>
-                    </ul>
-                </div>
-            <?php endforeach; ?>
-        </div>
+        <h4>Php <?php echo $product['price']; ?></h4>
+      </div>
+      <ul class="icons">
+         <li><i class="bx bx-heart add-to-wishlist" data-product-id="<?php echo $product['id']; ?>"></i></li>
+        <li><i class="bx bx-search"></i></li>
+        <li><i class="bx bx-cart add-to-cart" data-product-id="<?php echo $product['id']; ?>"></i></li>
+      </ul>
+    </div>
+    <?php endforeach; ?>
+  </div>
+
     </section>
 
     <section class="pagination">

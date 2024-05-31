@@ -329,7 +329,7 @@ if ($result && $result->num_rows > 0) {
       <div class="product-info">
         <span><?php echo $product['type']; ?></span>
         <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo $product['name_item']; ?></a>
-        <h4>$<?php echo $product['price']; ?></h4>
+        <h4>Php<?php echo $product['price']; ?></h4>
       </div>
       <ul class="icons">
         <li><i class="bx bx-heart add-to-wishlist" data-product-id="<?php echo $product['id']; ?>"></i></li>

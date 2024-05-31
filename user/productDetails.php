@@ -235,6 +235,14 @@ if ($result && $result->num_rows > 0) {
     </div>
 </section>
 
+
+
+<?php 
+  // Adjust the query to select featured products, assuming there is a column named 'is_featured'
+  $stmt = $conn->prepare("SELECT id, name_item, type, discount, price, image_front FROM products WHERE YEAR(date_insert) = 2024 LIMIT 4 ");
+  $stmt->execute();
+  $featured = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+?>
 <!-- Product Rating -->
 <section class="section product-rating" style="margin-top: -100px;">
     <div class="container">
@@ -263,78 +271,31 @@ if ($result && $result->num_rows > 0) {
             <h1>Related Products</h1>
             <a href="#" class="view-more">View more</a>
         </div>
-        <div class="product-center container">
-           <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-5.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-2.jpg" alt="" />
-            </a>
-            <span class="discount">40%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-7.jpg" alt="" />
-            </a>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        <div class="product-item">
-          <div class="overlay">
-            <a href="" class="product-thumb">
-              <img src="./images/product-4.jpg" alt="" />
-            </a>
-            <span class="discount">40%</span>
-          </div>
-          <div class="product-info">
-            <span>MEN'S CLOTHES</span>
-            <a href="">Concepts Solid Pink Men’s Polo</a>
-            <h4>$150</h4>
-          </div>
-          <ul class="icons">
-            <li><i class="bx bx-heart"></i></li>
-            <li><i class="bx bx-search"></i></li>
-            <li><i class="bx bx-cart"></i></li>
-          </ul>
-        </div>
-        </div>
+        <div class="product-center">
+    <?php foreach ($featured as $product): ?>
+    <div class="product-item">
+      <div class="overlay">
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>" class="product-thumb">
+          <img src="./images/<?php echo $product['image_front']; ?>" alt="<?php echo $product['name_item']; ?>" />
+        </a>
+        <?php if ($product['discount'] > 0): ?>
+        <span class="discount"><?php echo $product['discount']; ?>%</span>
+        <?php endif; ?>
+      </div>
+      <div class="product-info">
+        <span><?php echo $product['type']; ?></span>
+        <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo $product['name_item']; ?></a>
+        <h4>Php<?php echo $product['price']; ?></h4>
+      </div>
+      <ul class="icons">
+        <li><i class="bx bx-heart add-to-wishlist" data-product-id="<?php echo $product['id']; ?>"></i></li>
+        <li><i class="bx bx-search"></i></li>
+        <li><i class="bx bx-cart add-to-cart" data-product-id="<?php echo $product['id']; ?>"></i></li>
+      </ul>
+    </div>
+    <?php endforeach; ?>
+  </div>
+
     </section>
 
     <!-- Footer -->
