@@ -16,7 +16,7 @@
 
     <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="./css/styles.css" />
-    <title>Your Cart</title>
+    <title>Contact</title>
     <style>
     body {
     font-family: Arial, sans-serif;
@@ -31,7 +31,7 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 1000px;
+    width: 800px;
     max-width: 100%;
 }
 
@@ -165,16 +165,17 @@ button:hover {
         </form>
         <div id="responseMessage"></div>
 
-     
+     <HR>
         &nbsp;
 <b>
-        <h1> Contact Details</h1>
+        <h1> Contact Details: </h1>
         
         <h2>Email: aubrianachanelle.buyo@cvsu.edu.ph</h2>
-        &nbsp;
+        &nbsp; 
         <h2>Telephone Number: 456-777-451</h2>
-        &nbsp;
+        &nbsp; 
         <h2>Mobile Number: 0912345678 </h2>
+        <HR>
 </b>
 
     </div>
