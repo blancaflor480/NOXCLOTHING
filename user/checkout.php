@@ -186,7 +186,7 @@ if ($result && $result->num_rows > 0) {
               <a href="#about" class="nav-link">About</a>
             </li>
             <li class="nav-item">
-              <a href="#contact" class="nav-link">Contact</a>
+              <a href="contact.php" class="nav-link">Contact</a>
             </li>
             
            
