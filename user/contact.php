@@ -24,16 +24,17 @@
         display: flex;
         justify-content: space-between;
         background: white;
-        padding: 20px;
+
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 90%;
+        width: 100%;
         max-width: 1200px;
         margin: 20px auto;
       }
 
       .contact-section {
         width: 49%;
+        padding:2%;
       }
 
       h1 {
@@ -164,10 +165,12 @@
     </div>
 
     <center>
+    &nbsp;
       <h1>Connect with us</h1>
       <div class="contact-container">
         <div class="contact-section">
           <form id="contactForm">
+          &nbsp;
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
 
@@ -204,7 +207,7 @@
         const responseMessage = document.getElementById('responseMessage');
 
         if (name && email && message) {
-          // fito sana magssend yung message sa server or sa admin pa konek nalang uwu
+          // dito sana magssend yung message sa server or sa admin pa konek nalang uwu
           responseMessage.style.color = 'green';
           responseMessage.textContent = 'Thank you for your message!';
         } else {
