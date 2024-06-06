@@ -187,7 +187,7 @@
 
         <div class="contact-section contact-details">
        
-            <h1>Let's Connect!</h1>
+            <h1>LET'S CONNECT</h1>
             <hr>
             <h3>Email: aubrianachanelle.buyo@cvsu.edu.ph</h3>
             <h3>Telephone Number: 456-777-451</h3>
