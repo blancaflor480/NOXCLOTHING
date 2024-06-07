@@ -131,7 +131,7 @@
             <a href="#terms" class="nav-link">Terms</a>
           </li>
           <li class="nav-item">
-            <a href="#about" class="nav-link">About</a>
+            <a href="About.php" class="nav-link">About</a>
           </li>
           <li class="nav-item">
             <a href="#contact" class="nav-link">Contact</a>
