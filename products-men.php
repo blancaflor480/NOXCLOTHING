@@ -1,36 +1,6 @@
 <?php
 session_start();
-
-// Check kung may session na itinakda para sa 'uname'
-if (!isset($_SESSION['email'])) {
-    header("Location: index.php?error=Login%20First");
-    exit();
-}
-
-// Include ng database connection
 include 'dbconn/conn.php';
-
-// Kunin ang 'uname' mula sa session
-$email = $_SESSION['email'];
-
-// Subukan kung mayroong resulta sa query
-$stmt = $conn->prepare("SELECT * FROM customer WHERE email = ?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Siguraduhing may resulta bago kunin ang data
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-    $user_id = $user['id']; // Kunin ang 'id' ng user
-} else {
-    // Kung wala, i-redirect sa login page
-    header("Location: login-signup.php?error=Login%20First");
-    exit();
-}
-
-// I-set ang 'user_id' sa session para magamit sa ibang mga pahina
-$_SESSION['user_id'] = $user_id;
 ?>
 
 
@@ -61,43 +31,6 @@ $_SESSION['user_id'] = $user_id;
             $totalItems++; // Increment total items count
         }
     }
-?>
-  <?php
-// Make sure to properly escape $_SESSION['uname'] to prevent SQL injection
-$email = $_SESSION['email'];
-
-// Query to count the number of items in the user's cart
-$query = $conn->prepare("SELECT COUNT(id) AS numberofproduct FROM addcart WHERE customer_id = ? AND status != 'Paid'");
-$query->bind_param("s", $user_id);
-$query->execute();
-$result = $query->get_result();
-
-// Check if there are items in the cart
-if ($result && $result->num_rows > 0) { 
-    $row = $result->fetch_assoc();
-    $numberofproduct = $row['numberofproduct'];
-} else {
-    $numberofproduct = 0;
-}
-?>
-
-<?php
-// Make sure to properly escape $_SESSION['uname'] to prevent SQL injection
-$user_id = $_SESSION['user_id'];
-
-// Query to count the number of items in the user's cart
-$query = $conn->prepare("SELECT COUNT(id) AS numberwish  FROM wishlist WHERE customer_id = ?");
-$query->bind_param("s", $user_id);
-$query->execute();
-$result = $query->get_result();
-
-// Check if there are items in the cart
-if ($result && $result->num_rows > 0) { 
-    $row = $result->fetch_assoc();
-    $numberwish  = $row['numberwish'];
-} else {
-    $numberwish  = 0;
-}
 ?>
 
 
@@ -160,11 +93,9 @@ if ($result && $result->num_rows > 0) {
             </div>
            <a href="wishlist.php" class="icon">
               <i class="bx bx-heart"></i>
-              <span id="wishlistCount" class="d-flex"><?php echo $numberwish; ?></span>
               </a>
             <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
-              <span id="count" class="d-flex"><?php echo $numberofproduct; ?></span>
             </a>
             <a href="logout.php" class="icon">
               <i class="bx bx-log-out"></i>
@@ -179,9 +110,15 @@ if ($result && $result->num_rows > 0) {
       </div>
 
 <!-- All Products -->
-    <section class="section all-products" id="products">
+
+<?php
+       $stmt = $conn->prepare("SELECT id, name_item, discount, price, image_front, type FROM products WHERE type='male'");
+       $stmt->execute();
+       $men_products = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        ?>
+<section class="section all-products" id="products">
         <div class="top container">
-            <h1>All Products</h1>
+            <h1>Mens Products</h1>
             <form>
                 <select id="sortOptions" onchange="redirect()">
 					<option value="1">Default Sorting</option>
@@ -207,36 +144,34 @@ if ($result && $result->num_rows > 0) {
             </form>
         </div>
 
-        <?php
-        $stmt = $conn->prepare("SELECT id, name_item, type, discount, price, image_front FROM products ");
-        $stmt->execute();
-        $new = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-        ?>
 <div class="product-center">
-    <?php foreach ($new as $product): ?>
-    <div class="product-item">
-      <div class="overlay">
-        <a href="productDetails.php?id=<?php echo $product['id']; ?>" class="product-thumb">
-          <img src="../admin/uploads/<?php echo $product['image_front']; ?>" alt="<?php echo $product['name_item']; ?>" />
-        </a>
-        <?php if ($product['discount'] > 0): ?>
-        <span class="discount"><?php echo $product['discount']; ?>%</span>
-        <?php endif; ?>
-      </div>
-      <div class="product-info">
-        <span><?php echo $product['type']; ?></span>
-        <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo htmlspecialchars($product['name_item']); ?></a>
-
-        <h4>Php <?php echo $product['price']; ?></h4>
-      </div>
-      <ul class="icons">
-         <li><i class="bx bx-heart add-to-wishlist" data-product-id="<?php echo $product['id']; ?>"></i></li>
-        <li><i class="bx bx-search"></i></li>
-        <li><i class="bx bx-cart add-to-cart" data-product-id="<?php echo $product['id']; ?>"></i></li>
-      </ul>
-    </div>
-    <?php endforeach; ?>
-  </div>
+<?php if (!empty($men_products)): ?>
+                <?php foreach ($men_products as $product): ?>
+                    <div class="product-item">
+                        <div class="overlay">
+                            <a href="productDetails.php?id=<?php echo $product['id']; ?>" class="product-thumb">
+                                <img src="admin/uploads/<?php echo $product['image_front']; ?>" alt="<?php echo htmlspecialchars($product['name_item']); ?>" />
+                            </a>
+                            <?php if ($product['discount'] > 0): ?>
+                                <span class="discount"><?php echo $product['discount']; ?>%</span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="product-info">
+                            <span><?php echo htmlspecialchars($product['type']); ?></span>
+                            <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo htmlspecialchars($product['name_item']); ?></a>
+                            <h4>Php <?php echo number_format($product['price'], 2); ?></h4>
+                        </div>
+                        <ul class="icons">
+                            <li><i class="bx bx-heart add-to-wishlist" data-product-id="<?php echo $product['id']; ?>"></i></li>
+                            <li><i class="bx bx-search"></i></li>
+                            <li><i class="bx bx-cart add-to-cart" data-product-id="<?php echo $product['id']; ?>"></i></li>
+                        </ul>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No men's products found.</p>
+            <?php endif; ?>    
+</div>
 
     </section>
 

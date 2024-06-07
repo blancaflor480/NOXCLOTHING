@@ -1,21 +1,7 @@
 <?php
-
-// Include ng database connection
 include 'dbconn/conn.php';
 ?>
 
-<!--< ?php
-    $totalItems = 0; // Initialize total items count
-
-    $sql = "SELECT addcart.*, products.price AS product_price FROM addcart INNER JOIN products ON addcart.products_id = products.id";
-    $result = mysqli_query($conn, $sql);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $totalItems++; // Increment total items count
-        }
-    }
-?>-->
 
 
 <!DOCTYPE html>
@@ -149,14 +135,17 @@ include 'dbconn/conn.php';
     </div>
     </header>
 
-    <!-- Categories Section -->
-    <section class="section category">
+<!-- Categories Section -->
+<!-- Categories Section -->
+<section class="section category">
       <div class="cat-center">
         <div class="cat">
           <img src="./images/cat3.jpg" alt="" />
+          <a href="products-female.php">  
           <div>
             <p>WOMEN'S WEAR</p>
           </div>
+        </a>
         </div>
         <div class="cat">
           <img src="./images/cat2.jpg" alt="" />
@@ -166,9 +155,11 @@ include 'dbconn/conn.php';
         </div>
         <div class="cat">
           <img src="./images/cat1.jpg" alt="" />
+          <a href="products-men.php">
           <div>
-            <p>MEN'S WEAR</p>
+          <p>MEN'S WEAR</p>
           </div>
+          </a>
         </div>
       </div>
     </section>

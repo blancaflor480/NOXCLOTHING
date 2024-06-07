@@ -45,7 +45,7 @@ $_SESSION['user_id'] = $user_id;
     />
     <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="./css/styles.css" />
-    <title>Your Cart</title>
+    <title>NOX CLOTHING | Cart</title>
 
         <style>
         .cart-container {
@@ -267,7 +267,12 @@ if ($result && $result->num_rows > 0) {
 
     <!-- Cart Items -->
 <!-- Cart Items -->
+<div style="margin: auto;position: absolute; left: 220px; top: 150px;">
+    <h2><small style="font-size: 1.7rem;">Home > </small>Cart</h2>
+</div>
+    
     <div class="container cart">
+
         <div class="cart-items">
             <table>
                 <tr>
@@ -313,7 +318,9 @@ if ($result && $result->num_rows > 0) {
         </tr>";
     }
 } else {
-    echo "<tr><td colspan='3'>Your cart is empty.</td></tr>";
+    echo "<tr><td colspan='3' style='text-align: center;'>Your cart is empty.</td></tr>";
+    echo "<td colspan='3' style='text-align: center;'><a href='product.php'><input type='button' value='Go to Shop' style='width: 100px; background-color: #222; border-radius: 5px; color: white;'></a></td>";
+
 }
 
 // Retrieve discount rate from database
@@ -356,7 +363,9 @@ $finalTotal = $totalPrice - $discount;
                     <td id="final-total">₱ <?php echo number_format($finalTotal, 2); ?></td>
                 </tr>
             </table>
-            <a href="checkout.php" class="checkout">Proceed to Checkout</a>
+            <!--<a href="checkout.php" class="checkout">Proceed to Checkout</a>-->
+            <a href="checkout.php"><input type="button" style="width: 250px;" class="checkout" value="Proceed to Checkout" <?php if ($totalItems == 0) echo 'disabled'; ?>></a>
+    
         </div>
     </div>
 

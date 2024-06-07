@@ -212,9 +212,7 @@ if (isset($_POST['submit'])) {
             <h1>CREATE ACCOUNT.</h1>
 				<span>by continuing with </span>
 				<div class="social-container">
-					<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-					<a href="#" class="social"><i class="fab fa-google"></i></a>
-					<a href="#" class="social"><i class="fab fa-apple"></i></a>
+					<a href="#" class="social"><i class="fab fa-google"></i></a>Google
 						</div>
 				<input type="email" name = "email" value="<?php if (isset($_POST['submit'])) { echo $email; } ?>" placeholder="Email" required />
 				
@@ -256,10 +254,8 @@ if (isset($_POST['submit'])) {
 				<button name="login" style="margin-bottom: 40px; margin-top: 10px; padding: 12px 140px;">Sign In</button>
 				<span style="margin-bottom: 20px;">------ or continue with ------</span>
 				<div class="social-container">
-					<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-					<a href="#" class="social"><i class="fab fa-google"></i></a>
-					<a href="#" class="social"><i class="fab fa-apple"></i></a>
-				</div>
+					<a href="#" class="social"><i class="fab fa-google"></i></a>Google
+						</div>
 			
 				
 			</form>
@@ -267,14 +263,14 @@ if (isset($_POST['submit'])) {
 		<div class="overlay-container">
 			<div class="overlay">
 				<div class="overlay-panel overlay-left">
-					<a href="index.html" class="close-button-left"><img src="images/close-wht.png" class="close-icon-left"></a>
+					<a href="../index.php" class="close-button-left"><img src="images/close-wht.png" class="close-icon-left"></a>
 					<!--<img src="images/main-logo.png" style="width: 250px; height: 105px; margin-bottom: -15px;">-->
 					<h3 style="font-size: 2rem;">NOX CLOTHING</h3>
 					<p>Already have an account? To keep connected<br>with us please login with your personal info.</p>
 					<button class="ghost" id="signIn">Sign In</button>
 				</div>
 				<div class="overlay-panel overlay-right">
-					<a href="index.html" class="close-button-right"><img src="images/close-wht.png" class="close-icon-right"></a>
+					<a href="../index.php" class="close-button-right"><img src="images/close-wht.png" class="close-icon-right"></a>
 					<h3 style="font-size: 2rem;">NOX CLOTHING</h3>
 					
 					<!--<img src="images/main-logo.png" style="width: 250px; height: 105px; margin-bottom: -15px;">-->
