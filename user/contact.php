@@ -1,4 +1,37 @@
+<?php
+session_start();
 
+// Check kung may session na itinakda para sa 'uname'
+if (!isset($_SESSION['email'])) {
+    header("Location: index.php?error=Login%20First");
+    exit();
+}
+
+// Include ng database connection
+include 'dbconn/conn.php';
+
+// Kunin ang 'uname' mula sa session
+$email = $_SESSION['email'];
+
+// Subukan kung mayroong resulta sa query
+$stmt = $conn->prepare("SELECT * FROM customer WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Siguraduhing may resulta bago kunin ang data
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+    $user_id = $user['id']; // Kunin ang 'id' ng user
+} else {
+    // Kung wala, i-redirect sa login page
+    header("Location: login-signup.php?error=Login%20First");
+    exit();
+}
+
+// I-set ang 'user_id' sa session para magamit sa ibang mga pahina
+$_SESSION['user_id'] = $user_id;
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -102,8 +135,104 @@
 }
     </style>
   </head>
+<?php
+    $totalItems = 0; // Initialize total items count
 
-  <body>
+    $sql = "SELECT addcart.*, products.price AS product_price FROM addcart INNER JOIN products ON addcart.products_id = products.id";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $totalItems++; // Increment total items count
+        }
+    }
+?>
+  <?php
+// Make sure to properly escape $_SESSION['uname'] to prevent SQL injection
+$email = $_SESSION['email'];
+
+// Query to count the number of items in the user's cart
+$query = $conn->prepare("SELECT COUNT(id) AS numberofproduct FROM addcart WHERE customer_id = ? AND status != 'Paid'");
+$query->bind_param("s", $user_id);
+$query->execute();
+$result = $query->get_result();
+
+// Check if there are items in the cart
+if ($result && $result->num_rows > 0) { 
+    $row = $result->fetch_assoc();
+    $numberofproduct = $row['numberofproduct'];
+} else {
+    $numberofproduct = 0;
+}
+?>
+
+<?php
+// Make sure to properly escape $_SESSION['uname'] to prevent SQL injection
+$user_id = $_SESSION['user_id'];
+
+// Query to count the number of items in the user's cart
+$query = $conn->prepare("SELECT COUNT(id) AS numberwish  FROM wishlist WHERE customer_id = ?");
+$query->bind_param("s", $user_id);
+$query->execute();
+$result = $query->get_result();
+
+// Check if there are items in the cart
+if ($result && $result->num_rows > 0) { 
+    $row = $result->fetch_assoc();
+    $numberwish  = $row['numberwish'];
+} else {
+    $numberwish  = 0;
+}
+?>
+<?php
+    $totalItems = 0; // Initialize total items count
+
+    $sql = "SELECT addcart.*, products.price AS product_price FROM addcart INNER JOIN products ON addcart.products_id = products.id";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $totalItems++; // Increment total items count
+        }
+    }
+?>
+  <?php
+// Make sure to properly escape $_SESSION['uname'] to prevent SQL injection
+$email = $_SESSION['email'];
+
+// Query to count the number of items in the user's cart
+$query = $conn->prepare("SELECT COUNT(id) AS numberofproduct FROM addcart WHERE customer_id = ? AND status != 'Paid'");
+$query->bind_param("s", $user_id);
+$query->execute();
+$result = $query->get_result();
+
+// Check if there are items in the cart
+if ($result && $result->num_rows > 0) { 
+    $row = $result->fetch_assoc();
+    $numberofproduct = $row['numberofproduct'];
+} else {
+    $numberofproduct = 0;
+}
+?>
+
+<?php
+// Make sure to properly escape $_SESSION['uname'] to prevent SQL injection
+$user_id = $_SESSION['user_id'];
+
+// Query to count the number of items in the user's cart
+$query = $conn->prepare("SELECT COUNT(id) AS numberwish  FROM wishlist WHERE customer_id = ?");
+$query->bind_param("s", $user_id);
+$query->execute();
+$result = $query->get_result();
+
+// Check if there are items in the cart
+if ($result && $result->num_rows > 0) { 
+    $row = $result->fetch_assoc();
+    $numberwish  = $row['numberwish'];
+} else {
+    $numberwish  = 0;
+}
+?>  <body>
     <div class="top-nav">
       <div class="container d-flex">
         <p style="margin-top: 10px">Order Online Or Call Us: (001) 2222-55555</p>
