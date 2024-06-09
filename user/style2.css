@@ -12,7 +12,7 @@ body {
 	font-family: 'Poppins', sans-serif;
 	height: 100vh;
 	margin: 0;
-	background-image: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), url(images/bgvid-glitch.mp4);
+	background-image: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9));
 }
 
 h1 {
