@@ -209,6 +209,15 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
+<?php
+    $email_class = ''; // Initialize the class variable
+
+    if (mysqli_num_rows($check_email_result) > 0) {
+        $errors['email'] = "Email already exists";
+        $email_class = 'invalid'; // Add the class if email exists
+    }
+?>
+
 <br><br><br>
             <h1>CREATE ACCOUNT.</h1>
 				<span>by continuing with </span>
@@ -226,13 +235,14 @@ if (isset($_POST['submit'])) {
                 <input type="text" id="lname-up" name = "lname" placeholder="Last Name" value="<?php if (isset($_POST['submit'])) { echo $lname; } ?>"  />
                 <span id="lname-Error" class="error-message"><i class="bx bx-error"></i> Please enter your last name</span>
        
-                <input type="email" id="email-up" name = "email" value="<?php if (isset($_POST['submit'])) { echo $email; } ?>" placeholder="Email" />
+                
+                <input type="email" id="email-up" name="email" value="<?php if (isset($_POST['submit'])) { echo $email; } ?>" placeholder="Email" class="<?php echo $email_class; ?>" />
                 <span id="email-Error" class="error-message"><i class="bx bx-error"></i> Please enter your email</span>
                 <span style = "display: flex; margin-right: 272px;">
-				<?php if (isset($errors['email'])) echo '<span style ="color: red; font-size: 0.6rem; text-align: left;"><i class="bx bx-error"></i> ' . $errors['email'] . '</span>'; ?>
+				<?php if (isset($errors['email'])) echo '<span style ="color: red; font-size: 0.6rem; margin-top: -5px; text-align: left;"><i class="bx bx-error"></i> ' . $errors['email'] . '</span>'; ?>
 				</span>
-	
 
+                
 				<input type="password" id="pass-up" name="password" id="password" placeholder="Password"  oninput="passError()" />
 				<span id="pass-Error" class="error-message"><i class="bx bx-error"></i> Please enter your password</span>
                 <span id = "passError" style ="color: red; font-size: 0.6rem; margin-left: -155px; text-align: left;"></span>
@@ -432,5 +442,3 @@ if (isset($_POST['submit'])) {
 
 	</body>
 </html>
-
-
