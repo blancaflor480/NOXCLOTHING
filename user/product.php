@@ -50,6 +50,23 @@ $_SESSION['user_id'] = $user_id;
     <link rel="stylesheet" href="./css/styles.css" />
     <title>NOX CLOTHING</title>
   </head>
+  <style>
+	.pagination a span {
+  display: inline-block;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--black-gray);
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
+}
+
+.pagination a.active span {
+  border: 1px solid var(--black-gray);
+  background-color: var(--black-gray);
+  color: #fff;
+}
+	</style>
   <?php
     $totalItems = 0; // Initialize total items count
 
@@ -183,6 +200,16 @@ if ($result && $result->num_rows > 0) {
         <div class="top container">
             <h1>All Products</h1>
             <form>
+			<?php 
+			$records_per_page = 8;
+			if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+					$current_page = $_GET['page'];
+				} else {
+					$current_page = 1;
+				} 
+				$offset = ($current_page - 1) * $records_per_page;
+				
+				?>
                 <select id="sortOptions" onchange="redirect()">
 					<option value="1">Default Sorting</option>
 					<option value="2">Sort By Price</option>
@@ -190,7 +217,7 @@ if ($result && $result->num_rows > 0) {
 					<option value="4">Sort By Sale</option>
 					<option value="5">Sort By Rating</option>
 				</select>
-
+				
 						<script>
 						function redirect() {
 							var selectedValue = document.getElementById("sortOptions").value;
@@ -208,9 +235,37 @@ if ($result && $result->num_rows > 0) {
         </div>
 
         <?php
-        $stmt = $conn->prepare("SELECT id, name_item, type, discount, price, image_front FROM products ");
-        $stmt->execute();
-        $new = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+		$productsPerPage = 8;
+
+		// Get the current page number from the URL, default to 1 if not set
+		$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+		// Calculate the offset for the SQL query
+		$offset = ($page - 1) * $productsPerPage;
+		
+        $stmt = $conn->prepare("SELECT id, name_item, type, discount, price, image_front FROM products LIMIT ? OFFSET ?");
+        $stmt->bind_param("ii", $productsPerPage, $offset);
+		$stmt->execute();
+		$new = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+		$totalProductsResult = $conn->query("SELECT COUNT(id) AS total FROM products");
+		$totalProducts = $totalProductsResult->fetch_assoc()['total'];
+
+		// Calculate total number of pages
+		$totalPages = ceil($totalProducts / $productsPerPage);
+		
+				// Determine the range of pages to display
+		$pagesToShow = 4; // Number of pagination buttons to show at once
+		$startPage = max(1, $page - floor($pagesToShow / 2));
+		$endPage = min($totalPages, $startPage + $pagesToShow - 1);
+
+		// Adjust the start page if the end page is at the maximum
+		if ($endPage - $startPage + 1 < $pagesToShow) {
+			$startPage = max(1, $endPage - $pagesToShow + 1);
+		}
+		
+		
+		
         ?>
 <div class="product-center">
     <?php foreach ($new as $product): ?>
@@ -241,11 +296,22 @@ if ($result && $result->num_rows > 0) {
     </section>
 
     <section class="pagination">
-      <div class="container">
-        <span>1</span> <span>2</span> <span>3</span> <span>4</span>
-        <span><i class="bx bx-right-arrow-alt"></i></span>
-      </div>
-    </section>
+    <div class="container">
+        <?php if ($page > 1): ?>
+            <a href="?page=<?php echo $page - 1; ?>"><span><i class="bx bx-left-arrow-alt"></i></span></a>
+        <?php endif; ?>
+
+        <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+            <a href="?page=<?php echo $i; ?>" class="<?php echo $i == $page ? 'active' : ''; ?>">
+                <span><?php echo $i; ?></span>
+            </a>
+        <?php endfor; ?>
+
+        <?php if ($page < $totalPages): ?>
+            <a href="?page=<?php echo $page + 1; ?>"><span><i class="bx bx-right-arrow-alt"></i></span></a>
+        <?php endif; ?>
+    </div>
+</section>
     <!-- Footer -->
     <footer class="footer">
       <div class="row">
