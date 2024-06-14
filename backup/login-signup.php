@@ -11,17 +11,20 @@
 	  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/alertify.min.css"/>
     <!-- Include Alertify theme default CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs/build/css/themes/default.min.css"/>
+	<link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
 
 	</head>
 	<script src="https://cdn.jsdelivr.net/npm/alertifyjs/build/alertify.min.js"></script>
-  <style>
+
+	<body>
+	<style>
   .error-message {
     display: none;
     color: red;
     font-size: 0.6rem;
-  margin-right: 250px;
-  width: 200px;
-  margin-top: -5px;
+	margin-right: 250px;
+	width: 200px;
+	margin-top: -5px;
   }
 
   .visible {
@@ -33,7 +36,7 @@
   }
 </style>
 
-	<body>
+		
 <?php 
 	session_start();
 	require 'dbconn/conn.php';
@@ -66,7 +69,8 @@
 						document.querySelector('.alertify-notifier .ajs-message').style.backgroundColor = '#fc5555';
 						document.querySelector('.alertify-notifier .ajs-modal').style.border = '2px solid red';
 					</script>";
-			} else {
+			} 
+            else{
 				// Display error message for incorrect username/password
 				echo "<script>
 						alertify.set('notifier','position', 'top-center');
@@ -78,13 +82,28 @@
 						document.querySelector('.alertify-notifier .ajs-modal').style.border = '2px solid red';
 					</script>";
 			}
+        
 		}	
 	}		
 ?>
 
+<script>
+  function passError() {
+    var passwordInput = document.getElementById('password');
+    var passError = document.getElementById('passError');
+    var password = passwordInput.value;
+
+    if (password.length < 8) {
+      passError.textContent = "Password must be at least 8 characters long.";
+    } else {
+      passError.textContent = "";
+    }
+  }
+
+</script>
 <div class="container" id="container">
 		<div class="form-container sign-up-container">
-	<form action="" method="post" id="signupform">
+			<form action="" method="post" id="signupform">
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -112,6 +131,13 @@ if (isset($_POST['submit'])) {
    
     if (mysqli_num_rows($check_email_result) > 0) {
         $errors['email'] = "Email already exists";
+    }
+
+    $email_class = ''; // Initialize the class variable
+
+    if (mysqli_num_rows($check_email_result) > 0) {
+        $errors['email'] = "Email already exists";
+        $email_class = 'invalid'; // Add the class if email exists
     }
    
     if (empty($errors)) {
@@ -192,15 +218,15 @@ if (isset($_POST['submit'])) {
 ?>
 
 
+<br><br><br>
             <h1>CREATE ACCOUNT.</h1>
 				<span>by continuing with </span>
 				<div class="social-container">
-					<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-					<a href="#" class="social"><i class="fab fa-google"></i></a>
-					<a href="#" class="social"><i class="fab fa-apple"></i></a>
+					<a href="#" class="social"><i class="fab fa-google"></i></a>Google
 						</div>
-
-        <input type="text" id="fname-up" name = "fname" placeholder="First Name" value="<?php if (isset($_POST['submit'])) { echo $fname; } ?>" />
+				
+				
+				<input type="text" id="fname-up" name = "fname" placeholder="First Name" value="<?php if (isset($_POST['submit'])) { echo $fname; } ?>" />
                 <span id="fname-Error" class="error-message"><i class="bx bx-error"></i> Please enter your firstname</span>
 
                 <input type="text" id="mname-up" name = "mname" placeholder="Middle Name" value="<?php if (isset($_POST['submit'])) { echo $mname; } ?>"  />
@@ -213,30 +239,32 @@ if (isset($_POST['submit'])) {
                  <input type="email" id="email-up" name = "email" value="<?php if (isset($_POST['submit'])) { echo $email; } ?>" placeholder="Email" />
                 <span id="email-Error" class="error-message"><i class="bx bx-error"></i> Please enter your email</span>
                 <span style = "display: flex; margin-right: 272px;">
-        <?php if (isset($errors['email'])) echo '<span style ="color: red; font-size: 0.6rem; margin-top: -5px; text-align: left;"><i class="bx bx-error"></i> ' . $errors['email'] . '</span>'; ?>
-        </span>
+				<?php if (isset($errors['email'])) echo '<span style ="color: red; font-size: 0.6rem; margin-top: -5px; text-align: left;"><i class="bx bx-error"></i> ' . $errors['email'] . '</span>'; ?>
+				</span>
 
                 
-        <input type="password" id="pass-up" name="password" id="password" placeholder="Password"  oninput="passError()" />
-        <span id="pass-Error" class="error-message"><i class="bx bx-error"></i> Please enter your password</span>
+				<input type="password" id="pass-up" name="password" id="password" placeholder="Password"  oninput="passError()" />
+				<span id="pass-Error" class="error-message"><i class="bx bx-error"></i> Please enter your password</span>
                 <span id = "passError" style ="color: red; font-size: 0.6rem; margin-left: -155px; text-align: left;"></span>
                 
-        
-        <input placeholder="Birthday" id="bday-up" name="bday" class="textbox-n" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date"  />
-        <span id="bday-Error" class="error-message"><i class="bx bx-error"></i> Please select your Birthday</span>
+				
+				<input placeholder="Birthday" id="bday-up" name="bday" class="textbox-n" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date"  />
+				<span id="bday-Error" class="error-message"><i class="bx bx-error"></i> Please select your Birthday</span>
        
                 <button style="margin-top: 20px; padding: 12px 140px;" id="sign-up" type="submit" name ="submit">Continue</button>
-                			
+                
+			
 			<div class="checkbox-container">
                  <label for="agree-checkbox">By registering, you agree to GameVault's <span style="color: darkcyan;">Terms of Service</span> and <span style="color: darkcyan;">Privacy Policy</span>.</label>
            </div>
 
-          
+           <br><br><br> 
 			</form>
+            
 		</div>
-
+        
 		<div class="form-container sign-in-container">
-			<form action="" method="post" id="loginForm">
+		<form action="" method="post" id="loginForm">
         <h1>WELCOME BACK!</h1>
         <span style="padding-bottom: 20px;">We're so excited to see you again!</span>
         <input type="email" name="email" placeholder="Email" id="email"/>
@@ -250,18 +278,19 @@ if (isset($_POST['submit'])) {
           <a href="#" class="social"><i class="fab fa-google"></i></a>Google
         </div>
       </form>
-      	</div>
+
+		</div>
 		<div class="overlay-container">
 			<div class="overlay">
 				<div class="overlay-panel overlay-left">
-					<a href="index.html" class="close-button-left"><img src="images/close-wht.png" class="close-icon-left"></a>
+					<a href="../index.php" class="close-button-left"><img src="images/close-wht.png" class="close-icon-left"></a>
 					<!--<img src="images/main-logo.png" style="width: 250px; height: 105px; margin-bottom: -15px;">-->
 					<h3 style="font-size: 2rem;">NOX CLOTHING</h3>
 					<p>Already have an account? To keep connected<br>with us please login with your personal info.</p>
 					<button class="ghost" id="signIn">Sign In</button>
 				</div>
 				<div class="overlay-panel overlay-right">
-					<a href="index.html" class="close-button-right"><img src="images/close-wht.png" class="close-icon-right"></a>
+					<a href="../index.php" class="close-button-right"><img src="images/close-wht.png" class="close-icon-right"></a>
 					<h3 style="font-size: 2rem;">NOX CLOTHING</h3>
 					
 					<!--<img src="images/main-logo.png" style="width: 250px; height: 105px; margin-bottom: -15px;">-->
@@ -271,7 +300,8 @@ if (isset($_POST['submit'])) {
 			</div>
 		</div>
 	</div>
-      <script>
+
+    <script>
   document.getElementById("signin").addEventListener("click", function(event) {
     var emailField = document.getElementById("email");
     var passwordField = document.getElementById("password-login");
@@ -408,10 +438,7 @@ if (isset($_POST['submit'])) {
     }
   });
 </script>
-
-	  <script  src="script.js"></script>
+	<script  src="script.js"></script>
 
 	</body>
 </html>
-
-
