@@ -67,11 +67,11 @@ include 'dbconn/conn.php';
             </div>
             <div class="icon">
               <i class="bx bx-heart"></i>
-              <span class="d-flex">0</span>
+                  
             </div>
             <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
-              <span class="d-flex">0</span>
+             
             </a>
           </li>
           </ul>
@@ -85,10 +85,10 @@ include 'dbconn/conn.php';
             </div>
             <a href="cart.php" class="icon">
               <i class="bx bx-heart"></i>
-              <span class="d-flex">0</span>
+              
             <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
-              <span class="d-flex">0</span>
+             
             </a>
             
           </div>
@@ -251,7 +251,7 @@ include 'dbconn/conn.php';
       <div class="product-info">
         <span><?php echo $product['type']; ?></span>
         <a href="productDetails.php?id=<?php echo $product['id']; ?>"><?php echo $product['name_item']; ?></a>
-        <h4>$<?php echo $product['price']; ?></h4>
+        <h4>Php <?php echo $product['price']; ?></h4>
       </div>
       <ul class="icons">
         <li><i class="bx bx-heart"></i></li>
