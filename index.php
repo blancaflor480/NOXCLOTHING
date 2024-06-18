@@ -67,7 +67,7 @@ include 'dbconn/conn.php';
             </div>
             <div class="icon">
               <i class="bx bx-heart"></i>
-                  
+                
             </div>
             <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
