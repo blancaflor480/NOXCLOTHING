@@ -114,9 +114,9 @@ if ($result && $result->num_rows > 0) {
       <div class="container d-flex">
         <p style="margin-top: 10px">Order Online Or Call Us: (001) 2222-55555</p>
         <ul class="d-flex" style="margin-top: 10px">
-          <li><a href="#">About Us</a></li>
+          <li><a href="About.php">About Us</a></li>
           <li><a href="#">FAQ</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="contact.php">Contact</a></li>
         </ul>
       </div>
     </div>
@@ -136,10 +136,10 @@ if ($result && $result->num_rows > 0) {
             <a href="#terms" class="nav-link">Terms</a>
             </li>
             <li class="nav-item">
-              <a href="#about" class="nav-link">About</a>
+              <a href="About.php" class="nav-link">About</a>
             </li>
             <li class="nav-item">
-              <a href="#contact" class="nav-link">Contact</a>
+              <a href="contact.php" class="nav-link">Contact</a>
             </li>
             
            

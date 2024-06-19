@@ -125,9 +125,9 @@ button:hover {
       <div class="container d-flex">
         <p style="margin-top: 10px">Order Online Or Call Us: (001) 2222-55555</p>
         <ul class="d-flex" style="margin-top: 10px">
-          <li><a href="#">About Us</a></li>
+          <li><a href="About.php">About Us</a></li>
           <li><a href="#">FAQ</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="contact.php">Contact</a></li>
         </ul>
       </div>
     </div>
@@ -148,10 +148,10 @@ button:hover {
             <a href="#terms" class="nav-link">Terms</a>
           </li>
           <li class="nav-item">
-            <a href="#about" class="nav-link">About</a>
+            <a href="About.php" class="nav-link">About</a>
           </li>
           <li class="nav-item">
-            <a href="#contact" class="nav-link">Contact</a>
+            <a href="contact.php" class="nav-link">Contact</a>
           </li>
         </ul>
         
@@ -211,7 +211,7 @@ button:hover {
                     <p></p>
                 </div>
                 <div class="team-member">
-                    <img src="member2.jpg" alt="Member 2">
+                    <img src="cha111.jpg" alt="Member 2">
                     <h3>Aubriana Chanelle Buyo</h3>
                     <p></p>
                 </div>
