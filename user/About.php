@@ -20,7 +20,7 @@
       }
 
 
-.container {
+.container1 {
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
@@ -180,13 +180,13 @@ button:hover {
         </div>
       </div>
     </div>
-    <div class="container">
+    <div class="container1">
         <header>
         <center>
             <h1>About Us</h1>
             <nav>
                 <ul>
-                    <li><a href="#mission">Mission</a></li>
+                    <li><a href="#mission">Mission & Vision</a></li>
                     <li><a href="#team">Team</a></li>
                     <li><a href="#history">History</a></li>
                 </ul>
@@ -194,8 +194,14 @@ button:hover {
         </header>
         <section id="mission" class="section">
           <b>  <h2 style: align="center";>Our Mission</h2> 
-           <p>Nox Clothing aims to deliver stylish, high-quality clothing and accessories to fashion-forward individuals. Developed by talented students at Cavite State University Imus Campus, we are committed to innovation, sustainability, and excellence.</p>
-        </section></b> 
+           
+      
+          <p>Nox Clothing aims to deliver stylish, high-quality clothing and accessories to fashion-forward individuals. Developed by talented students at Cavite State University Imus Campus, we are committed to innovation, sustainability, and excellence.</p>
+          &nbsp;
+           <h2 style: align="center";>Our Vision</h2> 
+          <p>Nox Clothing aims to revolutionize the online fashion industry by providing a seamless, personalized shopping experience that celebrates individuality and sustainability. We envision a world where fashion is accessible, inclusive, and eco-friendly, empowering our customers to express their unique style confidently and responsibly.</p>
+       
+      </section></b> 
         <section id="team" class="section">
         <b>  <h2>Meet Our Team</h2></b> 
             <div class="team-grid">
