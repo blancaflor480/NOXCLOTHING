@@ -203,33 +203,40 @@ button:hover {
        
       </section></b> 
         <section id="team" class="section">
-        <b>  <h2>Meet Our Team</h2></b> 
+        <b>  <h2 style: align="center";>Meet Our Team</h2> 
+        &nbsp;
             <div class="team-grid">
                 <div class="team-member">
-                    <img src="member1.jpg" alt="Member 1">
+        
                     <h3>Jade Bryan Blancaflor</h3>
-                    <p></p>
+                    <p>3rd year IT Student from CVSU- Imus Campus</p>
+                    <p>Full Stack Developer</p>
                 </div>
                 <div class="team-member">
-                    <img src="cha111.jpg" alt="Member 2">
+      
                     <h3>Aubriana Chanelle Buyo</h3>
-                    <p></p>
+                    <p>3rd year IT Student from CVSU- Imus Campus</p>
+                    <p>Front end Developer</p>
                 </div>
                 <div class="team-member">
-                    <img src="member3.jpg" alt="Member 3">
+          
                     <h3>Ma. Angelico Rubrico</h3>
-                    <p></p>
+                    <p>3rd year IT Student from CVSU- Imus Campus</p>
+                    <p>Front end Developer</p>
                 </div>
 
                 <div class="team-member">
-                    <img src="member3.jpg" alt="Member 3">
+           
                     <h3>Elijah Gabriel Divosion</h3>
-                    <p></p>
+                    <p>3rd year IT Student from CVSU- Imus Campus</p>
+                    <p>Front end Developer</p>
                 </div>
 
                 <div class="team-member">
-                    <img src="member3.jpg" alt="Member 3">
+                
                     <h3>Christian Job Trio</h3>
+                    <p>3rd year IT Student from CVSU- Imus Campus</p>
+                    <p>Back end Developer</p>
                     <p></p>
                 </div>
             </div>
