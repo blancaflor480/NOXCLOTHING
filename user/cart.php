@@ -280,11 +280,11 @@ if ($result && $result->num_rows > 0) {
                     <th>Quantity</th>
                     <th>Unit Price</th>
                 </tr>
-    <?php
+  <?php
 $totalItems = 0;
 $totalPrice = 0.00;
 
-$sql = "SELECT addcart.*, products.price AS product_price, products.name_item, products.image_front, products.discount 
+$sql = "SELECT addcart.*, products.price AS product_price, products.name_item, products.image_front, products.discount, products.quantity 
         FROM addcart 
         INNER JOIN products ON addcart.products_id = products.id 
         WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
@@ -296,7 +296,11 @@ $result = $stmt->get_result();
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $totalItems++;
-        $subtotal = $row['product_price'] * $row['quantity'];
+        $unitPrice = $row['product_price']; // Get unit price from database
+        $quantity = $row['quantity']; // Get available quantity from database
+
+        // Calculate subtotal based on unit price and quantity
+        $subtotal = $unitPrice * 1; // Always multiply by 1 unit, not $row['quantity']
         $totalPrice += $subtotal;
 
         echo "
@@ -308,19 +312,20 @@ if ($result && $result->num_rows > 0) {
                         <a href='productDetails.php?id=" . $row['products_id'] . "'>
                             <p class='name'><b>" . htmlspecialchars($row['name_item']) . "</b></p>
                         </a>
-                        <span class='product-price'>₱" . number_format($row['product_price'], 2) . "</span> <br />
+                        <span class='product-price'>₱" . number_format($unitPrice, 2) . "</span> <br />
                         <a href='javascript:void(0);' onclick='removeFromCart(" . $row['id'] . ")'>remove</a>
                     </div>
                 </div>
             </td>
-            <td><input type='number' value='" . $row['quantity'] . "' min='1' class='quantity' data-product-id='" . $row['id'] . "' /></td>
+            <td>
+                <input type='number' value='1' min='1' max='" . $quantity . "' class='quantity' data-product-id='" . $row['id'] . "' />
+            </td>
             <td class='subtotal'>₱" . number_format($subtotal, 2) . "</td>
         </tr>";
     }
 } else {
     echo "<tr><td colspan='3' style='text-align: center;'>Your cart is empty.</td></tr>";
     echo "<td colspan='3' style='text-align: center;'><a href='product.php'><input type='button' value='Go to Shop' style='width: 100px; background-color: #222; border-radius: 5px; color: white;'></a></td>";
-
 }
 
 // Retrieve discount rate from database
@@ -365,6 +370,8 @@ $finalTotal = $totalPrice - $discount;
             </table>
             <!--<a href="checkout.php" class="checkout">Proceed to Checkout</a>-->
             <a href="checkout.php"><input type="button" style="width: 250px;" class="checkout" value="Proceed to Checkout" <?php if ($totalItems == 0) echo 'disabled'; ?>></a>
+
+
     
         </div>
     </div>
@@ -562,107 +569,118 @@ $finalTotal = $totalPrice - $discount;
         });
     </script>
 
-    <script>
+<script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Function to update the order summary
-        function updateOrderSummary() {
-            // Get all quantity input elements
-            var quantities = document.querySelectorAll(".quantity");
-            var totalItems = 0;
-            var totalPrice = 0.00;
+    // Function to update the order summary based on quantity changes
+    function updateOrderSummary() {
+        var quantities = document.querySelectorAll(".quantity");
+        var totalItems = 0;
+        var totalPrice = 0.00;
 
-            quantities.forEach(function(quantityInput) {
-                var quantity = parseInt(quantityInput.value);
-                var productId = quantityInput.dataset.productId;
-                var price = parseFloat(quantityInput.closest("tr").querySelector(".product-price").innerText.replace('₱', ''));
+        quantities.forEach(function(quantityInput) {
+            var quantity = parseInt(quantityInput.value);
+            var productId = quantityInput.dataset.productId;
+            var price = parseFloat(quantityInput.closest("tr").querySelector(".product-price").innerText.replace('₱', ''));
+            var maxQuantity = parseInt(quantityInput.getAttribute('max'));
 
-                totalItems += quantity;
-                totalPrice += (quantity * price);
-            });
+            // Validate quantity against max stock
+            if (quantity < 1) {
+                quantityInput.value = 1;
+            } else if (quantity > maxQuantity) {
+                alert('Maximum available quantity is ' + maxQuantity);
+                quantityInput.value = maxQuantity;
+            }
 
-            var discountRate = 0.1; // Assuming a 10% discount
-            var discount = totalPrice * discountRate;
-            var finalTotal = totalPrice - discount;
-
-            // Update the order summary
-            document.getElementById("total-items").innerText = totalItems;
-            document.getElementById("total-price").innerText = "₱" + totalPrice.toFixed(2);
-            document.getElementById("discount").innerText = "₱" + discount.toFixed(2);
-            document.getElementById("final-total").innerText = "₱" + finalTotal.toFixed(2);
-        }
-
-        // Add event listeners to all quantity input fields
-        var quantityInputs = document.querySelectorAll(".quantity");
-        quantityInputs.forEach(function(input) {
-            input.addEventListener("change", function() {
-                if (this.value < 1) {
-                    this.value = 1; // Ensure the quantity is at least 1
-                }
-                updateOrderSummary();
-            });
+            totalItems += quantity;
+            totalPrice += (quantity * price);
         });
 
-        // Initial order summary update
-        updateOrderSummary();
+        // Update order summary elements
+        var discountRate = 0.1; // Assuming a 10% discount rate
+        var discount = totalPrice * discountRate;
+        var finalTotal = totalPrice - discount;
+
+        document.getElementById("total-items").innerText = totalItems;
+        document.getElementById("total-price").innerText = "₱" + totalPrice.toFixed(2);
+        document.getElementById("discount").innerText = "₱" + discount.toFixed(2);
+        document.getElementById("final-total").innerText = "₱" + finalTotal.toFixed(2);
+    }
+
+    // Add event listeners to all quantity input fields
+    var quantityInputs = document.querySelectorAll(".quantity");
+    quantityInputs.forEach(function(input) {
+        input.addEventListener("change", function() {
+            updateOrderSummary();
+        });
     });
+
+    // Initial order summary update
+    updateOrderSummary();
+});
+
 </script>
+
 <script>
         document.querySelectorAll('.quantity').forEach(item => {
-            item.addEventListener('input', event => {
-                let quantity = event.target.value;
-                let productId = event.target.dataset.productId;
+    item.addEventListener('input', event => {
+        let quantity = event.target.value;
+        let maxQuantity = parseInt(event.target.getAttribute('max'));
+        let productId = event.target.dataset.productId;
 
-                if (quantity < 1) {
-                    alert('Quantity must be at least 1');
-                    event.target.value = 1;
-                    return;
-                }
-
-                fetch('update_cart.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `id=${productId}&quantity=${quantity}`,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        updateCart();
-                    } else {
-                        alert('Error updating cart');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        });
-
-        function updateCart() {
-            let totalItems = 0;
-            let totalPrice = 0.0;
-
-            document.querySelectorAll('.quantity').forEach(item => {
-                let quantity = parseInt(item.value);
-                let price = parseFloat(item.closest('tr').querySelector('.product-price').textContent.replace('₱', ''));
-                let subtotalElement = item.closest('tr').querySelector('.subtotal');
-                let subtotal = quantity * price;
-
-                subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
-                totalItems += quantity;
-                totalPrice += subtotal;
-            });
-
-            let discountRate = 0.1;
-            let discount = totalPrice * discountRate;
-            let finalTotal = totalPrice - discount;
-
-            document.getElementById('total-items').textContent = totalItems;
-            document.getElementById('total-price').textContent = `₱${totalPrice.toFixed(2)}`;
-            document.getElementById('discount').textContent = `₱${discount.toFixed(2)}`;
-            document.getElementById('final-total').textContent = `₱${finalTotal.toFixed(2)}`;
+        if (quantity < 1) {
+            alert('Quantity must be at least 1');
+            event.target.value = 1;
+            return;
+        } else if (quantity > maxQuantity) {
+            alert('Maximum available quantity is ' + maxQuantity);
+            event.target.value = maxQuantity;
+            return;
         }
 
-        
+        fetch('update_cart.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${productId}&quantity=${quantity}`,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateCart();
+            } else {
+                alert('Error updating cart');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+function updateCart() {
+    let totalItems = 0;
+    let totalPrice = 0.0;
+
+    document.querySelectorAll('.quantity').forEach(item => {
+        let quantity = parseInt(item.value);
+        let price = parseFloat(item.closest('tr').querySelector('.product-price').textContent.replace('₱', ''));
+        let subtotalElement = item.closest('tr').querySelector('.subtotal');
+        let subtotal = quantity * price;
+
+        subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
+        totalItems += quantity;
+        totalPrice += subtotal;
+    });
+
+    let discountRate = 0.1;
+    let discount = totalPrice * discountRate;
+    let finalTotal = totalPrice - discount;
+
+    document.getElementById('total-items').textContent = totalItems;
+    document.getElementById('total-price').textContent = `₱${totalPrice.toFixed(2)}`;
+    document.getElementById('discount').textContent = `₱${discount.toFixed(2)}`;
+    document.getElementById('final-total').textContent = `₱${finalTotal.toFixed(2)}`;
+}
+
     </script>
     <!-- Custom Script -->
     <script src="./js/index.js"></script>

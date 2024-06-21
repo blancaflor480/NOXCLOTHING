@@ -1,38 +1,45 @@
 <?php
 session_start();
 
-// Check kung may session na itinakda para sa 'uname'
+// Check if user is logged in
 if (!isset($_SESSION['email'])) {
     header("Location: index.php?error=Login%20First");
     exit();
 }
 
-// Include ng database connection
+// Include database connection
 include 'dbconn/conn.php';
 
-// Kunin ang 'uname' mula sa session
+// Get user email from session
 $email = $_SESSION['email'];
 
-// Subukan kung mayroong resulta sa query
+// Fetch user details from 'customer' table including address details
 $stmt = $conn->prepare("SELECT * FROM customer WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Siguraduhing may resulta bago kunin ang data
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
-    $user_id = $user['id']; // Kunin ang 'id' ng user
+    $user_id = $user['id']; // Get user ID
+
+    // Extract address details from customer table
+    $fname = htmlspecialchars($user['fname']);
+    $mname = htmlspecialchars($user['mname']);
+    $lname = htmlspecialchars($user['lname']);
+    $contactnumber = htmlspecialchars($user['contactnumber']);
+    $region = htmlspecialchars($user['region']);
+    $barangay = htmlspecialchars($user['barangay']);
+    $province = htmlspecialchars($user['province']);
+    $city = htmlspecialchars($user['city']);
+    $street = htmlspecialchars($user['street']);
+    $zipcode = htmlspecialchars($user['zipcode']);
 } else {
-    // Kung wala, i-redirect sa login page
-    header("Location: login-signup.php?error=Login%20First");
+    // Redirect to login if user not found
+    header("Location: login-signup.php?error=User%20not%20found");
     exit();
 }
-
-// I-set ang 'user_id' sa session para magamit sa ibang mga pahina
-$_SESSION['user_id'] = $user_id;
 ?>
-
 
 
 <!DOCTYPE html>
@@ -80,6 +87,19 @@ $_SESSION['user_id'] = $user_id;
     .custom-list-group .list-group-item:hover i {
         color: white; /* Change icon color on hover */
     }
+    address-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .address-card .badge {
+            margin-left: 10px;
+            font-size: 0.8rem;
+        }
+        .address-actions {
+            margin-top: 10px;
+        }
 </style>
 <?php
     $totalItems = 0; // Initialize total items count
@@ -239,21 +259,22 @@ if ($result && $result->num_rows > 0) {
                         </div>
                     </form>
                     <!-- Example Address Card 1 -->
-                    <div class="row" style="margin-left: 30px;">
-                        <div class="address-card">
-                            <strong>Jade Ryan L. Blancaflor</strong>
-                            <span>(+63) 9380438403</span><br>
-                            <span>Tramo Street, Kaingin (Pob.)</span><br>
-                            <span>Kaingin (Pob.), Bacoor, Cavite, South Luzon, 4102</span>
-                            <span class="badge bg-primary">Default</span>
-                            <div class="address-actions d-flex justify-content-end">
-                                <a href="#" class="btn btn-outline-secondary btn-sm mx-1">Edit</a>
-                                <a href="#" class="btn btn-outline-danger btn-sm mx-1">Delete</a>
-                                <button class="btn btn-outline-primary btn-sm mx-1">Set as default</button>
+                    
+           <div class="row" style="margin-left: 30px;">
+                <div class="address-card" style="   height: auto; margin: auto; border-radius: 10px;">
+                    <strong><?php echo $fname. " " .$mname . " " .$lname; ?></strong>
+                    <span>(+63) <?php echo $contactnumber; ?></span><br>
+                    <span><?php echo $barangay . ", " . $street; ?></span><br>
+                    <span><?php echo $region . ", " . $province . " , " . $city . ", " . $zipcode; ?></span>
+                    <span class="badge bg-primary">Default</span>
+                    <div class="address-actions d-flex" style="margin-left: 550px;">
+                                <a href="#" class="btn btn-outline-secondary btn-md mx-1">Edit</a>
+                                <a href="#" class="btn btn-outline-danger btn-md mx-1">Delete</a>
+                                <button class="btn btn-outline-primary btn-md mx-1" style="width: 90px;" >Set as default</button>
                             </div>
-                           
-                        </div>
-                    </div>
+                </div>
+            </div>
+       
                 </div>
             </div>
         </div>

@@ -397,6 +397,8 @@ if ($result && $result->num_rows > 0) {
         echo "<form action='checkout.php' method='post'>";
         echo "<button type='submit' class='btn btn-primary' style='background-color:#222831; border-color:#222831;
         margin: 10px; width: 90px; height: 45px; font-size: 1.3rem'>Checkout</button>";
+         echo "<a href='cart.php'><button type='button' class='btn btn-primary' style='background-color: transparent; color: black; border-color:#222831;
+        margin: 10px; width: 90px; height: 45px; font-size: 1.3rem'>Cancel</button></a>";
         echo "</form>";
         echo "<li>";
         
