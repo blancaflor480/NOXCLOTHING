@@ -145,7 +145,7 @@ if ($result && $result->num_rows > 0) {
             <a href="#terms" class="nav-link">Terms</a>
             </li>
             <li class="nav-item">
-              <a href="#about" class="nav-link">About</a>
+              <a href="About.php" class="nav-link">About</a>
             </li>
             <li class="nav-item">
               <a href="contact.php" class="nav-link">Contact</a>
@@ -169,7 +169,7 @@ if ($result && $result->num_rows > 0) {
           </ul>
 
           <div class="icons d-flex">
-            <a href="login-signup.php" class="icon">
+             <a href="profile.php" class="icon">    
               <i class="bx bx-user"></i>
             </a>
             <div class="icon">

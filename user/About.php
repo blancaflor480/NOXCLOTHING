@@ -156,7 +156,7 @@ button:hover {
         </ul>
         
         <div class="icons d-flex" style="margin-top: -16px;">
-          <a href="login-signup.php" class="icon">
+           <a href="profile.php" class="icon">
             <i class="bx bx-user"></i>
           </a>
           <div class="icon">

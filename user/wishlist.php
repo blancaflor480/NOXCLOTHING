@@ -253,7 +253,7 @@ if ($result && $result->num_rows > 0) {
           </ul>
 
           <div class="icons d-flex">
-            <a href="login-signup.php" class="icon">
+           <a href="profile.php" class="icon">
               <i class="bx bx-user"></i>
             </a>
             <div class="icon">
