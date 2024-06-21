@@ -41,8 +41,8 @@ $_SESSION['user_id'] = $user_id;
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="images/icon.png"/>
-  
+  	<link rel="icon" href="images/icon.png"/>
+	
     <!-- Boxicons -->
     <link
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
@@ -81,7 +81,6 @@ $_SESSION['user_id'] = $user_id;
         color: white; /* Change icon color on hover */
     }
 </style>
-
 <?php
     $totalItems = 0; // Initialize total items count
 
@@ -200,10 +199,10 @@ if ($result && $result->num_rows > 0) {
         </div>
       </div>
 
- <!-- Profile Section -->
-    <section class="container mt-5">
-        <div class="row">
-            <div class="col-md-3">
+
+<section class="container mt-5">
+    <div class="row">
+        <div class="col-md-3">
                 <div class="bg-light p-3">
                     <div class="d-flex align-items-center mb-3" style="text-align: center;">
                         <div>
@@ -221,93 +220,69 @@ if ($result && $result->num_rows > 0) {
 </div>
                 </div>
             </div>
-            <div class="col-md-9">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-header" style="background-color:transparent;">
-                            <h3>My Profile</h3>
-                            <span>Manage and protect your account</span>
+        
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header d-flex justify-content-between align-items-center" style="background-color:transparent;">
+                        <h3>My Purchase</h3>
+                        <div class="col-md-2 mb-3">
+                            <select id="inputState" class="form-select">
+                                <option selected>All</option>
+                                <option>To Pay</option>
+                                <option>To Ship</option>
+                                <option>To Receive</option>
+                                <option>Completed</option>
+                                <option>Cancelled</option>
+                            </select>
                         </div>
-                        <div class="mb-3" style="text-align: center;">
-                            <img id="imagePreview" src="uploads/pfpp.png" alt="Profile Picture" style="max-width: 120px; height: auto;" />
-                        </div>
-                        <form class="row g-3 mb-2 mt-3 needs-validation" novalidate>
-                            <div class="col-md-3" style=" margin-left: 80px;">
-                                <label for="validationCustom01" class="form-label" style="font-size: 1.5rem;">First name</label>
-                                <input type="text" class="form-control" id="validationCustom01" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['fname']); ?>" required>
-                                <div class="valid-feedback">Looks good!</div>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="validationCustom02" class="form-label" style="font-size: 1.5rem;">Middle name</label>
-                                <input type="text" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['mname']); ?>" required>
-                                <div class="valid-feedback">Looks good!</div>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="validationCustomUsername" class="form-label" style="font-size: 1.5rem">Last name</label>
-                                <div class="input-group has-validation">
-                                    <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                    <input type="text" class="form-control" id="validationCustomUsername" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['lname']); ?>" required>
-                                    <div class="invalid-feedback">Please choose a username.</div>
-                                </div>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0;">Email</label>
-                                    <input type="text" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['email']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
-                                </div>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0;">Phone</label>
-                                    <input type="text" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['contactnumber']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
-                                </div>
-                            </div>
-                           <?php
-$gender = $user['gender'];
-?>
-<div class="row g-3">
-    <div class="col-lg-9 d-flex align-items-center" style="margin-left: 80px;">
-        <label for="gender" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0;">Gender</label>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="gender" id="male" value="Male" <?php echo ($gender == 'Male') ? 'checked' : ''; ?>>
-            <label class="form-check-label" for="male">Male</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="gender" id="female" value="Female" <?php echo ($gender == 'Female') ? 'checked' : ''; ?>>
-            <label class="form-check-label" for="female">Female</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="gender" id="other" value="Other" <?php echo ($gender == 'Other') ? 'checked' : ''; ?>>
-            <label class="form-check-label" for="other">Other</label>
-        </div>
-    </div>
-</div>
-                            <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0; width: 110px;">Date of Birth</label>
-                                    <input type="text" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['bday']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
-                                </div>
-                            </div>
-                             <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0; width: 120px;">Upload Image</label>
-                                    <input type="file" class="form-control" id="validationCustom02" style="height: 25px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['bday']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
-                                </div>
-                            </div>
-                          
-                            <div class="col-12 mt-4">
-                                <button class="btn btn-primary" type="submit" style="margin-left: 78%; height: 30px; width:50px ">Update</button>
-                            </div>
-                        </form>
                     </div>
+                    <!-- Purchase Item Card -->
+                    <div class="purchase-card mb-3 mt-5">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-warning text-dark">Preferred</span>
+                                <strong>Brightest Roof Shop</strong>
+                                <button class="btn btn-outline-secondary btn-sm">Chat</button>
+                                <button class="btn btn-outline-secondary btn-sm">View Shop</button>
+                            </div>
+                            <div>
+                                <span class="text-success">Parcel has been delivered</span>
+                                <span class="badge bg-success">COMPLETED</span>
+                            </div>
+                        </div>
+                        <div class="d-flex mt-3">
+                            <img src="image.png" alt="Product Image" style="width: 80px; height: 80px; object-fit: cover;">
+                            <div class="ms-3">
+                                <p class="mb-1"><strong>SOFTEX Plain Round Neck Shirt light sky aqua blue royal violet brown black</strong></p>
+                                <p class="mb-1">Variation: navy blue, Large</p>
+                                <p class="mb-1">x1</p>
+                                <button class="btn btn-outline-success btn-sm">Change of Mind</button>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <span>Rate products by <a href="#">07/15/2024</a></span>
+                                <p class="text-danger mb-0">Rate now and get 1.4 coins</p>
+                            </div>
+                            <div>
+                                <span class="text-muted"><s>₱145</s></span>
+                                <span class="text-danger ms-2">₱121</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center mt-3">
+                            <span class="me-3"><strong>Order Total: ₱121</strong></span>
+                            <button class="btn btn-outline-danger me-2">Rate</button>
+                            <button class="btn btn-outline-secondary me-2">Contact Seller</button>
+                            <button class="btn btn-outline-primary">Buy Again</button>
+                        </div>
+                    </div>
+                    <!-- End of Purchase Item Card -->
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
   <br>
     <!-- Footer -->

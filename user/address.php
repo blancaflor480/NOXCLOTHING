@@ -41,8 +41,8 @@ $_SESSION['user_id'] = $user_id;
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="images/icon.png"/>
-  
+  	<link rel="icon" href="images/icon.png"/>
+	
     <!-- Boxicons -->
     <link
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
@@ -81,7 +81,6 @@ $_SESSION['user_id'] = $user_id;
         color: white; /* Change icon color on hover */
     }
 </style>
-
 <?php
     $totalItems = 0; // Initialize total items count
 
@@ -200,10 +199,10 @@ if ($result && $result->num_rows > 0) {
         </div>
       </div>
 
- <!-- Profile Section -->
-    <section class="container mt-5">
-        <div class="row">
-            <div class="col-md-3">
+
+<section class="container mt-5">
+    <div class="row">
+        <div class="col-md-3">
                 <div class="bg-light p-3">
                     <div class="d-flex align-items-center mb-3" style="text-align: center;">
                         <div>
@@ -221,93 +220,45 @@ if ($result && $result->num_rows > 0) {
 </div>
                 </div>
             </div>
-            <div class="col-md-9">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-header" style="background-color:transparent;">
-                            <h3>My Profile</h3>
-                            <span>Manage and protect your account</span>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header" style="background-color:transparent;">
+                        <h3>My Addresses</h3>
+                    </div>
+                    <form class="row g-3 mb-2 mt-3 needs-validation" novalidate>
+                        <div class="col-md-3" style="margin-left: 40px;">
+                            <label class="form-label" style="font-size: 1.7rem;">Address</label>
                         </div>
-                        <div class="mb-3" style="text-align: center;">
-                            <img id="imagePreview" src="uploads/pfpp.png" alt="Profile Picture" style="max-width: 120px; height: auto;" />
+                        <div class="col-md-3" style="margin-left: 40px;">
+                            <div class="row g-3 mb-3">
+                                <div class="col-lg-9 d-flex justify-content-end" style="margin-left: 350px;">
+                                    <button class="btn btn-primary" type="submit" style="width: 120px; height: 30px; font-size: 1.2rem;">Add New Address</button>
+                                </div>
+                            </div>
                         </div>
-                        <form class="row g-3 mb-2 mt-3 needs-validation" novalidate>
-                            <div class="col-md-3" style=" margin-left: 80px;">
-                                <label for="validationCustom01" class="form-label" style="font-size: 1.5rem;">First name</label>
-                                <input type="text" class="form-control" id="validationCustom01" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['fname']); ?>" required>
-                                <div class="valid-feedback">Looks good!</div>
+                    </form>
+                    <!-- Example Address Card 1 -->
+                    <div class="row" style="margin-left: 30px;">
+                        <div class="address-card">
+                            <strong>Jade Ryan L. Blancaflor</strong>
+                            <span>(+63) 9380438403</span><br>
+                            <span>Tramo Street, Kaingin (Pob.)</span><br>
+                            <span>Kaingin (Pob.), Bacoor, Cavite, South Luzon, 4102</span>
+                            <span class="badge bg-primary">Default</span>
+                            <div class="address-actions d-flex justify-content-end">
+                                <a href="#" class="btn btn-outline-secondary btn-sm mx-1">Edit</a>
+                                <a href="#" class="btn btn-outline-danger btn-sm mx-1">Delete</a>
+                                <button class="btn btn-outline-primary btn-sm mx-1">Set as default</button>
                             </div>
-                            <div class="col-md-3">
-                                <label for="validationCustom02" class="form-label" style="font-size: 1.5rem;">Middle name</label>
-                                <input type="text" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['mname']); ?>" required>
-                                <div class="valid-feedback">Looks good!</div>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="validationCustomUsername" class="form-label" style="font-size: 1.5rem">Last name</label>
-                                <div class="input-group has-validation">
-                                    <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                    <input type="text" class="form-control" id="validationCustomUsername" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['lname']); ?>" required>
-                                    <div class="invalid-feedback">Please choose a username.</div>
-                                </div>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0;">Email</label>
-                                    <input type="text" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['email']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
-                                </div>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0;">Phone</label>
-                                    <input type="text" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['contactnumber']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
-                                </div>
-                            </div>
-                           <?php
-$gender = $user['gender'];
-?>
-<div class="row g-3">
-    <div class="col-lg-9 d-flex align-items-center" style="margin-left: 80px;">
-        <label for="gender" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0;">Gender</label>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="gender" id="male" value="Male" <?php echo ($gender == 'Male') ? 'checked' : ''; ?>>
-            <label class="form-check-label" for="male">Male</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="gender" id="female" value="Female" <?php echo ($gender == 'Female') ? 'checked' : ''; ?>>
-            <label class="form-check-label" for="female">Female</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="gender" id="other" value="Other" <?php echo ($gender == 'Other') ? 'checked' : ''; ?>>
-            <label class="form-check-label" for="other">Other</label>
-        </div>
-    </div>
-</div>
-                            <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0; width: 110px;">Date of Birth</label>
-                                    <input type="text" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['bday']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
-                                </div>
-                            </div>
-                             <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0; width: 120px;">Upload Image</label>
-                                    <input type="file" class="form-control" id="validationCustom02" style="height: 25px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['bday']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
-                                </div>
-                            </div>
-                          
-                            <div class="col-12 mt-4">
-                                <button class="btn btn-primary" type="submit" style="margin-left: 78%; height: 30px; width:50px ">Update</button>
-                            </div>
-                        </form>
+                           
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
   <br>
     <!-- Footer -->
