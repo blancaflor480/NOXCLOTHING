@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2024 at 09:38 PM
+-- Generation Time: Jun 24, 2024 at 05:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,11 +44,9 @@ CREATE TABLE `addcart` (
 --
 
 INSERT INTO `addcart` (`id`, `customer_id`, `wishlist_id`, `products_id`, `quantity`, `size`, `price`, `status`, `datetime`) VALUES
-(6, 3, NULL, 5, 1, '', 299.00, '', '2024-05-27 13:59:33'),
-(7, 3, NULL, 4, 1, '', 599.00, '', '2024-05-27 13:59:58'),
-(14, 1, NULL, 6, 1, '', 199.00, '', '2024-05-29 12:56:53'),
-(15, 1, NULL, 4, 1, '', 599.00, '', '2024-06-01 03:13:24'),
-(16, 1, NULL, 3, 1, '', 399.00, '', '2024-06-01 03:13:35');
+(22, 1, NULL, 3, 1, '', 399.00, '', '2024-06-08 09:46:01'),
+(23, 1, NULL, 1, 1, '', 599.00, '', '2024-06-08 09:47:40'),
+(26, 3, NULL, 9, 1, '', 100.00, '', '2024-06-24 11:31:57');
 
 -- --------------------------------------------------------
 
@@ -75,9 +73,9 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `password`, `role`, `image`, `datereg`, `logintime`) VALUES
-(1, 'admin', '', '', 'admin@gmail.com', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', '', '2024-05-07', '2024-05-31 20:58:50'),
+(1, 'admin', '', '', 'admin@gmail.com', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', '', '2024-05-07', '2024-06-21 14:34:40'),
 (4, 'Ma. Angelica', 'M.', 'Rubrico', 'ghelle@gmail.com', 'ghelle', '0192023a7bbd73250516f069df18b500', 'Admin', 0x2e2e2f75706c6f6164732f637574656d6f6f2e6a7067, '2024-05-26', '2024-05-27 07:05:12'),
-(5, 'Jade Ryan', 'L.', 'Blancaflor', 'bryanblancaflor007@gmail.com', 'jade123', 'b220e82dde8abcb5dfe247ff49606009', 'Staff', 0x2e2e2f75706c6f6164732f36363532633431663030633262322e31343533383035322e706e67, '2024-05-26', '2024-05-29 04:21:42');
+(5, 'Jade Ryan', 'L.', 'Blancaflor', 'bryanblancaflor007@gmail.com', 'jade123', '21232f297a57a5a743894a0e4a801fc3', 'Staff', 0x2e2e2f75706c6f6164732f36363532633431663030633262322e31343533383035322e706e67, '2024-05-26', '2024-06-11 09:37:03');
 
 -- --------------------------------------------------------
 
@@ -90,6 +88,7 @@ CREATE TABLE `customer` (
   `fname` varchar(100) NOT NULL,
   `mname` varchar(100) NOT NULL,
   `lname` varchar(100) NOT NULL,
+  `gender` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `uname` varchar(250) NOT NULL,
   `region` varchar(100) NOT NULL,
@@ -111,8 +110,11 @@ CREATE TABLE `customer` (
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `region`, `province`, `barangay`, `city`, `zipcode`, `street`, `contactnumber`, `bday`, `image`, `password`, `otp`, `email_verified`, `datereg`) VALUES
-(1, 'Jade', 'Leba', 'Blancaflor', 'blancaflor480@gmail.com', 'jade123', 'IV', 'Cavite', '', 'Bacoor', 5012, 'Kaingen, Tramo st.', '09380438403', '2024-05-27', '', 'b220e82dde8abcb5dfe247ff49606009', NULL, 1, '2024-05-27');
+INSERT INTO `customer` (`id`, `fname`, `mname`, `lname`, `gender`, `email`, `uname`, `region`, `province`, `barangay`, `city`, `zipcode`, `street`, `contactnumber`, `bday`, `image`, `password`, `otp`, `email_verified`, `datereg`) VALUES
+(1, 'Jade', 'Leba', 'Blancaflor', '', 'blancaflor007@gmail.com', 'jade123', 'IV', 'Cavite', '', 'Bacoor', 5012, 'Kaingen, Tramo st.', '09380438403', '2024-05-27', 0x2e2e2f75706c6f6164732f6d6163636d2e6a7067, 'b220e82dde8abcb5dfe247ff49606009', NULL, 1, '2024-05-27'),
+(2, 'jkjk', '', '', '', 'bhbb@gmail.com', 'bbb', '', '', '', '', 0, '', '', '7777-08-07', '', '651ec1be722ede6ac5b0737ed37e0bee', '478291', 0, '2024-06-08'),
+(3, 'Jade ', 'Leba', 'Blancaflor', '', 'blancaflor480@gmail.com', '', 'IV', 'Cavite', 'Kaingen', 'Bacoor', 5012, 'Tramo', '09380438403', '2024-06-09', '', 'b220e82dde8abcb5dfe247ff49606009', NULL, 1, '2024-06-09'),
+(4, 'Jaderyan', 'Leba', 'Blancaflor', '', 'bryanblancaflor007@gmail.com', '', '', '', '', '', 0, '', '', '2024-06-14', '', 'b220e82dde8abcb5dfe247ff49606009', '322475', 0, '2024-06-14');
 
 -- --------------------------------------------------------
 
@@ -183,14 +185,15 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name_item`, `type`, `color`, `size`, `manufacturer`, `description`, `category`, `quantity`, `status`, `image_front`, `image_back`, `discount`, `price`, `date_insert`) VALUES
-(1, 'Ghirl Tshirt', 'female', 'Pink', 'medium', 'Dickies', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d312e6a7067, '', 28.00, 399.00, '2024-05-14'),
+(1, 'Ghirl Tshirt', 'female', 'Pink', 'medium', 'Dickies', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d312e6a7067, '', 28.00, 599.00, '2024-05-14'),
 (2, 'Hoodie X', 'female', 'Purple', 'large', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 12, 'Low Stock', 0x70726f647563742d332e6a7067, '', 50.00, 299.00, '2024-05-14'),
 (3, 'Hoodie X', 'male', 'Gray', 'medium', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'JACKETS', 10, 'Low Stock', 0x70726f647563742d342e6a7067, '', 38.00, 399.00, '2024-05-14'),
 (4, 'Hoodie M', 'male', 'Black', 'large', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Instock', 0x70726f647563742d352e6a7067, '', 100.00, 599.00, '2024-05-14'),
 (5, 'Boy\'s Greeny', 'male', 'Green', 'medium', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d362e6a7067, '', 38.00, 299.00, '2024-05-14'),
 (6, 'Sky Cloud', 'female', 'Sky Blue', 'small', 'Nike', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d382e6a7067, '', 38.00, 199.00, '2024-05-14'),
 (7, 'Jansport', 'other', 'Red', 'medium', 'Nike', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'SHORTS', 10, 'Restock', 0x70726f647563742d322e6a7067, '', 10.00, 599.00, '2024-05-14'),
-(8, 'Jansport Edition', 'female', 'Red', 'medium', 'UNIQLO', 'ahhahda', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d322e6a7067, '', 0.00, 999.00, '2024-05-14');
+(8, 'Jansport Edition', 'female', 'Red', 'medium', 'UNIQLO', 'ahhahda', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d322e6a7067, '', 0.00, 999.00, '2024-05-14'),
+(9, 'CVSU SHIRT', 'male', 'Blue', 'small', 'Nike', 'dbbdasb', 'T-SHIRT', 10, 'Restock', 0x436f6e6365707475616c2d4672616d65776f726b2e706466, '', 0.00, 100.00, '2024-06-08');
 
 -- --------------------------------------------------------
 
@@ -254,15 +257,6 @@ CREATE TABLE `wishlist` (
   `products_id` int(11) NOT NULL,
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `wishlist`
---
-
-INSERT INTO `wishlist` (`id`, `customer_id`, `products_id`, `date`) VALUES
-(1, 3, 6, '0000-00-00'),
-(6, 1, 2, '0000-00-00'),
-(7, 1, 3, '0000-00-00');
 
 --
 -- Indexes for dumped tables
@@ -350,7 +344,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `addcart`
 --
 ALTER TABLE `addcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -362,7 +356,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -380,7 +374,7 @@ ALTER TABLE `payment`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `ratings`
@@ -404,7 +398,7 @@ ALTER TABLE `voucher`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
