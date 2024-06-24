@@ -45,13 +45,10 @@ include 'dbconn/conn.php';
               <a href="product.php" class="nav-link">Shop</a>
             </li>
             <li class="nav-item">
-            <a href="#terms" class="nav-link">Terms</a>
+              <a href="About.php" class="nav-link">About</a>
             </li>
             <li class="nav-item">
-              <a href="#about" class="nav-link">About</a>
-            </li>
-            <li class="nav-item">
-              <a href="#contact" class="nav-link">Contact</a>
+              <a href="contact.php" class="nav-link">Contact</a>
             </li>
             <li class="icons d-flex">
             <a href="login-signup.php" class="icon">
@@ -62,11 +59,9 @@ include 'dbconn/conn.php';
             </div>
             <div class="icon">
               <i class="bx bx-heart"></i>
-              <span class="d-flex">0</span>
             </div>
             <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
-              <span class="d-flex">0</span>
             </a>
           </li>
           </ul>
@@ -80,10 +75,8 @@ include 'dbconn/conn.php';
             </div>
             <a href="cart.php" class="icon">
               <i class="bx bx-heart"></i>
-              <span class="d-flex">0</span>
             <a href="cart.php" class="icon">
               <i class="bx bx-cart"></i>
-              <span class="d-flex">0</span>
             </a>
             <a href="logout.php" class="icon">
               <i class="bx bx-log-out"></i>
@@ -132,7 +125,7 @@ include 'dbconn/conn.php';
                     </div>
                     <div class="product-info">
                         <span><?php echo htmlspecialchars($product['type']); ?></span>
-                        <a href="productDetails.html"><?php echo htmlspecialchars($product['name_item']); ?></a>
+                        <a href="productDetails.php"><?php echo htmlspecialchars($product['name_item']); ?></a>
                         <h4>₱<?php echo number_format($product['price'], 2); ?></h4>
                     </div>
                     <ul class="icons">

@@ -2,8 +2,6 @@
 include 'dbconn/conn.php';
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -50,13 +48,10 @@ include 'dbconn/conn.php';
               <a href="product.php" class="nav-link">Shop</a>
             </li>
             <li class="nav-item">
-            <a href="#terms" class="nav-link">Terms</a>
+              <a href="About.php" class="nav-link">About</a>
             </li>
             <li class="nav-item">
-              <a href="#about" class="nav-link">About</a>
-            </li>
-            <li class="nav-item">
-              <a href="#contact" class="nav-link">Contact</a>
+              <a href="contact.php" class="nav-link">Contact</a>
             </li>
             <li class="icons d-flex">
             <a href="login-signup.php" class="icon">

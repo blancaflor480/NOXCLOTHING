@@ -31,6 +31,33 @@ if ($result->num_rows > 0) {
 
 // I-set ang 'user_id' sa session para magamit sa ibang mga pahina
 $_SESSION['user_id'] = $user_id;
+
+// Process quantity updates if form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['productId']) && isset($_POST['quantity'])) {
+        $productId = $_POST['productId'];
+        $quantity = intval($_POST['quantity']);
+
+        // Validate quantity (optional)
+        if ($quantity < 1) {
+            $quantity = 1;
+        }
+
+        // Update quantity in the cart (example query)
+        $stmt = $conn->prepare("UPDATE addcart SET quantity = ? WHERE customer_id = ? AND products_id = ?");
+        $stmt->bind_param("iii", $quantity, $user_id, $productId);
+        $stmt->execute();
+
+        // Handle success or error (optional)
+        if ($stmt->affected_rows > 0) {
+            // Quantity updated successfully
+        } else {
+            // Handle update error
+        }
+
+        $stmt->close();
+    }
+}
 ?>
 
 <!DOCTYPE html>
