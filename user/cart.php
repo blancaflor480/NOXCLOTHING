@@ -72,6 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     />
     <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.20/dist/sweetalert2.min.css">
+
     <title>NOX CLOTHING | Cart</title>
 
         <style>
@@ -470,6 +472,8 @@ $finalTotal = $totalPrice - $discount;
       </div>
     </footer>
 
+ <!-- SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.20/dist/sweetalert2.all.min.js"></script>
   
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -532,13 +536,28 @@ $finalTotal = $totalPrice - $discount;
         xhr.onreadystatechange = function() {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 if (this.responseText === "success") {
-                    // Show alert if removal is successful
-                    alert("Item removed successfully.");
-                    // Reload the page to reflect changes after successful removal
-                    location.reload();
+                    // Show SweetAlert if removal is successful
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        position: 'top',
+                        text: 'Item removed successfully.',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(function() {
+                        // Reload the page to reflect changes after successful removal
+                        location.reload();
+                    });
                 } else {
-                    // Show alert if there is an error
-                    alert("Error: " + this.responseText);
+                    // Show SweetAlert if there is an error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        position: 'top',
+                        text: 'Error: ' + this.responseText,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
                 }
             }
         };

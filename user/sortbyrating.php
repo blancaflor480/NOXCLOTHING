@@ -48,6 +48,8 @@ $_SESSION['user_id'] = $user_id;
     />
     <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.20/dist/sweetalert2.min.css">
+
     <title>NOX CLOTHING</title>
 
   </head>
@@ -142,9 +144,7 @@ if ($result && $result->num_rows > 0) {
             <li class="nav-item">
               <a href="product.php" class="nav-link">Shop</a>
             </li>
-            <li class="nav-item">
-            <a href="#terms" class="nav-link">Terms</a>
-            </li>
+
             <li class="nav-item">
               <a href="#about" class="nav-link">About</a>
             </li>
@@ -273,7 +273,7 @@ if ($result && $result->num_rows > 0) {
           <img src="../admin/uploads/<?php echo $product['image_front']; ?>" alt="<?php echo $product['name_item']; ?>" />
         </a>
         <?php if ($product['discount'] > 0): ?>
-        <span class="discount"><?php echo $product['discount']; ?>%</span>
+        <span class="discount">-<?php echo number_format($product['discount'], 0); ?>%</span>
         <?php endif; ?>
       </div>
       <div class="product-info">
@@ -284,7 +284,6 @@ if ($result && $result->num_rows > 0) {
       </div>
       <ul class="icons">
          <li><i class="bx bx-heart add-to-wishlist" data-product-id="<?php echo $product['id']; ?>"></i></li>
-        <li><i class="bx bx-search"></i></li>
         <li><i class="bx bx-cart add-to-cart" data-product-id="<?php echo $product['id']; ?>"></i></li>
       </ul>
     </div>
@@ -338,7 +337,10 @@ if ($result && $result->num_rows > 0) {
     </footer>
     <!-- Custom Script -->
 
-  
+
+  <!-- SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.20/dist/sweetalert2.all.min.js"></script>
+
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     var addToWishlistButtons = document.querySelectorAll(".add-to-wishlist");
@@ -359,10 +361,32 @@ if ($result && $result->num_rows > 0) {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var response = JSON.parse(xhr.responseText);
                 if (response.success) {
-                    alert(response.message);
+                    Swal.fire({
+                        title: 'Success',
+                        icon: 'success',
+                        text: response.message,
+                        position: 'top',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            title: 'swal2-title-custom',
+                            content: 'swal2-content-custom'
+                        }
+                    });
                     updateWishlistIndicator();
                 } else {
-                    alert(response.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message,
+                        position: 'top',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        customClass: {
+                            title: 'swal2-title-custom',
+                            content: 'swal2-content-custom'
+                        }
+                    });
                 }
             }
         };
@@ -385,12 +409,8 @@ if ($result && $result->num_rows > 0) {
 
         xhr.send();
     }
-
-});
-
+  });
 </script>
-
-
 <script>
         document.addEventListener("DOMContentLoaded", function() {
 
@@ -412,10 +432,32 @@ if ($result && $result->num_rows > 0) {
                     if (xhr.readyState === 4 && xhr.status === 200) {
                         var response = JSON.parse(xhr.responseText);
                         if (response.success) {
-                            alert(response.message);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                                position: 'top',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    title: 'swal2-title-custom',
+                                    content: 'swal2-content-custom'
+                                }
+                            });
                             updateCartIndicator();
                         } else {
-                            alert(response.message);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message,
+                                position: 'top',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                customClass: {
+                                    title: 'swal2-title-custom',
+                                    content: 'swal2-content-custom'
+                                }
+                            });
                         }
                     }
                 };
@@ -442,4 +484,5 @@ if ($result && $result->num_rows > 0) {
     </script>
     <script src="./js/index.js"></script>
   </body>
+
 </html>

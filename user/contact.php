@@ -256,9 +256,7 @@ if ($result && $result->num_rows > 0) {
           <li class="nav-item">
             <a href="product.php" class="nav-link">Shop</a>
           </li>
-          <li class="nav-item">
-            <a href="#terms" class="nav-link">Terms</a>
-          </li>
+          
           <li class="nav-item">
             <a href="About.php" class="nav-link">About</a>
           </li>
