@@ -45,6 +45,8 @@ $_SESSION['user_id'] = $user_id;
     />
     <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.20/dist/sweetalert2.min.css">
+
     <title>Your Cart</title>
 
         <style>
@@ -226,9 +228,6 @@ if ($result && $result->num_rows > 0) {
               <a href="product.php" class="nav-link">Shop</a>
             </li>
             <li class="nav-item">
-            <a href="#terms" class="nav-link">Terms</a>
-            </li>
-            <li class="nav-item">
               <a href="#about" class="nav-link">About</a>
             </li>
             <li class="nav-item">
@@ -317,10 +316,10 @@ if ($result && $result->num_rows > 0) {
                             </td>
                             <td class='subtotal'>₱" . htmlspecialchars($row['product_price']) . "</td>
                             <td>
-                                <button class='btn-add' data-product-id='" . $row['products_id'] . "'>
+                                <button class='btn-add' style='background-color: black;' data-product-id='" . $row['products_id'] . "'>
                                     <i class='bx bx-cart-add'></i>
                                 </button> 
-                                <button class='btn-remove' data-wishlist-id='" . $row['id'] . "'>
+                                <button class='btn-remove' style='background-color: transparent; color:red; border-color: black;' data-wishlist-id='" . $row['id'] . "'>
                                     <i class='bx bx-trash'></i>
                                 </button>
                             </td>
@@ -369,7 +368,6 @@ if ($result && $result->num_rows > 0) {
       </div>
       <ul class="icons">
         <li><i class="bx bx-heart add-to-wishlist" data-product-id="<?php echo $product['id']; ?>"></i></li>
-        <li><i class="bx bx-search"></i></li>
         <li><i class="bx bx-cart add-to-cart" data-product-id="<?php echo $product['id']; ?>"></i></li>
       </ul>
     </div>
@@ -404,7 +402,8 @@ if ($result && $result->num_rows > 0) {
       </div>
     </footer>
 
-  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.20/dist/sweetalert2.all.min.js"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Function to remove item from wishlist
@@ -417,10 +416,26 @@ if ($result && $result->num_rows > 0) {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.success) {
-                        alert(response.message);
-                        location.reload(); // Reload page to reflect changes
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then(function() {
+                        // Reload the page to reflect changes after successful removal
+                        location.reload();
+                    });
                     } else {
-                        alert(response.message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
                     }
                 }
             };
@@ -428,7 +443,7 @@ if ($result && $result->num_rows > 0) {
             var data = "wishlistId=" + wishlistId;
             xhr.send(data);
         }
-
+ 
         // Event listener for remove buttons
         var removeButtons = document.querySelectorAll(".btn-remove");
         removeButtons.forEach(function(button) {
@@ -448,12 +463,29 @@ if ($result && $result->num_rows > 0) {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.success) {
-                        alert(response.message);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then(function() {
+                        // Reload the page to reflect changes after successful removal
+                        location.reload();
+                    });
                         updateWishlistIndicator();
                         updateCartIndicator();
-                        location.reload(); // Reload page to reflect changes
+                         // Reload page to reflect changes
                     } else {
-                        alert(response.message);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
                     }
                 }
             };
@@ -499,7 +531,8 @@ if ($result && $result->num_rows > 0) {
             xhr.send();
         }
     });
-    </script>
+</script>
+
 
 <script>
         document.addEventListener("DOMContentLoaded", function() {

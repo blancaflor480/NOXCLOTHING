@@ -68,6 +68,53 @@ if ($result->num_rows > 0) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"/>
     <link rel="stylesheet" href="./css/styles.css"/>
     <title>NOX CLOTHING - <?php echo htmlspecialchars($product['name_item']); ?></title>
+    <style>
+        .color-container {
+            margin-top: 10px;
+        }
+
+        .color-options {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .color-label {
+            display: flex;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            margin: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 70px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .color-label input[type="radio"] {
+            display: none;
+        }
+
+        .color-box {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 2px;
+        }
+
+        .color-label:hover {
+            border-color: #000;
+        }
+
+        .color-label input[type="radio"]:checked + .color-box {
+            border: 2px solid #000;
+        }
+
+        .color-label.selected {
+            border-color: #000;
+        }
+    </style>
 </head>
  <?php
     $totalItems = 0; // Initialize total items count
@@ -175,68 +222,97 @@ if ($result && $result->num_rows > 0) {
 
 
 <!-- Product Details -->
-<section class="section product-detail">
-    <div class="details container">
-        <div class="left image-container">
+<section class="section product-detail" style="background-color: #F5F5F5;">
+    <span style="position: absolute; top: 130px; left: 190px; font-size: 1.3rem;" ><a href="index.php">Home</a> > <span style="font-size: 1.5rem; font-weight: bold;"><?php echo htmlspecialchars($product['category']); ?></span></span><br>
+    <div class="details container" style="background-color: white; box-shadow: 1px 1px #C9C9C9; border-radius: 5px;  margin-top: -65px; ">
+        
+    
+        <div class="left image-container" style="margin: 10px; border-radius: 10px;">
             <div class="main">
                 <img src="../admin/uploads/<?php echo htmlspecialchars($product['image_front']); ?>" id="zoom" alt="Product Image"/>
             </div>
         </div>
         <div class="right">
-            <span>Home/<?php echo htmlspecialchars($product['category']); ?></span>
-            <h1><?php echo htmlspecialchars($product['name_item']); ?></h1>
-            <div class="price">₱<?php echo number_format($product['price'], 2); ?></div>
+            <br>
+                
+            <h2 style="font-size: 3rem;"><?php echo htmlspecialchars($product['name_item']); ?></h2>
+            
+              
+                
+                <span style="color: #F1C40F ; font-size: 1.3rem; margin-left: 5px;">
+                    <?php
+                    // Display stars based on rating
+                    $rating = (int)$product['rating'];
+                    for ($i = 1; $i <= 5; $i++) {
+                        if ($i <= $rating) {
+                            echo '<i class="bx bxs-star"></i>';
+                        } else {
+                            echo '<i class="bx bx-star"></i>';
+                        }
+                    }
+                    ?>
+                    <span style="color: black; font-size: 1.3rem;"><?php echo htmlspecialchars($product['rating']); ?> </span>
+                    <span style="color: black; font-size: 1.3rem;">Rating</span>
+                </span>
+            
+               
+               <br>
+            
+            <h2 class="price" style="font-size: 2.5rem;">₱<?php echo number_format($product['price'], 2); ?></h2>
             
             <!-- First Form (Size Selection) -->
-            <form id="select-form">
-                <div class="select-container" style="margin-left: 210px;">
-                <span >
-                    <select id="select-size" name="size">
-                        <option>Select Size</option>
-                        <option value="small">Small</option>
-                        <option value="medium">Medium</option>
-                        <option value="large">Large</option>
+                    
+                    
+                    <br>
+       <!-- Color Selection -->
+        <form action="add_to_cart.php" method="post" class="form" style="padding: 5px;">
+                <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>"/>
+          
+                <div class="color-container" style="margin-top: 10px;">
+                    <label for="color" style="font-weight: 400;">Color: </label>
+                    <div class="color-options" style="margin-left: 18px;" >
+                        <?php
+                        $colors = explode(",", $product['color']);
+                        foreach ($colors as $color) {
+                            echo '<label class="color-label">';
+                            echo '<input type="radio" name="color" value="' . htmlspecialchars(trim($color)) . '" required/>';
+                            echo '<span class="color-box" style="background-color:' . htmlspecialchars(trim($color)) . ';"></span>';
+                            echo htmlspecialchars(trim($color));
+                            echo '</label>';
+                        }
+                        ?>
+                    </div>
+                </div><br><br>
+           
+                <!-- Size Selection -->
+                <div  class="select-container" style="margin-left: 0px; display: flex; align-items: center;">
+                    <label for="size" style="font-weight: 400; margin-right: 10px;">Size: </label>
+                    <select name="size" id="select-size" style="margin-left: 25px;" required>
+                        <option value="">Select Size</option>
+                        <?php
+                        $sizes = explode(",", $product['size']);
+                        foreach ($sizes as $size) {
+                            echo '<option value="' . htmlspecialchars(trim($size)) . '">' . htmlspecialchars(trim($size)) . '</option>';
+                        }
+                        ?>
                     </select>
-                    <span class="select-icon"><i class="bx bx-chevron-down"></i></span>
-                </span>
-                </div>
-            </form><br>
-                 <form id="color-form">
-    <div class="color-container">
-        <label>Color:</label>
-        <div class="color-options">
-            <label for="color-blue">
-                <input type="radio" id="color-blue" name="color" value="blue">
-                <span class="color-box blue"></span> Blue
-            </label>
-            <label for="color-red">
-                <input type="radio" id="color-red" name="color" value="red">
-                <span class="color-box red"></span> Red
-            </label>
-            <!-- Add more color options here as needed -->
-        </div>
-    </div>
-</form>
-            <br>
+                </div><br>
             
             <!-- Second Form (Add to Cart) -->
-                <form class="form">
-                    <label>Quantity</label>
-                    <input type="number" placeholder="1" style="width: 50px;" min="1" max="<?php echo $product['quantity']; ?>"/>
-                 <!--   <span><?php echo $product['quantity']; ?></span>-->
-                 <br><br><br>       
-                    <a href="" class="addCart">Buy Now</a>
-                    <a href="" class="addCart">Add To Cart</a>
-                </form>
+                
+           
+                    <label for="quantity" style="font-weight: 400;">Quantity: </label>
+                    <input type="number" id="quantityInput" placeholder="1" style="width: 50px;" min="1" max="<?php echo $product['quantity']; ?>"/>
+             <br>
+    <div style="margin-top: 80px;">     
+    <button type="button" class="addCart" style="border-radius: 5px; padding: 17px; border-color: black; background-color: transparent; color: black;"><i class='bx bx-cart'></i> Add To Cart</button>
+    <button type="button" class="addCart" style="border-radius: 5px; padding: 17px; width: 100px; margin: 10px;">Buy Now</button>
+    </div>
+    
+</form>
             
-            <h3>Product Detail</h3>
-            <p><?php echo htmlspecialchars($product['description']); ?></p>
         </div>
     </div>
-</section>
-
-
-
 <?php 
   // Adjust the query to select featured products, assuming there is a column named 'is_featured'
   $stmt = $conn->prepare("SELECT id, name_item, type, discount, price, image_front FROM products WHERE YEAR(date_insert) = 2024 LIMIT 4 ");
@@ -244,30 +320,51 @@ if ($result && $result->num_rows > 0) {
   $featured = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 <!-- Product Rating -->
-<section class="section product-rating" style="margin-top: -100px;">
-    <div class="container">
-        <h3 class="section-title">Product Rating</h3>
-        <div class="rating-details">
-            <div class="rating-stars">
-                <!-- Add your star rating display here -->
-                <!-- For example, you can use font awesome icons or any other rating system -->
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <i class="far fa-star"></i>
-            </div>
-            <span class="rating-value">4.5</span> <!-- Display the average rating value here -->
-            <span class="rating-count">(250 reviews)</span> <!-- Display the total number of reviews here -->
+<section class="section product-rating" style="margin-top: -70px;">
+    <div class="container" style="background-color: white; box-shadow: 1px 1px #C9C9C9; border-radius: 5px;">
+        <br>
+        <div style="background-color: #F8F9F9; padding: 15px;">
+        <h4 style="font-size: 1.9rem;">Product Description</h4>
         </div>
-        <div class="rating-description">
-            <p><?php echo htmlspecialchars($product['description']); ?></p>
-        </div>
+            <p style="font-size: 1.5rem; padding: 15px;"><?php echo htmlspecialchars($product['description']); ?></p>
+        
     </div>
 </section>
+<section class="section product-rating" style="margin-top: -130px;">
+    <div class="container" style="background-color: white; box-shadow: 1px 1px #C9C9C9; border-radius: 5px;">
+        <br>
+        <div style="background-color: #F8F9F9; padding: 15px;">
+        <h4 style="font-size: 1.9rem;">Product Ratings</h4>
+        </div>
+        <span style="color: black; font-size: 3rem; margin-left: 10px; margin-top: -10px"><?php echo htmlspecialchars($product['rating']); ?> /5</span><br>
+        <span style="color: #F1C40F ; font-size: 3rem; margin-left: 5px;">
+                    <?php
+                    // Display stars based on rating
+                    $rating = (int)$product['rating'];
+                    for ($i = 1; $i <= 5; $i++) {
+                        if ($i <= $rating) {
+                            echo '<i class="bx bxs-star"></i>';
+                        } else {
+                            echo '<i class="bx bx-star"></i>';
+                        }
+                    }
+                    ?>
+                    <br>
+                    <span style="color: black; font-size: 1.3rem; margin-left: 10px;">Rating</span>
+                </span>
+            <p style="font-size: 1.5rem; padding: 15px;"><?php echo htmlspecialchars($product['description']); ?></p>
+        
+    </div>
+</section>
+
+</section>
+
+
+
     <!-- Related Products -->
     <section class="section featured">
         <div class="top container">
+            
             <h1>Related Products</h1>
             <a href="#" class="view-more">View more</a>
         </div>
