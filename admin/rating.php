@@ -1,4 +1,5 @@
 
+
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
 
 <?php
@@ -271,19 +272,25 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
 
                     <div class="row">
                         <div class="col-sm-4">
-    <label for="color" class="form-label">Color</label>
-    <select class="form-select" id="color" name="color" multiple required>
-        <option value="Red">Red</option>
-        <option value="Blue">Blue</option>
-        <option value="Green">Green</option>
-        <option value="Black">Black</option>
-        <option value="White">White</option>
-        <option value="Yellow">Yellow</option>
-        <option value="Pink">Pink</option>
-        <option value="Other">Other</option>
-    </select>
-</div>
-
+                            <div class="mb-3">
+                                <label for="color" class="form-label">Color</label>
+                                <select class="form-select" id="color" name="color" multiple required>
+                                    <option value="Red">Red</option>
+                                    <option value="Blue">Blue</option>
+                                    <option value="Green">Green</option>
+                                    <option value="Black">Black</option>
+                                    <option value="White">White</option>
+                                    <option value="Yellow">Yellow</option>
+                                    <option value="Pink">Pink</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3" id="otherColorDiv" style="display:none;">
+                                <label for="otherColor" class="form-label">Other Color</label>
+                                <input type="text" width="" class="form-control" id="otherColor" name="color">
+                            </div>
+                        
+                        </div>
                         <div class="col-sm-4">
                             <div class="mb-3">
                                 <label for="size" class="form-label">Size</label>
@@ -313,12 +320,7 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
                             </div>
                         </div>
                     </div>
-<div class="col-sm-12">
-<div class="mb-3" id="otherColorDiv" style="display:none;">
-    <label for="otherColor" class="form-label">Other Color</label>
-    <input type="text" class="form-control" id="otherColor">
-</div>
-</div>
+
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-3">
@@ -421,41 +423,12 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
    <script>
 document.getElementById('color').addEventListener('change', function() {
     const otherColorDiv = document.getElementById('otherColorDiv');
-    const selectedOptions = Array.from(this.selectedOptions).map(option => option.value);
-    if (selectedOptions.includes('Other')) {
+    if (this.value.includes('Other')) {
         otherColorDiv.style.display = 'block';
     } else {
         otherColorDiv.style.display = 'none';
     }
 });
-
-document.querySelector('form').addEventListener('submit', function(event) {
-    event.preventDefault();  // Prevent default form submission
-    const colorSelect = document.getElementById('color');
-    const selectedOptions = Array.from(colorSelect.selectedOptions).map(option => option.value);
-    const otherColorInput = document.getElementById('otherColor').value;
-
-    if (selectedOptions.includes('Other') && otherColorInput) {
-        selectedOptions[selectedOptions.indexOf('Other')] = otherColorInput;
-    }
-
-    // Create a hidden input field to submit the combined color values
-    const hiddenColorInput = document.createElement('input');
-    hiddenColorInput.type = 'hidden';
-    hiddenColorInput.name = 'color';
-    hiddenColorInput.value = selectedOptions.join(',');
-
-    // Append the hidden input field to the form
-    this.appendChild(hiddenColorInput);
-
-    // Optionally, log the values to the console for debugging
-    console.log('Submitting colors:', hiddenColorInput.value);
-
-    // Submit the form
-    this.submit();
-});
-
-
 </script>
 
    <script>
