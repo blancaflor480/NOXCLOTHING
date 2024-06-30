@@ -255,61 +255,58 @@ if ($result && $result->num_rows > 0) {
                     <span style="color: black; font-size: 1.3rem;">Rating</span>
                 </span>
             
-               
-               <br>
+        
+                   <h2 class="price" style="font-size: 2.5rem;">₱<?php echo number_format($product['price'], 2); ?></h2>
+      
+      <form id="addCartForm" class="form" style="padding: 5px;">
             
-            <h2 class="price" style="font-size: 2.5rem;">₱<?php echo number_format($product['price'], 2); ?></h2>
+             <input type="hidden" name="price" value="<?php echo htmlspecialchars($product['price']); ?>"/>
             
-            <!-- First Form (Size Selection) -->
                     
                     
                     <br>
-       <!-- Color Selection -->
-        <form action="add_to_cart.php" method="post" class="form" style="padding: 5px;">
-                <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>"/>
-          
-                <div class="color-container" style="margin-top: 10px;">
-                    <label for="color" style="font-weight: 400;">Color: </label>
-                    <div class="color-options" style="margin-left: 18px;" >
-                        <?php
-                        $colors = explode(",", $product['color']);
-                        foreach ($colors as $color) {
-                            echo '<label class="color-label">';
-                            echo '<input type="radio" name="color" value="' . htmlspecialchars(trim($color)) . '" required/>';
-                            echo '<span class="color-box" style="background-color:' . htmlspecialchars(trim($color)) . ';"></span>';
-                            echo htmlspecialchars(trim($color));
-                            echo '</label>';
-                        }
-                        ?>
-                    </div>
-                </div><br><br>
-           
-                <!-- Size Selection -->
-                <div  class="select-container" style="margin-left: 0px; display: flex; align-items: center;">
-                    <label for="size" style="font-weight: 400; margin-right: 10px;">Size: </label>
-                    <select name="size" id="select-size" style="margin-left: 25px;" required>
-                        <option value="">Select Size</option>
-                        <?php
-                        $sizes = explode(",", $product['size']);
-                        foreach ($sizes as $size) {
-                            echo '<option value="' . htmlspecialchars(trim($size)) . '">' . htmlspecialchars(trim($size)) . '</option>';
-                        }
-                        ?>
-                    </select>
-                </div><br>
-            
-            <!-- Second Form (Add to Cart) -->
-                
-           
-                    <label for="quantity" style="font-weight: 400;">Quantity: </label>
-                    <input type="number" id="quantityInput" placeholder="1" style="width: 50px;" min="1" max="<?php echo $product['quantity']; ?>"/>
-             <br>
-    <div style="margin-top: 80px;">     
-    <button type="button" class="addCart" style="border-radius: 5px; padding: 17px; border-color: black; background-color: transparent; color: black;"><i class='bx bx-cart'></i> Add To Cart</button>
-    <button type="button" class="addCart" style="border-radius: 5px; padding: 17px; width: 100px; margin: 10px;">Buy Now</button>
+    <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>"/>
+    <div class="color-container" style="margin-top: 10px;">
+        <label for="color" style="font-weight: 400;">Color: </label>
+        <div class="color-options" style="margin-left: 18px;">
+            <?php
+            $colors = explode(",", $product['color']);
+            $firstColor = true;
+            foreach ($colors as $color) {
+                $color = htmlspecialchars(trim($color));
+                echo '<label class="color-label">';
+                echo '<input type="radio" name="color" value="' . $color . '"' . ($firstColor ? ' checked' : '') . '/>';
+                echo '<span class="color-box" style="background-color:' . $color . ';"></span>';
+                echo $color;
+                echo '</label>';
+                $firstColor = false;
+            }
+            ?>
+        </div>
     </div>
-    
+    <br><br>
+    <div class="select-container" style="margin-left: 0px; display: flex; align-items: center;">
+        <label for="size" style="font-weight: 400; margin-right: 10px;">Size: </label>
+        <select name="size" id="select-size" style="margin-left: 25px;" required>
+            <option value="">Select Size</option>
+            <?php
+            $sizes = explode(",", $product['size']);
+            foreach ($sizes as $size) {
+                echo '<option value="' . htmlspecialchars(trim($size)) . '">' . htmlspecialchars(trim($size)) . '</option>';
+            }
+            ?>
+        </select>
+    </div>
+    <br>
+    <label for="quantity" style="font-weight: 400;">Quantity: </label>
+    <input type="number" name="quantity" id="quantityInput" placeholder="1" value="1" style="width: 50px;" min="1" max="<?php echo $product['quantity']; ?>" required/>
+    <br><br><br><br>
+    <button type="submit" class="addCart" style="border-radius: 5px; padding: 17px; border-color: black; background-color: transparent; color: black;">
+        <i class='bx bx-cart'></i> Add To Cart
+    </button>
+    <button type="button" class="addCart" style="border-radius: 5px; padding: 17px; width: 100px; margin: 10px;">Buy Now</button>
 </form>
+
             
         </div>
     </div>
@@ -421,7 +418,49 @@ if ($result && $result->num_rows > 0) {
             </div>
         </div>
     </footer>
-    <!-- Custom Script -->
+    <!-- Custom Script --><script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var addCartForm = document.getElementById("addCartForm");
+
+            addCartForm.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                var formData = new FormData(addCartForm); // Create a FormData object
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "function/addcart_details.php", true); // Send the form data to your PHP script
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            alert(response.message); // Display success message
+                            updateCartIndicator();
+                        } else {
+                            alert(response.message); // Display error message
+                        }
+                    }
+                };
+
+                xhr.send(formData); // Send the FormData object
+            });
+
+            function updateCartIndicator() {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "function/getcartcount.php", true); // Fetch the updated cart count
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var cartCount = xhr.responseText;
+                        var cartIndicator = document.querySelector("#count");
+                        cartIndicator.innerText = cartCount; // Update the cart indicator
+                    }
+                };
+
+                xhr.send();
+            }
+        });
+    </script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {

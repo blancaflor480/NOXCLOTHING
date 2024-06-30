@@ -38,21 +38,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $productId = $_POST['productId'];
         $quantity = intval($_POST['quantity']);
 
-        // Validate quantity (optional)
+        // Validate quantity
         if ($quantity < 1) {
             $quantity = 1;
         }
 
-        // Update quantity in the cart (example query)
-        $stmt = $conn->prepare("UPDATE addcart SET quantity = ? WHERE customer_id = ? AND products_id = ?");
-        $stmt->bind_param("iii", $quantity, $user_id, $productId);
+        // Check if the product already exists in the cart
+        $stmt = $conn->prepare("SELECT quantity FROM addcart WHERE customer_id = ? AND products_id = ?");
+        $stmt->bind_param("ii", $user_id, $productId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            // If the product exists, update the quantity
+            $row = $result->fetch_assoc();
+            $newQuantity = $row['quantity'] + $quantity;
+
+            $stmt = $conn->prepare("UPDATE addcart SET quantity = ? WHERE customer_id = ? AND products_id = ?");
+            $stmt->bind_param("iii", $newQuantity, $user_id, $productId);
+        } else {
+            // If the product does not exist, insert a new record
+            $stmt = $conn->prepare("INSERT INTO addcart (customer_id, products_id, quantity) VALUES (?, ?, ?)");
+            $stmt->bind_param("iii", $user_id, $productId, $quantity);
+        }
+
         $stmt->execute();
 
-        // Handle success or error (optional)
         if ($stmt->affected_rows > 0) {
-            // Quantity updated successfully
+            // Quantity updated/inserted successfully
+            echo json_encode(["success" => true, "message" => "Product added to cart successfully."]);
         } else {
-            // Handle update error
+            // Handle update/insert error
+            echo json_encode(["success" => false, "message" => "Failed to add product to cart."]);
         }
 
         $stmt->close();
@@ -300,79 +317,95 @@ if ($result && $result->num_rows > 0) {
     <div class="container cart">
 
         <div class="cart-items">
-            <table>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Unit Price</th>
-                </tr>
-  <?php
-$totalItems = 0;
-$totalPrice = 0.00;
+           <table style="background-color:#F2F4F4;">
+    <tr>
+        <th></th>
+        <th>Product</th>
+        <th>Variation</th>
+        <th>Quantity</th>
+        <th style="text-align: center;">Unit Price</th>
+        
+    </tr>
+    <?php
+    $totalItems = 0;
+    $totalPrice = 0.00;
 
-$sql = "SELECT addcart.*, products.price AS product_price, products.name_item, products.image_front, products.discount, products.quantity 
-        FROM addcart 
-        INNER JOIN products ON addcart.products_id = products.id 
-        WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
+    $sql = "SELECT addcart.*, products.price AS product_price, products.name_item, products.image_front, products.discount, products.quantity, addcart.quantity AS qty 
+            FROM addcart 
+            INNER JOIN products ON addcart.products_id = products.id 
+            WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $totalItems++;
-        $unitPrice = $row['product_price']; // Get unit price from database
-        $quantity = $row['quantity']; // Get available quantity from database
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $totalItems++;
+            $unitPrice = $row['product_price'];
+            $quantity = $row['qty'];
 
-        // Calculate subtotal based on unit price and quantity
-        $subtotal = $unitPrice * 1; // Always multiply by 1 unit, not $row['quantity']
-        $totalPrice += $subtotal;
+            // Calculate subtotal and discount
+            $subtotal = $unitPrice * $quantity;
+            $discount = $row['discount'];
+            $discountAmount = ($subtotal * $discount) / 100;
+            $discountedSubtotal = $subtotal - $discountAmount;
 
-        echo "
-        <tr>
-            <td>
-                <div class='cart-info'>
-                    <img src='./images/" . htmlspecialchars($row['image_front']) . "' alt='" . htmlspecialchars($row['name_item']) . "' />
-                    <div>
-                        <a href='productDetails.php?id=" . $row['products_id'] . "'>
-                            <p class='name'><b>" . htmlspecialchars($row['name_item']) . "</b></p>
-                        </a>
-                        <span class='product-price'>₱" . number_format($unitPrice, 2) . "</span> <br />
-                        <a href='javascript:void(0);' onclick='removeFromCart(" . $row['id'] . ")'>remove</a>
+            $totalPrice += $discountedSubtotal;
+
+            echo "
+            <tr>
+                <td><input style='width: 15px; height: 15px;' type='checkbox' /></td>
+                <td>
+                    <div class='cart-info'>
+                        <img src='../admin/uploads/" . htmlspecialchars($row['image_front']) . "' alt='" . htmlspecialchars($row['name_item']) . "' />
+                        <div>
+                            <a href='productDetails.php?id=" . $row['products_id'] . "'>
+                                <p class='name'><b>" . htmlspecialchars($row['name_item']) . "</b></p>
+                            </a>
+                            <span class='product-price'>₱" . number_format($unitPrice, 2) . "</span> <br />
+                            <a href='javascript:void(0);' onclick='removeFromCart(" . $row['id'] . ")'>remove</a>
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td>
-                <input type='number' value='1' min='1' max='" . $quantity . "' class='quantity' data-product-id='" . $row['id'] . "' />
-            </td>
-            <td class='subtotal'>₱" . number_format($subtotal, 2) . "</td>
-        </tr>";
+                </td>
+                <td><a href='productDetails.php?id=" . $row['products_id'] . "'>
+                        <p class='name' style='font-size: 1.3rem;'>" . htmlspecialchars($row['color']) . ", " . htmlspecialchars($row['size']) . "</p>
+                    </a>
+                    <button style='width: 50px; background-color: #222; font-size: 1.2rem; border-radius: 5px; color: white;'>Update</button>
+                </td>
+                <td>
+                    <input type='number' value='" . $quantity . "' min='1' max='" . $row['quantity'] . "' class='quantity' data-product-id='" . $row['id'] . "' />
+                </td>
+                <td class='subtotal'>";
+                
+                if ($discount > 0) {
+                    echo "<span style='text-decoration: line-through;'>₱" . number_format($subtotal, 2) . "</span> ₱" . number_format($discountedSubtotal, 2);
+                } else {
+                    echo "₱" . number_format($subtotal, 2);
+                }
+
+            echo "</td>
+            </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='6' style='text-align: center;'>Your cart is empty.</td></tr>";
+        echo "<td colspan='6' style='text-align: center;'><a href='product.php'><input type='button' value='Go to Shop' style='width: 100px; background-color: #222; border-radius: 5px; color: white;'></a></td>";
     }
-} else {
-    echo "<tr><td colspan='3' style='text-align: center;'>Your cart is empty.</td></tr>";
-    echo "<td colspan='3' style='text-align: center;'><a href='product.php'><input type='button' value='Go to Shop' style='width: 100px; background-color: #222; border-radius: 5px; color: white;'></a></td>";
-}
 
-// Retrieve discount rate from database
-$discountRate = 0.0; // Initialize to 0.0 to avoid undefined variable warning
-
-if ($result && $result->num_rows > 0) {
-    $result->data_seek(0); // Reset the result pointer to the first row
-    $firstRow = $result->fetch_assoc(); // Get the first row again
-    if ($firstRow !== null && array_key_exists('discount', $firstRow)) {
-        // Convert percentage discount to decimal
-        $discountRate = $firstRow['discount'] / 100;
+    // Calculate total discount and final total
+    $discountRate = 0.0;
+    if ($result && $result->num_rows > 0) {
+        $result->data_seek(0);
+        $firstRow = $result->fetch_assoc();
+        if ($firstRow !== null && array_key_exists('discount', $firstRow)) {
+            $discountRate = $firstRow['discount'] / 100;
+        }
     }
-}
 
-$discount = $totalPrice * $discountRate;
-$finalTotal = $totalPrice - $discount;
-?>
-
-
-
-            </table>
+    $discount = $totalPrice * $discountRate;
+    $finalTotal = $totalPrice - $discount;
+    ?>
+</table>
         </div>
         <div class="order-summary">
             <h3>ORDER SUMMARY</h3>
