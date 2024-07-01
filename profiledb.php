@@ -53,10 +53,11 @@ if (isset($_POST['submit'])) {
                 gender = '$gender1', 
                 bday = '$date'
 			
-            WHERE email = '$emailadd'"; // Assuming email is unique and used as identifier
+            WHERE id = '$id'"; // Assuming email is unique and used as identifier
 
     
     if(mysqli_query($a,$sql)){	
+		$_SESSION['email'] = $emailadd;
 		header("Location: profile.php");
 	}
 }
