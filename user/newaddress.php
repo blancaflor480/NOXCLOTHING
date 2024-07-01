@@ -254,63 +254,91 @@ if ($result && $result->num_rows > 0) {
 
 <section class="container mt-5">
     <div class="row">
-        <div class="col-md-3">
-            <div class="bg-light p-3">
-                <!-- Sidebar content -->
-                <div class="d-flex align-items-center mb-3" style="text-align: center;">
-                    <div>
-                        <!-- Profile Picture -->
-                        <img id="imagePreview" src="<?php echo $image_src ?>" alt="Profile Picture" style="max-width: 50px; height: auto;" />
+         <div class="col-md-3"  style="background-color:#F5F5F5;">
+                <div class="bg-light p-3">
+
+                    <div class="d-flex align-items-center mt-3" style="text-align: center;">
+                        <div>
+                            <img id="imagePreview" src="<?php echo $image_src ?>" alt="Profile Picture" style="max-width: 90%; height:90%; border-radius: 70%;" />
+                        </div>
+                        <div class="ms-4 mt-4">
+                            <p style="font-size: 1.3rem; font-weight: bold;"><?php echo htmlspecialchars($email); ?></p>
+                            <span style="font-size: 1.3rem; margin-right: 75px;"><i class='bx bx-edit-alt'></i> Edit Profile</span>
+                        </div>
                     </div>
-                    <div class="ms-4 mt-4">
-                        <!-- User email -->
-                        <p style="font-size: 1.3rem; font-weight: bold;"><?php echo htmlspecialchars($email); ?></p>
-                    </div>
-                </div>
-                <!-- Sidebar navigation links -->
-                <div class="list-group mb-2 mt-4 custom-list-group" style="font-size: 1.7rem;">
-                    <a href="profile.php" class="list-group-item list-group-item-action"><i class='bx bx-user'></i> Profile</a>
-                    <a href="address.php" class="list-group-item list-group-item-action"><i class='bx bx-map'></i> Address</a>
-                    <a href="changepassword.php" class="list-group-item list-group-item-action"><i class='bx bx-edit'></i> Change Password</a>
-                    <a href="mypurchase.php" class="list-group-item list-group-item-action"><i class='bx bx-notepad'></i> My Purchase</a>
+                    <div class="list-group mb-2 mt-5 custom-list-group" style="font-size: 1.7rem;">
+    <a href="profile.php" class="list-group-item list-group-item-action"><i class='bx bx-user'></i> Profile</a>
+    <a href="address.php" class="list-group-item list-group-item-action"><i class='bx bx-map'></i> Address</a>
+    <a href="changepassword.php" class="list-group-item list-group-item-action"><i class='bx bx-edit'></i> Change Password</a>
+    <a href="mypurchase.php" class="list-group-item list-group-item-action"><i class='bx bx-notepad'></i> My Purchase</a>
+</div>
                 </div>
             </div>
-        </div>
         <div class="col-md-9">
             <div class="card">
                 <div class="card-body">
                     <div class="card-header" style="background-color: transparent;">
-                        <h3>New Address</h3>
+                        <h3 style="margin-left: 10px;">New Address</h3>
                     </div>
                     <!-- Address form -->
                     <form action="newaddress.php" method="post" class="row g-3 mb-2 mt-3 needs-validation" novalidate>
                         <div class="col-md-6">
-                            <label class="form-label" style="font-size: 1.7rem;">Address</label>
+                            <label class="form-label" style="font-size: 1.3rem; margin-left: 190px">Region</label>
                             <!-- Input fields for address -->
-                            <input type="text" name="region" placeholder="Region" class="form-control mb-2" required>
-                            <input type="text" name="province" placeholder="Province" class="form-control mb-2" required>
-                            <input type="text" name="barangay" placeholder="Barangay" class="form-control mb-2" required>
-                            <input type="text" name="city" placeholder="City" class="form-control mb-2" required>
-                            <input type="text" id="numericInput" name="zipcode" placeholder="Zipcode" class="form-control mb-2" maxlength="4" required>
-									<script>
-									const inputElement = document.getElementById('numericInput');
-									inputElement.addEventListener('input', function(event) {
+                             
+                           <select name="region" id="regionSelect" style="background-color: #F2F3F4; margin-left: 190px; height: 35px; font-size: 1.3rem;" class="form-control mb-3" required>
+    <option value="">Select Region</option>
+    <option value="National Capital Region">National Capital Region (NCR)</option>
+    <option value="Cordillera Administrative Region">Cordillera Administrative Region (CAR)</option>
+    <option value="Ilocos Region">Ilocos Region (Region I)</option>
+    <option value="Cagayan Valley">Cagayan Valley (Region II)</option>
+    <option value="Central Luzon">Central Luzon (Region III)</option>
+    <option value="Calabarzon">Calabarzon (Region IV-A)</option>
+    <option value="Mimaropa">Mimaropa (Region IV-B)</option>
+    <option value="Bicol Region">Bicol Region (Region V)</option>
+    <option value="Western Visayas">Western Visayas (Region VI)</option>
+    <option value="Central Visayas">Central Visayas (Region VII)</option>
+    <option value="Eastern Visayas">Eastern Visayas (Region VIII)</option>
+    <option value="Zamboanga Peninsula">Zamboanga Peninsula (Region IX)</option>
+    <option value="Northern Mindanao">Northern Mindanao (Region X)</option>
+    <option value="Davao Region">Davao Region (Region XI)</option>
+    <option value="Soccsksargen">Soccsksargen (Region XII)</option>
+    <option value="Caraga">Caraga (Region XIII)</option>
+    <option value="Bangsamoro Autonomous Region in Muslim Mindanao">Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)</option>
+</select>
 
-										let currentValue = inputElement.value;
-										let cleanedValue = currentValue.replace(/\D/g, '');
-										inputElement.value = cleanedValue;
-									});
-									</script>
-                            <input type="text" name="street" placeholder="Street" class="form-control mb-2" required>
+<label class="form-label" style="font-size: 1.3rem; margin-left: 190px">Province</label>
+<select name="province" id="provinceSelect" style="background-color: #F2F3F4;margin-left: 190px; height: 35px; font-size: 1.3rem;" class="form-control mb-3" required>
+    <option value="">Select Province</option>
+</select>
+
+<label class="form-label" style="font-size: 1.3rem; margin-left: 190px">City</label>
+<select name="city" id="citySelect" style="background-color: #F2F3F4; margin-left: 190px; height: 35px; font-size: 1.3rem;" class="form-control mb-3" required>
+    <option value="">Select City</option>
+</select>
+
+<label class="form-label" style="font-size: 1.3rem; margin-left: 190px;">Barangay</label>
+<input type="text" id="barangay" name="barangay" placeholder="Enter your barangay" style="background-color: #F2F3F4 ; margin-left: 190px;height: 35px; font-size: 1.3rem;" class="form-control mb-3"  required>
+                            <label class="form-label" style="font-size: 1.3rem;margin-left: 190px;">Street</label>
+                            <input type="text" name="street" placeholder="Enter your street" style="background-color: #F2F3F4 ; margin-left: 190px;height: 35px; font-size: 1.3rem;" class="form-control mb-2" required>
+                            <label class="form-label" style="font-size: 1.3rem; margin-left: 190px;">Zipcode</label>
+                            <input type="text" id="numericInput" name="zipcode" placeholder="Enter your zipcode" style="background-color: #F2F3F4 ; margin-left: 190px;height: 35px; font-size: 1.3rem;" class="form-control mb-3" maxlength="4" required>
+                                    <script>
+                                    const inputElement = document.getElementById('numericInput');
+                                    inputElement.addEventListener('input', function(event) {
+
+                                        let currentValue = inputElement.value;
+                                        let cleanedValue = currentValue.replace(/\D/g, '');
+                                        inputElement.value = cleanedValue;
+                                    });
+                                    </script>
                         </div>
                         <!-- Form actions -->
-                        <div class="col-md-6">
-                            <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-start mt-5" style="margin-left: 300px;">
                                 <!-- Form buttons -->
-                                <a href="address.php" class="btn btn-outline-danger btn-md mx-1">Cancel</a>
-                                <button type="submit" name="submit" class="btn btn-outline-primary btn-md mx-1">Submit</button>
+                                <a href="address.php" class="btn btn-outline-danger btn-md mx-1" style="height: 28px; width: 70px; font-size: 1.3rem;">Cancel</a>
+                                <button type="submit" name="submit" class="btn btn-outline-primary btn-md mx-1" style="height: 28px; width: 70px; font-size: 1.3rem;">Submit</button>
                             </div>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -351,15 +379,171 @@ if ($result && $result->num_rows > 0) {
   
 
   </body>
-  <script>
-  document.getElementById('imageUpload').addEventListener('change', function(event) {
-    const [file] = event.target.files;
-    if (file) {
-      const preview = document.getElementById('imagePreview');
-      preview.src = URL.createObjectURL(file);
-      preview.style.display = 'block';
+  <select name="region" id="regionSelect" style="background-color: #F2F3F4; margin-left: 20px; height: 35px; font-size: 1.3rem;" class="form-control mb-3" required>
+    <option value="">Select Region</option>
+    <option value="National Capital Region">National Capital Region (NCR)</option>
+    <option value="Cordillera Administrative Region">Cordillera Administrative Region (CAR)</option>
+    <option value="Ilocos Region">Ilocos Region (Region I)</option>
+    <option value="Cagayan Valley">Cagayan Valley (Region II)</option>
+    <option value="Central Luzon">Central Luzon (Region III)</option>
+    <option value="Calabarzon">Calabarzon (Region IV-A)</option>
+    <option value="Mimaropa">Mimaropa (Region IV-B)</option>
+    <option value="Bicol Region">Bicol Region (Region V)</option>
+    <option value="Western Visayas">Western Visayas (Region VI)</option>
+    <option value="Central Visayas">Central Visayas (Region VII)</option>
+    <option value="Eastern Visayas">Eastern Visayas (Region VIII)</option>
+    <option value="Zamboanga Peninsula">Zamboanga Peninsula (Region IX)</option>
+    <option value="Northern Mindanao">Northern Mindanao (Region X)</option>
+    <option value="Davao Region">Davao Region (Region XI)</option>
+    <option value="Soccsksargen">Soccsksargen (Region XII)</option>
+    <option value="Caraga">Caraga (Region XIII)</option>
+    <option value="Bangsamoro Autonomous Region in Muslim Mindanao">Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)</option>
+</select>
+
+<label class="form-label" style="font-size: 1.3rem; margin-left: 18px;">Province</label>
+<select name="province" id="provinceSelect" style="background-color: #F2F3F4; margin-left: 20px; height: 35px; font-size: 1.3rem;" class="form-control mb-3" required>
+    <option value="">Select Province</option>
+</select>
+
+<label class="form-label" style="font-size: 1.3rem; margin-left: 18px;">City</label>
+<select name="city" id="citySelect" style="background-color: #F2F3F4; margin-left: 20px; height: 35px; font-size: 1.3rem;" class="form-control mb-3" required>
+    <option value="">Select City</option>
+</select>
+
+<label class="form-label" style="font-size: 1.3rem; margin-left: 18px;">Barangay</label>
+<select name="barangay" id="barangaySelect" style="background-color: #F2F3F4; margin-left: 20px; height: 35px; font-size: 1.3rem;" class="form-control mb-3" required>
+    <option value="">Select Barangay</option>
+</select>
+
+
+
+
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var regionSelect = document.getElementById('regionSelect');
+    var provinceSelect = document.getElementById('provinceSelect');
+    var citySelect = document.getElementById('citySelect');
+    var barangaySelect = document.getElementById('barangaySelect');
+
+    // Object mapping regions to provinces
+    var regionProvinces = {
+        "National Capital Region": ["Metro Manila"],
+        "Cordillera Administrative Region": ["Abra", "Apayao", "Benguet", "Ifugao", "Kalinga", "Mountain Province"],
+        "Ilocos Region": ["Ilocos Norte", "Ilocos Sur", "La Union", "Pangasinan"],
+        "Cagayan Valley": ["Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino"],
+        "Central Luzon": ["Aurora", "Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales"],
+        "Calabarzon": ["Batangas", "Cavite", "Laguna", "Quezon", "Rizal"],
+        "Mimaropa": ["Marinduque", "Occidental Mindoro", "Oriental Mindoro", "Palawan", "Romblon"],
+        "Bicol Region": ["Albay", "Camarines Norte", "Camarines Sur", "Catanduanes", "Masbate", "Sorsogon"],
+        "Western Visayas": ["Aklan", "Antique", "Capiz", "Guimaras", "Iloilo", "Negros Occidental"],
+        "Central Visayas": ["Bohol", "Cebu", "Negros Oriental", "Siquijor"],
+        "Eastern Visayas": ["Biliran", "Eastern Samar", "Leyte", "Northern Samar", "Samar", "Southern Leyte"],
+        "Zamboanga Peninsula": ["Zamboanga del Norte", "Zamboanga del Sur", "Zamboanga Sibugay"],
+        "Northern Mindanao": ["Bukidnon", "Camiguin", "Lanao del Norte", "Misamis Occidental", "Misamis Oriental"],
+        "Davao Region": ["Davao de Oro", "Davao del Norte", "Davao del Sur", "Davao Occidental", "Davao Oriental"],
+        "Soccsksargen": ["Cotabato", "South Cotabato", "Sultan Kudarat", "Sarangani"],
+        "Caraga": ["Agusan del Norte", "Agusan del Sur", "Dinagat Islands", "Surigao del Norte", "Surigao del Sur"],
+        "Bangsamoro Autonomous Region in Muslim Mindanao": ["Basilan", "Lanao del Sur", "Maguindanao", "Sulu", "Tawi-Tawi"]
+    };
+
+    // Object mapping provinces to cities and barangays (dummy data for demonstration)
+    var provinceCities = {
+        "Metro Manila": ["Manila", "Quezon City", "Makati", "Pasig"],
+        "Cavite": ["Bacoor", "Imus", "Dasmarinas"],
+        "Rizal": ["Antipolo", "Cainta", "Taytay"],
+        "Cebu": ["Cebu City", "Mandaue", "Lapu-Lapu"],
+        "Davao del Sur": ["Davao City", "Digos"]
+        // Add more provinces and their respective cities and barangays as needed
+    };
+
+    // Object mapping cities to barangays (dummy data for demonstration)
+    var cityBarangays = {
+        "Manila": ["Barangay 1", "Barangay 2", "Barangay 3"],
+        "Quezon City": ["Barangay A", "Barangay B", "Barangay C"],
+        "Makati": ["Barangay X", "Barangay Y", "Barangay Z"],
+        "Pasig": ["Barangay P", "Barangay Q", "Barangay R"],
+        // Add more cities and their respective barangays as needed
+    };
+
+    // Event listener for region selection change
+    regionSelect.addEventListener('change', function() {
+        var selectedRegion = regionSelect.value;
+        updateProvinceOptions(selectedRegion);
+    });
+
+    // Event listener for province selection change
+    provinceSelect.addEventListener('change', function() {
+        var selectedProvince = provinceSelect.value;
+        updateCityOptions(selectedProvince);
+    });
+
+    // Event listener for city selection change
+    citySelect.addEventListener('change', function() {
+        var selectedCity = citySelect.value;
+        updateBarangayOptions(selectedCity);
+    });
+
+    // Function to update province options based on selected region
+    function updateProvinceOptions(selectedRegion) {
+        // Clear current options
+        provinceSelect.innerHTML = '<option value="">Select Province</option>';
+        
+        // Add options for the selected region
+        if (selectedRegion in regionProvinces) {
+            regionProvinces[selectedRegion].forEach(function(province) {
+                var option = document.createElement('option');
+                option.value = province;
+                option.textContent = province;
+                provinceSelect.appendChild(option);
+            });
+        }
+
+        // Trigger update for city options
+        updateCityOptions(provinceSelect.value);
     }
-  });
+
+    // Function to update city options based on selected province
+    function updateCityOptions(selectedProvince) {
+        // Clear current options
+        citySelect.innerHTML = '<option value="">Select City</option>';
+        
+        // Add options for the selected province (dummy data)
+        if (selectedProvince in provinceCities) {
+            provinceCities[selectedProvince].forEach(function(city) {
+                var option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+
+        // Trigger update for barangay options
+        updateBarangayOptions(citySelect.value);
+    }
+
+    // Function to update barangay options based on selected city
+    function updateBarangayOptions(selectedCity) {
+        // Clear current options
+        barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+        
+        // Add options for the selected city (dummy data)
+        if (selectedCity in cityBarangays) {
+            cityBarangays[selectedCity].forEach(function(barangay) {
+                var option = document.createElement('option');
+                option.value = barangay;
+                option.textContent = barangay;
+                barangaySelect.appendChild(option);
+            });
+        }
+    }
+
+    // Initialize with default options (optional)
+    updateProvinceOptions(regionSelect.value);
+});
 </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 

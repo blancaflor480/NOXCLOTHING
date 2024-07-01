@@ -263,17 +263,19 @@ if ($result && $result->num_rows > 0) {
 
  <section class="container mt-5">
         <div class="row">
-           <div class="col-md-3">
+            <div class="col-md-3"  style="background-color:#F5F5F5;">
                 <div class="bg-light p-3">
-                    <div class="d-flex align-items-center mb-3" style="text-align: center;">
+
+                    <div class="d-flex align-items-center mt-3" style="text-align: center;">
                         <div>
-                            <img id="imagePreview" src="<?php echo $image_src ?>" alt="Profile Picture" style="max-width: 50px; height: auto;" />
+                            <img id="imagePreview" src="<?php echo $image_src ?>" alt="Profile Picture" style="max-width: 90%; height:90%; border-radius: 70%;" />
                         </div>
                         <div class="ms-4 mt-4">
                             <p style="font-size: 1.3rem; font-weight: bold;"><?php echo htmlspecialchars($email); ?></p>
+                            <span style="font-size: 1.3rem; margin-right: 75px;"><i class='bx bx-edit-alt'></i> Edit Profile</span>
                         </div>
                     </div>
-                    <div class="list-group mb-2 mt-4 custom-list-group" style="font-size: 1.7rem;">
+                    <div class="list-group mb-2 mt-5 custom-list-group" style="font-size: 1.7rem;">
     <a href="profile.php" class="list-group-item list-group-item-action"><i class='bx bx-user'></i> Profile</a>
     <a href="address.php" class="list-group-item list-group-item-action"><i class='bx bx-map'></i> Address</a>
     <a href="changepassword.php" class="list-group-item list-group-item-action"><i class='bx bx-edit'></i> Change Password</a>

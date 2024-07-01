@@ -217,19 +217,21 @@ if ($result && $result->num_rows > 0) {
       </div>
 
  <!-- Profile Section -->
-    <section class="container mt-5">
+    <section class="container mt-5" >
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3"  style="background-color:#F5F5F5;">
                 <div class="bg-light p-3">
-                    <div class="d-flex align-items-center mb-3" style="text-align: center;">
+
+                    <div class="d-flex align-items-center mt-3" style="text-align: center;">
                         <div>
-                            <img id="imagePreview" src="<?php echo $image_src ?>" alt="Profile Picture" style="max-width: 50px; height: auto;" />
+                            <img id="imagePreview" src="<?php echo $image_src ?>" alt="Profile Picture" style="max-width: 90%; height:90%; border-radius: 70%;" />
                         </div>
                         <div class="ms-4 mt-4">
                             <p style="font-size: 1.3rem; font-weight: bold;"><?php echo htmlspecialchars($email); ?></p>
+                            <span style="font-size: 1.3rem; margin-right: 75px;"><i class='bx bx-edit-alt'></i> Edit Profile</span>
                         </div>
                     </div>
-                    <div class="list-group mb-2 mt-4 custom-list-group" style="font-size: 1.7rem;">
+                    <div class="list-group mb-2 mt-5 custom-list-group" style="font-size: 1.7rem;">
     <a href="profile.php" class="list-group-item list-group-item-action"><i class='bx bx-user'></i> Profile</a>
     <a href="address.php" class="list-group-item list-group-item-action"><i class='bx bx-map'></i> Address</a>
     <a href="changepassword.php" class="list-group-item list-group-item-action"><i class='bx bx-edit'></i> Change Password</a>
@@ -244,48 +246,54 @@ if ($result && $result->num_rows > 0) {
                             <h3>My Profile</h3>
                             <span>Manage and protect your account</span>
                         </div>
-                        <div class="mb-3" style="text-align: center;">
-                            <img id="imagePreview" src="<?php echo $image_src ?>" alt="Profile Picture" style="max-width: 120px; height: auto;" />
+                        <div class="mb-3 mt-3" style="text-align: center;">
+                            <img id="imagePreview" src="<?php echo $image_src ?>" alt="Profile Picture" style="max-width: 20%; height: 20%; border-radius: 70%;" />
                         </div>
                         <form action="profiledb.php" method="POST" enctype="multipart/form-data" class="row g-3 mb-2 mt-3 needs-validation" novalidate>
                             <div class="col-md-3" style=" margin-left: 80px;">
-                                <label for="validationCustom01" class="form-label" style="font-size: 1.5rem;">First name</label>
-                                <input type="text" name="fname" class="form-control" id="validationCustom01" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['fname']); ?>" required>
+                                <label for="validationCustom01" class="form-label" style="font-size: 1.8rem;">First name</label>
+                                <input type="text" name="fname" class="form-control" id="validationCustom01" style="background-color: #F2F3F4 ;height: 40px; padding: 10px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['fname']); ?>" required>
                                 <div class="valid-feedback">Looks good!</div>
                             </div>
                             <div class="col-md-3">
-                                <label for="validationCustom02" class="form-label" style="font-size: 1.5rem;">Middle name</label>
-                                <input type="text" name="mname" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['mname']); ?>" required>
+                                <label for="validationCustom02" class="form-label" style="font-size: 1.8rem;">Middle name</label>
+                                <input type="text" name="mname" class="form-control" id="validationCustom02" style="background-color: #F2F3F4 ;height: 40px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['mname']); ?>" required>
                                 <div class="valid-feedback">Looks good!</div>
                             </div>
                             <div class="col-md-3">
-                                <label for="validationCustomUsername" class="form-label" style="font-size: 1.5rem">Last name</label>
+                                <label for="validationCustomUsername" class="form-label" style="font-size: 1.8rem">Last name</label>
                                 <div class="input-group has-validation">
                                     <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                    <input type="text" name="lname" class="form-control" id="validationCustomUsername" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['lname']); ?>" required>
+                                    <input type="text" name="lname" class="form-control" id="validationCustomUsername" style="background-color: #F2F3F4 ; height: 40px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['lname']); ?>" required>
                                     <div class="invalid-feedback">Please choose a username.</div>
                                 </div>
                             </div>
-                            <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0;">Email</label>
-                                    <input type="text" name="email" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['email']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
+                            <div class="col-md-9 mt-4" style="margin-left: 80px;">
+                                <label for="validationCustomUsername" class="form-label" style="font-size: 1.8rem">Email</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                     <input type="text" name="email" class="form-control" id="validationCustom02" style="background-color: #F2F3F4 ;height: 40px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                                     <div class="valid-feedback">Looks good!</div>
                                 </div>
                             </div>
-                            <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0;">Phone</label>
-                                    <input type="text" name="phone" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['contactnumber']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
+                            
+                    
+                               <div class="col-md-9 mt-4" style="margin-left: 80px;">
+                                <label for="validationCustomUsername" class="form-label" style="font-size: 1.8rem">Contact#</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                     <input type="text" name="phone" class="form-control" id="validationCustom02" style="background-color: #F2F3F4 ;height: 40px; font-size: 1.3rem" maxlength="11" value="<?php echo htmlspecialchars($user['contactnumber']); ?>" required>
+                                     <div class="valid-feedback">Looks good!</div>
                                 </div>
                             </div>
+
+                           
                            <?php
 $gender = $user['gender'];
 ?>
 <div class="row g-3">
     <div class="col-lg-9 d-flex align-items-center" style="margin-left: 80px;">
-        <label for="gender" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0;">Gender</label>
+        <label for="gender" class="form-label me-2" style="font-size: 1.8rem; margin-bottom: 0;">Gender</label>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="gender" id="male" value="Male" <?php echo ($gender == 'Male') ? 'checked' : ''; ?>>
             <label class="form-check-label" for="male">Male</label>
@@ -300,23 +308,30 @@ $gender = $user['gender'];
         </div>
     </div>
 </div>
-                            <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0; width: 110px;">Date of Birth</label>
-                                    <input type="text" name="birth" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['bday']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
+
+                    <div class="col-md-9 mt-4" style="margin-left: 80px;">
+                                <label for="validationCustomUsername" class="form-label" style="font-size: 1.8rem">Date of Birth</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                     <input type="text" name="birth" class="form-control" id="validationCustom02" style="background-color: #F2F3F4 ;height: 40px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['bday']); ?>" required>
+                                     <div class="valid-feedback">Looks good!</div>
                                 </div>
                             </div>
-                             <div class="row g-3">
-                                <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
-                                    <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0; width: 120px;">Upload Image</label>
-                                    <input type="file" name="image" class="form-control" id="validationCustom02" style="height: 25px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['bday']); ?>" required>
-                                    <div class="valid-feedback">Looks good!</div>
+
+
+                           <div class="col-md-9 mt-4" style="margin-left: 80px;">
+                                <label for="validationCustomUsername" class="form-label" style="font-size: 1.8rem">Upload Avatar</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                     <input type="file" name="image" class="form-control" id="validationCustom02" style="height: 40px; font-size: 1.3rem" value="<?php echo htmlspecialchars($user['bday']); ?>" required>
+                                     <div class="valid-feedback">Looks good!</div>
                                 </div>
                             </div>
+
+                            
                           
-                            <div class="col-12 mt-4">
-                                <button class="btn btn-primary" name="submit" type="submit" style="margin-left: 78%; height: 30px; width:50px ">Update</button>
+                            <div class="col-12 mt-5">
+                                <button class="btn btn-primary" name="submit" type="submit" style="font-size: 1.3rem;margin-left: 45%; height: 35px; width:70px ">Save</button>
                             </div>
                         </form>
                     </div>
