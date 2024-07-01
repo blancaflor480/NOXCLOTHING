@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 24, 2024 at 05:12 PM
+-- Generation Time: Jul 01, 2024 at 07:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,7 +33,8 @@ CREATE TABLE `addcart` (
   `wishlist_id` int(11) DEFAULT NULL,
   `products_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `size` varchar(50) NOT NULL,
+  `size` varchar(255) NOT NULL,
+  `color` varchar(255) NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `status` varchar(50) NOT NULL,
   `datetime` datetime NOT NULL DEFAULT current_timestamp()
@@ -43,10 +44,8 @@ CREATE TABLE `addcart` (
 -- Dumping data for table `addcart`
 --
 
-INSERT INTO `addcart` (`id`, `customer_id`, `wishlist_id`, `products_id`, `quantity`, `size`, `price`, `status`, `datetime`) VALUES
-(22, 1, NULL, 3, 1, '', 399.00, '', '2024-06-08 09:46:01'),
-(23, 1, NULL, 1, 1, '', 599.00, '', '2024-06-08 09:47:40'),
-(26, 3, NULL, 9, 1, '', 100.00, '', '2024-06-24 11:31:57');
+INSERT INTO `addcart` (`id`, `customer_id`, `wishlist_id`, `products_id`, `quantity`, `size`, `color`, `price`, `status`, `datetime`) VALUES
+(14, 3, NULL, 49, 2, 'large', 'Pink', 100.00, '', '2024-07-01 13:44:22');
 
 -- --------------------------------------------------------
 
@@ -73,7 +72,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `fname`, `mname`, `lname`, `email`, `uname`, `password`, `role`, `image`, `datereg`, `logintime`) VALUES
-(1, 'admin', '', '', 'admin@gmail.com', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', '', '2024-05-07', '2024-06-21 14:34:40'),
+(1, 'admin', '', '', 'admin@gmail.com', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Admin', '', '2024-05-07', '2024-07-01 03:25:54'),
 (4, 'Ma. Angelica', 'M.', 'Rubrico', 'ghelle@gmail.com', 'ghelle', '0192023a7bbd73250516f069df18b500', 'Admin', 0x2e2e2f75706c6f6164732f637574656d6f6f2e6a7067, '2024-05-26', '2024-05-27 07:05:12'),
 (5, 'Jade Ryan', 'L.', 'Blancaflor', 'bryanblancaflor007@gmail.com', 'jade123', '21232f297a57a5a743894a0e4a801fc3', 'Staff', 0x2e2e2f75706c6f6164732f36363532633431663030633262322e31343533383035322e706e67, '2024-05-26', '2024-06-11 09:37:03');
 
@@ -173,6 +172,7 @@ CREATE TABLE `products` (
   `category` varchar(250) NOT NULL,
   `quantity` int(15) NOT NULL,
   `status` varchar(50) NOT NULL,
+  `rating` decimal(10,1) NOT NULL,
   `image_front` longblob NOT NULL,
   `image_back` longblob NOT NULL,
   `discount` decimal(5,2) NOT NULL,
@@ -184,16 +184,60 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `name_item`, `type`, `color`, `size`, `manufacturer`, `description`, `category`, `quantity`, `status`, `image_front`, `image_back`, `discount`, `price`, `date_insert`) VALUES
-(1, 'Ghirl Tshirt', 'female', 'Pink', 'medium', 'Dickies', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d312e6a7067, '', 28.00, 599.00, '2024-05-14'),
-(2, 'Hoodie X', 'female', 'Purple', 'large', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 12, 'Low Stock', 0x70726f647563742d332e6a7067, '', 50.00, 299.00, '2024-05-14'),
-(3, 'Hoodie X', 'male', 'Gray', 'medium', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'JACKETS', 10, 'Low Stock', 0x70726f647563742d342e6a7067, '', 38.00, 399.00, '2024-05-14'),
-(4, 'Hoodie M', 'male', 'Black', 'large', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Instock', 0x70726f647563742d352e6a7067, '', 100.00, 599.00, '2024-05-14'),
-(5, 'Boy\'s Greeny', 'male', 'Green', 'medium', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d362e6a7067, '', 38.00, 299.00, '2024-05-14'),
-(6, 'Sky Cloud', 'female', 'Sky Blue', 'small', 'Nike', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d382e6a7067, '', 38.00, 199.00, '2024-05-14'),
-(7, 'Jansport', 'other', 'Red', 'medium', 'Nike', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'SHORTS', 10, 'Restock', 0x70726f647563742d322e6a7067, '', 10.00, 599.00, '2024-05-14'),
-(8, 'Jansport Edition', 'female', 'Red', 'medium', 'UNIQLO', 'ahhahda', 'T-SHIRT', 10, 'Restock', 0x70726f647563742d322e6a7067, '', 0.00, 999.00, '2024-05-14'),
-(9, 'CVSU SHIRT', 'male', 'Blue', 'small', 'Nike', 'dbbdasb', 'T-SHIRT', 10, 'Restock', 0x436f6e6365707475616c2d4672616d65776f726b2e706466, '', 0.00, 100.00, '2024-06-08');
+INSERT INTO `products` (`id`, `name_item`, `type`, `color`, `size`, `manufacturer`, `description`, `category`, `quantity`, `status`, `rating`, `image_front`, `image_back`, `discount`, `price`, `date_insert`) VALUES
+(1, 'Ghirl Tshirt', 'Female', 'Pink', 'medium', 'Dickies', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 3.0, 0x70726f647563742d312e6a7067, '', 28.00, 599.00, '2024-05-14'),
+(2, 'Hoodie X', 'Male', 'Purple', 'large', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 12, 'Low Stock', 0.0, 0x70726f647563742d332e6a7067, '', 50.00, 299.00, '2024-05-14'),
+(3, 'Hoodie X', 'male', 'Gray', 'medium', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'JACKETS', 10, 'Low Stock', 0.0, 0x70726f647563742d342e6a7067, '', 38.00, 399.00, '2024-05-14'),
+(4, 'Hoodie M', 'male', 'Black', 'large', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Instock', 0.0, 0x70726f647563742d352e6a7067, '', 100.00, 599.00, '2024-05-14'),
+(5, 'Boy\'s Greeny', 'male', 'Green', 'medium', 'UNIQLO', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0.0, 0x70726f647563742d362e6a7067, '', 38.00, 299.00, '2024-05-14'),
+(6, 'Sky Cloud', 'female', 'Sky Blue', 'small', 'Nike', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'T-SHIRT', 10, 'Restock', 0.0, 0x70726f647563742d382e6a7067, '', 38.00, 199.00, '2024-05-14'),
+(7, 'Jansport', 'other', 'Red', 'medium', 'Nike', 'A colorful t-shirt featuring a large image of a surfer on the front, exuding a laid-back and cool vibe for anyone seeking adventure.', 'SHORTS', 10, 'Restock', 0.0, 0x70726f647563742d322e6a7067, '', 10.00, 599.00, '2024-05-14'),
+(8, 'Jansport Edition', 'female', 'Red', 'medium', 'UNIQLO', 'ahhahda', 'T-SHIRT', 10, 'Restock', 0.0, 0x70726f647563742d322e6a7067, '', 0.00, 999.00, '2024-05-14'),
+(10, 'Jansports', 'Accessories', 'Gray', 'small', 'Nike', 'Bagssssss', 'BAG', 3, 'Low Stock', 0.0, 0x626167312e6a7067, '', 0.00, 299.00, '2024-06-28'),
+(11, 'Tshirt mens', 'Male', 'Green', 'small', 'UNIQLO', 'adadasdda', 'T-SHIRT', 5, 'Instock', 0.0, 0x677265656e747368697274312e706e67, '', 10.00, 399.00, '2024-06-28'),
+(49, 'Pinky ', 'Male', '', '', 'Nike', '12adada', 'T-SHIRT', 3, 'Low Stock', 0.0, 0x70696e6b747368697274322e6a666966, '', 12.00, 100.00, '2024-07-01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_colors`
+--
+
+CREATE TABLE `product_colors` (
+  `id` int(11) NOT NULL,
+  `products_id` int(11) DEFAULT NULL,
+  `color` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_colors`
+--
+
+INSERT INTO `product_colors` (`id`, `products_id`, `color`) VALUES
+(26, 49, 'Pink');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_sizes`
+--
+
+CREATE TABLE `product_sizes` (
+  `id` int(11) NOT NULL,
+  `products_id` int(11) DEFAULT NULL,
+  `size` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_sizes`
+--
+
+INSERT INTO `product_sizes` (`id`, `products_id`, `size`) VALUES
+(12, 49, 'small'),
+(13, 49, 'small'),
+(14, 49, 'medium'),
+(15, 49, 'large'),
+(16, 49, 'XL');
 
 -- --------------------------------------------------------
 
@@ -307,6 +351,20 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `product_colors`
+--
+ALTER TABLE `product_colors`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `p_id_color` (`products_id`);
+
+--
+-- Indexes for table `product_sizes`
+--
+ALTER TABLE `product_sizes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `p_id_size` (`products_id`);
+
+--
 -- Indexes for table `ratings`
 --
 ALTER TABLE `ratings`
@@ -344,7 +402,7 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `addcart`
 --
 ALTER TABLE `addcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -374,7 +432,19 @@ ALTER TABLE `payment`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+
+--
+-- AUTO_INCREMENT for table `product_colors`
+--
+ALTER TABLE `product_colors`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT for table `product_sizes`
+--
+ALTER TABLE `product_sizes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `ratings`
@@ -398,7 +468,7 @@ ALTER TABLE `voucher`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- Constraints for dumped tables
@@ -409,7 +479,7 @@ ALTER TABLE `wishlist`
 --
 ALTER TABLE `addcart`
   ADD CONSTRAINT `customerid` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `productid` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `productid` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `wishlistid` FOREIGN KEY (`wishlist_id`) REFERENCES `wishlist` (`id`);
 
 --
@@ -426,6 +496,20 @@ ALTER TABLE `orders`
 --
 ALTER TABLE `payment`
   ADD CONSTRAINT `ordersid` FOREIGN KEY (`orders_id`) REFERENCES `orders` (`id`);
+
+--
+-- Constraints for table `product_colors`
+--
+ALTER TABLE `product_colors`
+  ADD CONSTRAINT `p_id_color` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `product_colors_ibfk_1` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `product_sizes`
+--
+ALTER TABLE `product_sizes`
+  ADD CONSTRAINT `p_id_size` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `product_sizes_ibfk_1` FOREIGN KEY (`products_id`) REFERENCES `products` (`id`);
 
 --
 -- Constraints for table `uservoucher`
