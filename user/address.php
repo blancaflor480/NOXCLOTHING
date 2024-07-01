@@ -39,6 +39,23 @@ if ($result->num_rows > 0) {
     header("Location: login-signup.php?error=User%20not%20found");
     exit();
 }
+
+//trioimage
+$sql = "SELECT image FROM customer WHERE id = $user_id";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Output the image as an <img> tag
+    $row = $result->fetch_assoc();
+    $image_data = $row['image'];
+    $image_base64 = base64_encode($image_data);
+    $image_src = 'data:image/jpeg;base64,' . $image_base64; // Adjust MIME type as needed
+
+} else {
+   
+}
+
 ?>
 
 
@@ -226,7 +243,7 @@ if ($result && $result->num_rows > 0) {
                 <div class="bg-light p-3">
                     <div class="d-flex align-items-center mb-3" style="text-align: center;">
                         <div>
-                            <img id="imagePreview" src="uploads/pfpp.png" alt="Profile Picture" style="max-width: 50px; height: auto;" />
+                            <img id="imagePreview" src="<?php echo $image_src ?>" alt="Profile Picture" style="max-width: 50px; height: auto;" />
                         </div>
                         <div class="ms-4 mt-4">
                             <p style="font-size: 1.3rem; font-weight: bold;"><?php echo htmlspecialchars($email); ?></p>
@@ -253,7 +270,21 @@ if ($result && $result->num_rows > 0) {
                         <div class="col-md-3" style="margin-left: 40px;">
                             <div class="row g-3 mb-3">
                                 <div class="col-lg-9 d-flex justify-content-end" style="margin-left: 350px;">
-                                    <button class="btn btn-primary" type="submit" style="width: 120px; height: 30px; font-size: 1.2rem;">Add New Address</button>
+									
+									<?php
+										$fetch1 = "SELECT `id` from subaddress WHERE id = $user_id";
+										$resulta = $conn->query($fetch1);
+
+										// Check if there are any rows returned
+										if ($resulta->num_rows > 0) {
+											
+										}
+										else{
+											echo '<button type="button" class="btn btn-primary" onclick="window.location.href=\'newaddress.php\';" style="width: 120px; height: 30px; font-size: 1.2rem;">Add New Address</button>';
+										}
+										?>
+                                    
+
                                 </div>
                             </div>
                         </div>
@@ -268,13 +299,68 @@ if ($result && $result->num_rows > 0) {
                     <span><?php echo $region . ", " . $province . " , " . $city . ", " . $zipcode; ?></span>
                     <span class="badge bg-primary">Default</span>
                     <div class="address-actions d-flex" style="margin-left: 550px;">
-                                <a href="#" class="btn btn-outline-secondary btn-md mx-1">Edit</a>
-                                <a href="#" class="btn btn-outline-danger btn-md mx-1">Delete</a>
-                                <button class="btn btn-outline-primary btn-md mx-1" style="width: 90px;" >Set as default</button>
+                                <a href="oldaddressedit.php" class="btn btn-outline-secondary btn-md mx-1">Edit</a>		
+																								
+																								<a href="#" class="btn btn-outline-danger btn-md mx-1" style="pointer-events: none;
+  cursor: default;
+  opacity: 0.5;">Delete</a>
+																								
+																																																																	
+                                <button class="btn btn-outline-primary btn-md mx-1" style="width: 90px;" disabled>Set as default</button>
                             </div>
                 </div>
             </div>
-       
+									<div class="row" style="margin-left: 30px;">
+									
+												<?php
+												// Assuming $conn is your database connection object and $user_id is defined
+												$fetch = "SELECT `id`, `region`, `province`, `barangay`, `city`, `zipcode`, `street`  FROM subaddress WHERE id = $user_id";
+												$result = $conn->query($fetch);
+
+												// Check if there are any rows returned
+												if ($result->num_rows > 0) {
+													while ($row = $result->fetch_assoc()) {
+												?>
+												<div id="myDiv" class="address-card" style="height: auto; margin: auto; border-radius: 10px;">
+													<strong><?php echo $fname . " " . $mname . " " . $lname; ?></strong>
+													<span>(+63) <?php echo $contactnumber; ?></span><br>
+													<span><?php echo $row["barangay"] . ", " . $row["street"]; ?></span><br>
+													<span><?php echo $row["region"] . ", " . $row["province"] . " , " . $row["city"] . ", " . $row["zipcode"]; ?></span>
+													<span class="badge bg-primary"></span>
+													<div class="address-actions d-flex" style="margin-left: 550px;">
+														<a href="newaddressedit.php" class="btn btn-outline-secondary btn-md mx-1">Edit</a>
+														
+																							<form id="deleteForm" method="post" action="default.php">
+																								<!-- Any other form fields can go here if needed -->
+
+																								<!-- Delete link -->
+																								<a href="#" class="btn btn-outline-danger btn-md mx-1" onclick="deleteFormSubmit(); return false;" disabled>Delete</a>
+																								<!-- Hidden input to handle delete action in PHP -->
+																								<input type="hidden" name="delete1" value="true">
+																							</form>
+
+																							<script>
+																							function deleteFormSubmit() {
+																								if (confirm('Are you sure you want to delete?')) {
+																									document.getElementById('deleteForm').submit();
+																								}
+																							}
+																							</script>
+																							
+														<form action="default.php" method="post">
+														<button type="submit" name="submit" class="btn btn-outline-primary btn-md mx-1" style="width: 90px;">Set as default</button></form>
+													</div>
+												</div>
+												<?php
+													}
+												} else {
+													// If no rows are returned, hide the myDiv
+													echo '<div id="myDiv" class="address-card" style="display: none;"></div>';
+												}
+												?>
+									</div>
+													
+									
                 </div>
             </div>
         </div>

@@ -31,6 +31,67 @@ if ($result->num_rows > 0) {
 
 // I-set ang 'user_id' sa session para magamit sa ibang mga pahina
 $_SESSION['user_id'] = $user_id;
+
+
+$sql = "SELECT image FROM customer WHERE id = $user_id";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Output the image as an <img> tag
+    $row = $result->fetch_assoc();
+    $image_data = $row['image'];
+    $image_base64 = base64_encode($image_data);
+    $image_src = 'data:image/jpeg;base64,' . $image_base64; // Adjust MIME type as needed
+
+} else {
+   
+}
+
+
+if (isset($_POST["submit"])) {
+	
+		$sqlhash="SELECT * FROM customer WHERE id=$user_id";
+		$resultq = $conn->query($sqlhash);
+		if ($resultq) {
+				// Check if there are rows returned
+				if ($resultq->num_rows > 0) {
+					// Fetch the row data
+					$row = $resultq->fetch_assoc();
+					// Output the password
+					$correctpass=$row['password'];
+				} else {
+					echo "No results found.";
+				}
+			} else {
+				echo "Query error: " . $conn->error;
+			}
+		$currentpass=$_POST['currentpass'];
+		$newpass=$_POST['newpass'];
+		$confirmpass=$_POST['confirmpass'];
+		
+		$hashedpass=md5($currentpass);
+		$hashednewpass=md5($newpass);
+		$hashedconfirmpass=md5($confirmpass);
+		
+		$sqlyawa="UPDATE customer SET password='$hashednewpass' WHERE id=$user_id";
+		
+		if($hashedpass==$correctpass){
+			if($hashednewpass==$hashedconfirmpass){
+						if(mysqli_query($conn,$sqlyawa)){	
+								echo '<script>alert("Password Successfully changed!");</script>';
+
+							}							
+			}
+			else{
+				echo '<script>alert("The new password and its confirmation do not match!");</script>';				
+			}
+		}
+		else{
+			echo '<script>alert("'.$hashedpass.'");</script>';
+			echo '<script>alert("Password Incorrect!");</script>';
+		}
+}
 ?>
 
 
@@ -206,7 +267,7 @@ if ($result && $result->num_rows > 0) {
                 <div class="bg-light p-3">
                     <div class="d-flex align-items-center mb-3" style="text-align: center;">
                         <div>
-                            <img id="imagePreview" src="uploads/pfpp.png" alt="Profile Picture" style="max-width: 50px; height: auto;" />
+                            <img id="imagePreview" src="<?php echo $image_src ?>" alt="Profile Picture" style="max-width: 50px; height: auto;" />
                         </div>
                         <div class="ms-4 mt-4">
                             <p style="font-size: 1.3rem; font-weight: bold;"><?php echo htmlspecialchars($email); ?></p>
@@ -227,11 +288,11 @@ if ($result && $result->num_rows > 0) {
                         <h3>Change Password</h3>
                         <span>Manage and protect your account</span>
                       </div>
-  <form class="row g-3 mb-2 mt-3 needs-validation" novalidate>
+  <form action="changepassword.php" method="post" class="row g-3 mb-2 mt-3 needs-validation">
    <div class="row g-3">
   <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
     <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0;  width: 155px;">Current Password</label>
-    <input type="password" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem"  required>
+    <input type="password" name="currentpass" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem"  required>
     <div class="valid-feedback">
       Looks good!
     </div>
@@ -240,7 +301,7 @@ if ($result && $result->num_rows > 0) {
 <div class="row g-3">
   <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
     <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0; width: 150px;">New Password</label>
-    <input type="password" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem"  required>
+    <input type="password" name="newpass" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem"  required>
     <div class="valid-feedback">
       Looks good!
     </div>
@@ -249,7 +310,7 @@ if ($result && $result->num_rows > 0) {
 <div class="row g-3">
   <div class="col-lg-9 d-flex align-items-center" style=" margin-left: 80px;">
     <label for="validationCustom02" class="form-label me-2" style="font-size: 1.5rem; margin-bottom: 0; width: 165px;">Confirm Password</label>
-    <input type="password" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem"  required>
+    <input type="password" name="confirmpass" class="form-control" id="validationCustom02" style="height: 35px; font-size: 1.3rem"  required>
     <div class="valid-feedback">
       Looks good!
     </div>
@@ -258,7 +319,7 @@ if ($result && $result->num_rows > 0) {
 
 <div class="row g-3 mb-3">
           <div class="col-lg-9 d-flex justify-content-end" style="margin-left: 80px;">
-            <button class="btn btn-primary" type="submit" style="width: 70px; height: 30px; font-size: 1.2rem;">Change</button>
+            <button class="btn btn-primary" name="submit" type="submit" style="width: 70px; height: 30px; font-size: 1.2rem;">Change</button>
           </div>
         </form>
                     </div>
