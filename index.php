@@ -144,9 +144,11 @@ include 'dbconn/conn.php';
         </div>
         <div class="cat">
           <img src="./images/cat2.jpg" alt="" />
+          <a href="accessories.php">
           <div>
             <p>ACCESSORIES</p>
           </div>
+          </a>
         </div>
         <div class="cat">
           <img src="./images/cat1.jpg" alt="" />

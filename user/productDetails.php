@@ -274,11 +274,11 @@ if ($result && $result->num_rows > 0) {
                     <span style="color: black; font-size: 1.3rem;">Rating</span>
                 </span>
             
-        <div>
-                   <h2 class="price" style="font-size: 2.5rem;color: black;text-decoration: line-through;">₱<?php echo number_format($product['price'], 2); ?></h2><span id="finalPrice" class="price" style="font-size: 2.5rem;">₱ <?php echo htmlspecialchars($product['price']); ?></span>
-</div>
+        <div></div>
     
       
+                   <h2 class="price" style="font-size: 2.5rem;color: black;text-decoration: line-through;">₱<?php echo number_format($product['price'], 2); ?></h2><span id="finalPrice" class="price" style="font-size: 2.5rem;">₱ <?php echo htmlspecialchars($product['price']); ?></span>
+
       <form id="addCartForm" class="form" style="padding: 5px;">
     <input type="hidden" id="basePrice" name="price" value="<?php echo htmlspecialchars($product['price']); ?>"/>
     <input type="hidden" id="discount" name="discount" value="<?php echo htmlspecialchars($product['discount']); ?>"/>
