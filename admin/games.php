@@ -264,137 +264,198 @@ document.getElementById('editImage<?php echo $row['id']; ?>').addEventListener('
             <div class="modal-body">
                 <!-- Add Product Form -->
                 <form action="add_product.php" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="productName" class="form-label">Product Name</label>
-                        <input type="text" class="form-control" id="productName" name="productName" required>
-                    </div>
+    <div class="mb-3">
+        <label for="productName" class="form-label">Product Name</label>
+        <input type="text" class="form-control" id="productName" name="productName" required>
+    </div>
 
-                    <div class="row">
-                        <div class="col-sm-4">
-    <label for="color" class="form-label">Color</label>
-    <select class="form-select" id="color" name="color" multiple required>
-        <option value="Red">Red</option>
-        <option value="Blue">Blue</option>
-        <option value="Green">Green</option>
-        <option value="Black">Black</option>
-        <option value="White">White</option>
-        <option value="Yellow">Yellow</option>
-        <option value="Pink">Pink</option>
-        <option value="Other">Other</option>
-    </select>
-</div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div id="colorsDiv">
+                <div class="mb-3">
+                    <label for="color" class="form-label">Color <span class="text" onclick="addColor()" style="font-size: 0.7rem; color: red;"> Add More</span></label>
+                    <select class="form-select" name="color[]" required>
+                        <option value="">Select Here</option>
+                        <option value="Red">Red</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Green">Green</option>
+                        <option value="Black">Black</option>
+                        <option value="White">White</option>
+                        <option value="Yellow">Yellow</option>
+                        <option value="Pink">Pink</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-                        <div class="col-sm-4">
-                            <div class="mb-3">
-                                <label for="size" class="form-label">Size</label>
-                                <select class="form-select" id="size" name="size" required>
-                                    <option>Select Here</option>
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                    <option value="XL">XL</option>
-                                    <option value="2XL">2XL</option>
-                                    <option value="3XL">3XL</option>
-                                    
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="mb-3">
-                                <label for="category" class="form-label">Category</label>
-                                <select class="form-select" id="category" name="category" required>
-                                    <option>Select Here</option>
-                                    <option value="T-SHIRT">T-SHIRT</option>
-                                    <option value="SHORTS">SHORTS</option>
-                                    <option value="JACKETS">JACKETS</option>
-                                    <option value="BAGS">BAG</option>
-                                    <!-- Add more categories as needed -->
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-<div class="col-sm-12">
-<div class="mb-3" id="otherColorDiv" style="display:none;">
-    <label for="otherColor" class="form-label">Other Color</label>
-    <input type="text" class="form-control" id="otherColor">
-</div>
-</div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label for="quantity" class="form-label">Quantity</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity" required>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label for="type" class="form-label">Type</label>
-                                <select class="form-select" id="type" name="type" required>
-                                    <option>Select Here</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Accessories">Accessories</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+        <div class="col-sm-4">
+            <div id="sizesDiv">
+                <div class="mb-3">
+                    <label for="size" class="form-label">Size <span class="text" onclick="addSize()" style="font-size: 0.7rem; color: red;"> Add More</span></label>
+                    <select class="form-select" id="size" name="size[]" required>
+                        <option value="" disabled>Select Here</option>
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
+                        <option value="XL">XL</option>
+                        <option value="2XL">2XL</option>
+                        <option value="3XL">3XL</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label for="manufacturer" class="form-label">Manufacturer</label>
-                                <select class="form-select" id="manufacturer" name="manufacturer" required>
-                                    <option >Select Here</option>
-                                    <option value="Nike">Nike</option>
-                                    <option value="Dickies">Dickies</option>
-                                    <option value="UNIQLO">UNIQLO</option>
-                                    <!-- Add more manufacturers as needed -->
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select class="form-select" id="status" name="status" required>
-                                    <option >Select Here</option>
-                                    <option value="Restock">Restock</option>
-                                    <option value="Low Stock">Low Stock</option>
-                                    <option value="Instock">In Stock</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+        <div class="col-sm-4">
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" id="category" name="category" required>
+                    <option value="">Select Here</option>
+                    <option value="T-SHIRT">T-SHIRT</option>
+                    <option value="SHORTS">SHORTS</option>
+                    <option value="JACKETS">JACKETS</option>
+                    <option value="BAGS">BAG</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-                    <div class="mb-3">
-                        <label for="image" class="form-label">Image Product</label>
-                        <input type="file" class="form-control" id="image" name="image_front" required>
-                    </div>
+    <div class="col-sm-12">
+        <div class="mb-3" id="otherColorDiv" style="display:none;">
+            <label for="otherColor" class="form-label">Other Color</label>
+            <input type="text" class="form-control" id="otherColor">
+        </div>
+    </div>
 
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" name="description" required></textarea>
-                    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="mb-3">
+                <label for="quantity" class="form-label">Quantity</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" required>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="mb-3">
+                <label for="type" class="form-label">Type</label>
+                <select class="form-select" id="type" name="type" required>
+                    <option value="">Select Here</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Accessories">Accessories</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-                    <div class="mb-3">
-                        <label for="discount" class="form-label">Discount</label>
-                        <input type="number" class="form-control" id="discount" name="discount" required>
-                    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="mb-3">
+                <label for="manufacturer" class="form-label">Manufacturer</label>
+                <select class="form-select" id="manufacturer" name="manufacturer" required>
+                    <option value="">Select Here</option>
+                    <option value="Nike">Nike</option>
+                    <option value="Dickies">Dickies</option>
+                    <option value="UNIQLO">UNIQLO</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status" name="status" required>
+                    <option value="">Select Here</option>
+                    <option value="Restock">Restock</option>
+                    <option value="Low Stock">Low Stock</option>
+                    <option value="In Stock">In Stock</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-                    <div class="mb-3">
-                        <label for="price" class="form-label">Price</label>
-                        <input type="number" class="form-control" id="price" name="price" required>
-                    </div>
+    <div class="mb-3">
+        <label for="image_front" class="form-label">Image Product</label>
+        <input type="file" class="form-control" id="image_front" name="image_front" required>
+    </div>
 
-                    <hr class="my-3 mt-1">
-                    <div class="text-center d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary">Add Product</button>&nbsp;
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" name="description" required></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="discount" class="form-label">Discount</label>
+        <input type="number" class="form-control" id="discount" name="discount" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <input type="number" class="form-control" id="price" name="price" required>
+    </div>
+
+    <hr class="my-3 mt-1">
+    <div class="text-center d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary">Add Product</button>&nbsp;
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    </div>
+</form>
+
             </div>
         </div>
     </div>
 </div>
+<script>
+    function addColor() {
+    const colorDiv = document.createElement('div');
+    colorDiv.classList.add('row');
+    colorDiv.innerHTML = `
+        <div class='mb-1'>
+            <select class="form-select" name="color[]" required>
+                <option value="Red">Red</option>
+                <option value="Blue">Blue</option>
+                <option value="Green">Green</option>
+                <option value="Black">Black</option>
+                <option value="White">White</option>
+                <option value="Yellow">Yellow</option>
+                <option value="Pink">Pink</option>
+                <option value="Other">Other</option>
+            </select>
+           </div>
+            <div class="mb-1">
+           <span class='text' onclick="removeElement(this)">Remove</span>
+        </div>
+        
+
+    `;
+    document.getElementById('colorsDiv').appendChild(colorDiv);
+}
+
+function addSize() {
+    const sizeDiv = document.createElement('div');
+    sizeDiv.classList.add('row');
+    sizeDiv.innerHTML = `
+        <div class="mb-1">
+            <select class="form-select" name="size[]" required>
+                <option>Select Here</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+                <option value="XL">XL</option>
+                <option value="2XL">2XL</option>
+                <option value="3XL">3XL</option>
+            </select>
+        </div>
+        <div class="mb-1">
+           <span class='text' onclick="removeElement(this)">Remove</span>
+        </div>
+    `;
+    document.getElementById('sizesDiv').appendChild(sizeDiv);
+}
+
+function removeElement(button) {
+    button.parentElement.parentElement.remove();
+}
+
+</script>
 <script>
     document.querySelectorAll('.edit-color-select').forEach(function(selectElement) {
         selectElement.addEventListener('change', function() {

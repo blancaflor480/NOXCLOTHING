@@ -1,16 +1,9 @@
 <?php
 session_start();
-if (!isset($_SESSION['uname'])) {
-    header("Location: index.php?error=Login%20First");
-    die();
-}
-
 include 'dbconn/conn.php';
 
 // Kunin ang mga detalye ng produkto mula sa form
 $productName = $_POST['productName'];
-$color = $_POST['color'];
-$size = $_POST['size'];
 $category = $_POST['category'];
 $quantity = $_POST['quantity'];
 $status = $_POST['status'];
@@ -30,13 +23,37 @@ if ($_FILES["image_front"]["error"] == 0) {
        }
        move_uploaded_file($_FILES["image_front"]["tmp_name"], "uploads/" . $image_name);
 
-    $sql = "INSERT INTO products (name_item, type, color, size, manufacturer, description, category, quantity, status, image_front,discount, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO products (name_item, type, manufacturer, description, category, quantity, status, image_front,discount, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
      $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssssssii", $productName, $type, $color, $size, $manufacturer, $description, $category, $quantity, $status, $image_name, $discount, $price);
+    $stmt->bind_param("ssssssssii", $productName, $type, $manufacturer, $description, $category, $quantity, $status, $image_name, $discount, $price);
 
 
     // Patakbuhin ang query
     if ($stmt->execute()) {
+        $products_id = $stmt->insert_id;
+
+            // Insert colors
+            if (isset($_POST['color'])) {
+                $colors = $_POST['color'];
+                $color_sql = "INSERT INTO product_colors (products_id, color) VALUES (?, ?)";
+                $color_stmt = $conn->prepare($color_sql);
+                foreach ($colors as $color) {
+                    $color_stmt->bind_param("is", $products_id, $color);
+                    $color_stmt->execute();
+                }
+                $color_stmt->close();
+            }
+            // Insert sizes
+            if (isset($_POST['size'])) {
+                $sizes = $_POST['size'];
+                $size_sql = "INSERT INTO product_sizes (products_id, size) VALUES (?, ?)";
+                $size_stmt = $conn->prepare($size_sql);
+                foreach ($sizes as $size) {
+                    $size_stmt->bind_param("is", $products_id, $size);
+                    $size_stmt->execute();
+                }
+                $size_stmt->close();
+            }
         // Kung ang pagdaragdag ay matagumpay, i-redirect sa product list page
         echo '<script>alert("Record added successfully"); window.location.href = "games.php";</script>';
     } else {

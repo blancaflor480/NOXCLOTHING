@@ -1,35 +1,35 @@
 <?php
 session_start();
 
-// Check kung may session na itinakda para sa 'uname'
+// Check if a session is set for 'email'
 if (!isset($_SESSION['email'])) {
     header("Location: index.php?error=Login%20First");
     exit();
 }
 
-// Include ng database connection
+// Include the database connection
 include 'dbconn/conn.php';
 
-// Kunin ang 'uname' mula sa session
+// Get the 'email' from the session
 $email = $_SESSION['email'];
 
-// Subukan kung mayroong resulta sa query
+// Try to get the result from the query
 $stmt = $conn->prepare("SELECT * FROM customer WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Siguraduhing may resulta bago kunin ang data
+// Ensure there's a result before fetching the data
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
-    $user_id = $user['id']; // Kunin ang 'id' ng user
+    $user_id = $user['id']; // Get the 'id' of the user
 } else {
-    // Kung wala, i-redirect sa login page
+    // If not, redirect to login page
     header("Location: login-signup.php?error=Login%20First");
     exit();
 }
 
-// I-set ang 'user_id' sa session para magamit sa ibang mga pahina
+// Set the 'user_id' in the session to be used on other pages
 $_SESSION['user_id'] = $user_id;
 
 // Get the 'id' parameter from the URL
@@ -56,9 +56,27 @@ if ($result->num_rows > 0) {
     exit();
 }
 
+$stmt = $conn->prepare("SELECT size FROM product_sizes WHERE products_id = ?");
+$stmt->bind_param("i", $product_id);
+$stmt->execute();
+$inventory_result = $stmt->get_result();
+$inventory = [];
+
+while ($row = $inventory_result->fetch_assoc()) {
+    $inventory[] = $row['size']; // Collect all sizes into an array
+}
+
+$stmt = $conn->prepare("SELECT color FROM product_colors WHERE products_id = ?");
+$stmt->bind_param("i", $product_id);
+$stmt->execute();
+$inventory_result = $stmt->get_result();
+$inventory_color = [];
+
+// Fetch colors into an array
+while ($row = $inventory_result->fetch_assoc()) {
+    $inventory_color[] = $row['color'];
+}
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,12 +114,13 @@ if ($result->num_rows > 0) {
         }
 
         .color-box {
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            margin-right: 2px;
-        }
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid #000; /* Border color for visibility */
+}
 
         .color-label:hover {
             border-color: #000;
@@ -266,37 +285,46 @@ if ($result && $result->num_rows > 0) {
                     
                     <br>
     <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>"/>
-    <div class="color-container" style="margin-top: 10px;">
-        <label for="color" style="font-weight: 400;">Color: </label>
-        <div class="color-options" style="margin-left: 18px;">
-            <?php
-            $colors = explode(",", $product['color']);
-            $firstColor = true;
-            foreach ($colors as $color) {
-                $color = htmlspecialchars(trim($color));
-                echo '<label class="color-label">';
-                echo '<input type="radio" name="color" value="' . $color . '"' . ($firstColor ? ' checked' : '') . '/>';
-                echo '<span class="color-box" style="background-color:' . $color . ';"></span>';
-                echo $color;
-                echo '</label>';
-                $firstColor = false;
-            }
-            ?>
+    <!--<div class="color-container" style="margin-top: 5px;">-->
+    <label for="color" style="font-weight: 400;">Color: </label>
+ <div class="color-options" style="margin-left: 63px; margin-top: -30px; display: flex; flex-wrap: wrap; gap: 1px;">
+    <?php
+// Default color value
+$selectedColor = '';
+
+// Check if $_POST['color'] is set
+if (isset($_POST['color'])) {
+    $selectedColor = htmlspecialchars(trim($_POST['color']));
+}
+
+foreach ($inventory_color as $color) {
+    $colorName = htmlspecialchars(trim($color));
+    $colorStyle = htmlspecialchars($color); // Assuming $color is a valid CSS color
+
+    // Check if this color is selected
+    $isChecked = ($colorName == $selectedColor);
+
+    echo '<label class="color-label ' . ($isChecked ? 'selected' : '') . '">';
+    echo '<input type="radio" name="color" value="' . $colorName . '" ' . ($isChecked ? 'checked' : '') . ' />';
+   // echo '<span class="color-box" style="background-color: ' . $colorStyle . ';"></span>'; // Set the color
+    echo $colorName;
+    echo '</label>';
+}
+?>
+
+</div>
+<!---</div>-->
+    <br>
+     <div class="select-container" style="margin-left: 0px; display: flex; align-items: center;">
+            <label for="size" style="font-weight: 400; margin-right: 10px;">Size: </label>
+            <select name="size" id="select-size" style="margin-left: 25px;" required>
+                <option value="">Select Size</option>
+                <?php foreach ($inventory as $size): ?>
+                    <option value="<?php echo htmlspecialchars(trim($size)); ?>"><?php echo htmlspecialchars(trim($size)); ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
-    </div>
-    <br><br>
-    <div class="select-container" style="margin-left: 0px; display: flex; align-items: center;">
-        <label for="size" style="font-weight: 400; margin-right: 10px;">Size: </label>
-        <select name="size" id="select-size" style="margin-left: 25px;" required>
-            <option value="">Select Size</option>
-            <?php
-            $sizes = explode(",", $product['size']);
-            foreach ($sizes as $size) {
-                echo '<option value="' . htmlspecialchars(trim($size)) . '">' . htmlspecialchars(trim($size)) . '</option>';
-            }
-            ?>
-        </select>
-    </div>
+
     <br>
     <label for="quantity" style="font-weight: 400;">Quantity: </label>
     <input type="number" name="quantity" id="quantityInput" placeholder="1" value="1" style="width: 50px;" min="1" max="<?php echo $product['quantity']; ?>" required/>
@@ -418,7 +446,32 @@ if ($result && $result->num_rows > 0) {
             </div>
         </div>
     </footer>
-    <!-- Custom Script --><script>
+    <!-- Custom Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    // Kunin ang lahat ng label ng kulay
+    var colorLabels = document.querySelectorAll('.color-label');
+
+    colorLabels.forEach(function(label) {
+        label.addEventListener('click', function() {
+            // I-clear ang 'selected' class sa lahat ng label
+            colorLabels.forEach(function(label) {
+                label.classList.remove('selected');
+            });
+
+            // I-set ang 'selected' class sa piniling label
+            this.classList.add('selected');
+
+            // Makipag-ugnay sa input[type="radio"] para sa pagpili ng kulay
+            var radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+        });
+    });
+});
+
+</script>
+
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
             var addCartForm = document.getElementById("addCartForm");
 
