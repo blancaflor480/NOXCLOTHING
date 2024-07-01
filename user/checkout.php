@@ -232,7 +232,8 @@ if ($result && $result->num_rows > 0) {
       <div class="card mt-5" style="background-color: #FEF9E7;">
           
       <div class="card-body">
-      <h2 class="md-3 text-left" style="margin: 8px; font-weight: bold;"><i class="fas fa-map-marker-alt"></i> Delivery Address</h2>
+      <h2 class="md-3 text-left" style="margin: 8px; font-weight: bold;"><i class="fas fa-map-marker-alt"></i> Delivery Address </h2>
+      <span style="font-size: 1.3rem; color:blue; margin-top: -30px;">Change</span>
       <div class="row mt-4">
       <h5 class="col-5 mt-" style="margin: 8px; "><b>Customer:</b> <?php echo htmlspecialchars($user['fname']. ' ' . $user['mname'] . ' ' . $user['lname']); ?></h5>
           <h5 class="col-5 mt-3" style="margin: 8px; "><b>Email:</b> <?php echo htmlspecialchars($user['email']); ?></h5>

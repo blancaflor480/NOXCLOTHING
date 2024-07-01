@@ -275,60 +275,56 @@ if ($result && $result->num_rows > 0) {
                 </span>
             
         
-                   <h2 class="price" style="font-size: 2.5rem;">₱<?php echo number_format($product['price'], 2); ?></h2>
+                   <h2 class="price" style="font-size: 2.5rem;color: black;text-decoration: line-through;">₱<?php echo number_format($product['price'], 2); ?></h2><span id="finalPrice" class="price" style="font-size: 2.5rem;">₱ <?php echo htmlspecialchars($product['price']); ?></span>
+
+    
       
       <form id="addCartForm" class="form" style="padding: 5px;">
-            
-             <input type="hidden" name="price" value="<?php echo htmlspecialchars($product['price']); ?>"/>
-            
-                    
-                    
-                    <br>
-    <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>"/>
-    <!--<div class="color-container" style="margin-top: 5px;">-->
-    <label for="color" style="font-weight: 400;">Color: </label>
- <div class="color-options" style="margin-left: 63px; margin-top: -30px; display: flex; flex-wrap: wrap; gap: 1px;">
-    <?php
-// Default color value
-$selectedColor = '';
+    <input type="hidden" id="basePrice" name="price" value="<?php echo htmlspecialchars($product['price']); ?>"/>
+    <input type="hidden" id="discount" name="discount" value="<?php echo htmlspecialchars($product['discount']); ?>"/>
 
-// Check if $_POST['color'] is set
-if (isset($_POST['color'])) {
-    $selectedColor = htmlspecialchars(trim($_POST['color']));
-}
-
-foreach ($inventory_color as $color) {
-    $colorName = htmlspecialchars(trim($color));
-    $colorStyle = htmlspecialchars($color); // Assuming $color is a valid CSS color
-
-    // Check if this color is selected
-    $isChecked = ($colorName == $selectedColor);
-
-    echo '<label class="color-label ' . ($isChecked ? 'selected' : '') . '">';
-    echo '<input type="radio" name="color" value="' . $colorName . '" ' . ($isChecked ? 'checked' : '') . ' />';
-   // echo '<span class="color-box" style="background-color: ' . $colorStyle . ';"></span>'; // Set the color
-    echo $colorName;
-    echo '</label>';
-}
-?>
-
-</div>
-<!---</div>-->
     <br>
-     <div class="select-container" style="margin-left: 0px; display: flex; align-items: center;">
-            <label for="size" style="font-weight: 400; margin-right: 10px;">Size: </label>
-            <select name="size" id="select-size" style="margin-left: 25px;" required>
-                <option value="">Select Size</option>
-                <?php foreach ($inventory as $size): ?>
-                    <option value="<?php echo htmlspecialchars(trim($size)); ?>"><?php echo htmlspecialchars(trim($size)); ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+    <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>"/>
+
+    <label for="color" style="font-weight: 400;">Color: </label>
+    <div class="color-options" style="margin-left: 63px; margin-top: -30px; display: flex; flex-wrap: wrap; gap: 1px;">
+        <?php
+        $selectedColor = '';
+        if (isset($_POST['color'])) {
+            $selectedColor = htmlspecialchars(trim($_POST['color']));
+        }
+
+        foreach ($inventory_color as $color) {
+            $colorName = htmlspecialchars(trim($color));
+            $isChecked = ($colorName == $selectedColor);
+
+            echo '<label class="color-label ' . ($isChecked ? 'selected' : '') . '">';
+            echo '<input type="radio" name="color" value="' . $colorName . '" ' . ($isChecked ? 'checked' : '') . ' />';
+            echo $colorName;
+            echo '</label>';
+        }
+        ?>
+    </div>
+
+    <br>
+    <div class="select-container" style="margin-left: 0px; display: flex; align-items: center;">
+        <label for="size" style="font-weight: 400; margin-right: 10px;">Size: </label>
+        <select name="size" id="select-size" style="margin-left: 25px;" required>
+            <option value="">Select Size</option>
+            <?php foreach ($inventory as $size): ?>
+                <option value="<?php echo htmlspecialchars(trim($size)); ?>"><?php echo htmlspecialchars(trim($size)); ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
 
     <br>
     <label for="quantity" style="font-weight: 400;">Quantity: </label>
     <input type="number" name="quantity" id="quantityInput" placeholder="1" value="1" style="width: 50px;" min="1" max="<?php echo $product['quantity']; ?>" required/>
-    <br><br><br><br>
+    
+    <br><br>
+    
+    
+    <br><br>
     <button type="submit" class="addCart" style="border-radius: 5px; padding: 17px; border-color: black; background-color: transparent; color: black;">
         <i class='bx bx-cart'></i> Add To Cart
     </button>
@@ -447,6 +443,20 @@ foreach ($inventory_color as $color) {
         </div>
     </footer>
     <!-- Custom Script -->
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    var basePrice = parseFloat(document.getElementById('basePrice').value);
+    var discount = parseFloat(document.getElementById('discount').value);
+    var finalPriceElement = document.getElementById('finalPrice');
+
+    function updatePrice() {
+        var finalPrice = basePrice - (basePrice * discount / 100);
+        finalPriceElement.textContent = finalPrice.toFixed(2);
+    }
+
+    updatePrice();
+});
+</script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
     // Kunin ang lahat ng label ng kulay

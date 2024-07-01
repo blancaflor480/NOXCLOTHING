@@ -1,81 +1,59 @@
 <?php
 session_start();
 
-// Check kung may session na itinakda para sa 'uname'
+// Check if session email exists
 if (!isset($_SESSION['email'])) {
     header("Location: index.php?error=Login%20First");
     exit();
 }
 
-// Include ng database connection
+// Include database connection
 include 'dbconn/conn.php';
 
-// Kunin ang 'uname' mula sa session
+// Get the user email from session
 $email = $_SESSION['email'];
 
-// Subukan kung mayroong resulta sa query
+// Prepare and execute statement to fetch user data
 $stmt = $conn->prepare("SELECT * FROM customer WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Siguraduhing may resulta bago kunin ang data
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
-    $user_id = $user['id']; // Kunin ang 'id' ng user
+    $user_id = $user['id'];
 } else {
-    // Kung wala, i-redirect sa login page
     header("Location: login-signup.php?error=Login%20First");
     exit();
 }
 
-// I-set ang 'user_id' sa session para magamit sa ibang mga pahina
 $_SESSION['user_id'] = $user_id;
 
-// Process quantity updates if form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['productId']) && isset($_POST['quantity'])) {
-        $productId = $_POST['productId'];
-        $quantity = intval($_POST['quantity']);
+// Handle AJAX request for updating quantity
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'updateQuantity') {
+    $productId = $_POST['productId'];
+    $quantity = intval($_POST['quantity']);
 
-        // Validate quantity
-        if ($quantity < 1) {
-            $quantity = 1;
-        }
-
-        // Check if the product already exists in the cart
-        $stmt = $conn->prepare("SELECT quantity FROM addcart WHERE customer_id = ? AND products_id = ?");
-        $stmt->bind_param("ii", $user_id, $productId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            // If the product exists, update the quantity
-            $row = $result->fetch_assoc();
-            $newQuantity = $row['quantity'] + $quantity;
-
-            $stmt = $conn->prepare("UPDATE addcart SET quantity = ? WHERE customer_id = ? AND products_id = ?");
-            $stmt->bind_param("iii", $newQuantity, $user_id, $productId);
-        } else {
-            // If the product does not exist, insert a new record
-            $stmt = $conn->prepare("INSERT INTO addcart (customer_id, products_id, quantity) VALUES (?, ?, ?)");
-            $stmt->bind_param("iii", $user_id, $productId, $quantity);
-        }
-
-        $stmt->execute();
-
-        if ($stmt->affected_rows > 0) {
-            // Quantity updated/inserted successfully
-            echo json_encode(["success" => true, "message" => "Product added to cart successfully."]);
-        } else {
-            // Handle update/insert error
-            echo json_encode(["success" => false, "message" => "Failed to add product to cart."]);
-        }
-
-        $stmt->close();
+    if ($quantity < 1) {
+        $quantity = 1;
     }
+
+    $stmt = $conn->prepare("UPDATE addcart SET quantity = ? WHERE customer_id = ? AND products_id = ?");
+    $stmt->bind_param("iii", $quantity, $user_id, $productId);
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+        echo json_encode(["success" => true, "message" => "Quantity updated successfully."]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Failed to update quantity."]);
+    }
+    $stmt->close();
+    exit();
 }
+
+// Rest of the code for displaying the cart remains unchanged
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -355,7 +333,11 @@ if ($result && $result->num_rows > 0) {
 
             echo "
             <tr>
-                <td><input style='width: 15px; height: 15px;' type='checkbox' /></td>
+      <form id='checkoutForm' method='POST' action='function/process_checkout.php'>
+         <td><input style='width: 15px; height: 15px;' type='checkbox' class='cart-checkbox' value='<?php ".$row['id']."?>' data-product-id='" . $row['products_id'] . "' /></td>
+    
+
+
                 <td>
                     <div class='cart-info'>
                         <img src='../admin/uploads/" . htmlspecialchars($row['image_front']) . "' alt='" . htmlspecialchars($row['name_item']) . "' />
@@ -428,9 +410,9 @@ if ($result && $result->num_rows > 0) {
                 </tr>
             </table>
             <!--<a href="checkout.php" class="checkout">Proceed to Checkout</a>-->
-            <a href="checkout.php"><input type="button" style="width: 250px;" class="checkout" value="Proceed to Checkout" <?php if ($totalItems == 0) echo 'disabled'; ?>></a>
+            <input type="submit" style="width: 250px;" class="checkout" value="Proceed to Checkout" <?php if ($totalItems == 0) echo 'disabled'; ?>>
 
-
+            </form>
     
         </div>
     </div>
@@ -644,7 +626,42 @@ if ($result && $result->num_rows > 0) {
             }
         });
     </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    var checkboxes = document.querySelectorAll('.cart-checkbox');
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            updateOrderSummary();
+        });
+    });
 
+    function updateOrderSummary() {
+        var totalItems = 0;
+        var totalPrice = 0.00;
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                var productId = checkbox.dataset.productId;
+                var quantity = parseInt(checkbox.closest('tr').querySelector('.quantity').value);
+                var price = parseFloat(checkbox.closest('tr').querySelector('.product-price').innerText.replace('₱', ''));
+                totalPrice += (quantity * price);
+                totalItems++;
+            }
+        });
+
+        // Update order summary elements
+        var discountRate = 0.1; // Assuming a 10% discount rate
+        var discount = totalPrice * discountRate;
+        var finalTotal = totalPrice - discount;
+
+        document.getElementById("total-items").innerText = totalItems;
+        document.getElementById("total-price").innerText = "₱" + totalPrice.toFixed(2);
+        document.getElementById("discount").innerText = "₱" + discount.toFixed(2);
+        document.getElementById("final-total").innerText = "₱" + finalTotal.toFixed(2);
+    }
+});
+
+</script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
     // Function to update the order summary based on quantity changes
@@ -697,6 +714,52 @@ if ($result && $result->num_rows > 0) {
 </script>
 
 <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+
+            quantityInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const productId = this.getAttribute('data-product-id');
+                    const quantity = this.value;
+
+                    fetch('cart.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `action=updateQuantity&productId=${productId}&quantity=${quantity}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: data.message,
+                                icon: 'success'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: data.message,
+                                icon: 'error'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'An error occurred while updating the quantity.',
+                            icon: 'error'
+                        });
+                    });
+                });
+            });
+        });
+    </script>
+
+<script>
         document.querySelectorAll('.quantity').forEach(item => {
     item.addEventListener('input', event => {
         let quantity = event.target.value;
@@ -713,7 +776,7 @@ if ($result && $result->num_rows > 0) {
             return;
         }
 
-        fetch('update_cart.php', {
+        fetch('function/update_addcart.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
