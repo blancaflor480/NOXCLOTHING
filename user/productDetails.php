@@ -281,7 +281,7 @@ if ($result && $result->num_rows > 0) {
 
       <form id="addCartForm" class="form" style="padding: 5px;">
     <input type="hidden" id="basePrice" name="price" value="<?php echo htmlspecialchars($product['price']); ?>"/>
-    <input type="hidden" id="discount" name="discount" value="<?php echo htmlspecialchars($product['discount']); ?>"/>
+<input type="hidden" id="discount" name="discount" value="<?php echo htmlspecialchars($product['discount']); ?>"/>
 
     <br>
     <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>"/>

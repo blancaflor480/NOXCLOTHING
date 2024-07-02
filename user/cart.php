@@ -38,21 +38,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $quantity = 1;
     }
 
-    $stmt = $conn->prepare("UPDATE addcart SET quantity = ? WHERE customer_id = ? AND products_id = ?");
-    $stmt->bind_param("iii", $quantity, $user_id, $productId);
+    // Check if the product exists in the cart for this user
+    $stmt = $conn->prepare("SELECT id FROM addcart WHERE customer_id = ? AND products_id = ?");
+    $stmt->bind_param("ii", $user_id, $productId);
     $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($stmt->affected_rows > 0) {
-        echo json_encode(["success" => true, "message" => "Quantity updated successfully."]);
+    if ($result->num_rows > 0) {
+        // Product exists, update the quantity
+        $stmt = $conn->prepare("UPDATE addcart SET quantity = ? WHERE customer_id = ? AND products_id = ?");
+        $stmt->bind_param("iii", $quantity, $user_id, $productId);
+        if ($stmt->execute()) {
+            echo json_encode(["success" => true, "message" => "Quantity updated successfully."]);
+        } else {
+            echo json_encode(["success" => false, "message" => "Failed to update quantity.", "error" => $stmt->error]);
+        }
     } else {
-        echo json_encode(["success" => false, "message" => "Failed to update quantity."]);
+        // Product does not exist in the cart, return an error
+        echo json_encode(["success" => false, "message" => "Product not found in the cart."]);
     }
     $stmt->close();
     exit();
 }
-
-// Rest of the code for displaying the cart remains unchanged
 ?>
+
 
 
 <!DOCTYPE html>
@@ -308,7 +317,7 @@ if ($result && $result->num_rows > 0) {
     $totalItems = 0;
     $totalPrice = 0.00;
 
-    $sql = "SELECT addcart.*, products.price AS product_price, products.name_item, products.image_front, products.discount, products.quantity, addcart.quantity AS qty 
+    $sql = "SELECT addcart.*, products.price AS product_price, addcart.id AS ID, addcart.price AS cart_price, products.name_item, products.image_front, products.discount, products.quantity, addcart.quantity AS qty 
             FROM addcart 
             INNER JOIN products ON addcart.products_id = products.id 
             WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
@@ -320,7 +329,8 @@ if ($result && $result->num_rows > 0) {
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $totalItems++;
-            $unitPrice = $row['product_price'];
+            $unitPrice = $row['cart_price'];
+            
             $quantity = $row['qty'];
 
             // Calculate subtotal and discount
@@ -333,8 +343,8 @@ if ($result && $result->num_rows > 0) {
 
             echo "
             <tr>
-      <form id='checkoutForm' method='POST' action='function/process_checkout.php'>
-         <td><input style='width: 15px; height: 15px;' type='checkbox' class='cart-checkbox' value='<?php ".$row['id']."?>' data-product-id='" . $row['products_id'] . "' /></td>
+         <td><input style='width: 15px; height: 15px;' type='checkbox' class='cart-checkbox' value='" . $row['ID'] . "' data-product-id='" . $row['ID'] . "' /></td>
+  
     
 
 
@@ -358,13 +368,14 @@ if ($result && $result->num_rows > 0) {
                 <td>
                     <input type='number' value='" . $quantity . "' min='1' max='" . $row['quantity'] . "' class='quantity' data-product-id='" . $row['id'] . "' />
                 </td>
-                <td class='subtotal'>";
-                
-                if ($discount > 0) {
-                    echo "<span style='text-decoration: line-through;'>₱" . number_format($subtotal, 2) . "</span> ₱" . number_format($discountedSubtotal, 2);
-                } else {
-                    echo "₱" . number_format($subtotal, 2);
-                }
+
+
+     <td class='subtotal'>"; 
+        if ($discount > 0) {
+            echo "<span style='text-decoration: line-through;'>₱" . number_format($row['product_price'],2) . "</span> ₱" . number_format($row['cart_price'],2);
+        } else {
+            echo "₱" . number_format($subtotal, 2);
+        }
 
             echo "</td>
             </tr>";
@@ -398,22 +409,24 @@ if ($result && $result->num_rows > 0) {
                 </tr>
                 <tr>
                     <td>Items</td>
-                    <td id="total-items"><?php echo $totalItems; ?></td>
+                    <td id="total-items"><input type="hidden" value="<?php echo number_format($totalItems, 2); ?>" name="quantity"> <?php echo $totalItems; ?></td>
                 </tr>
                 <tr>
                     <td>Discount</td>
-                    <td id="discount">₱ <?php echo number_format($discount, 2); ?></td>
+                    <td id="discount">₱ <?php echo number_format($row['discount'], 2); ?></td>
                 </tr>
                 <tr>
                     <td>Total Amount</td>
-                    <td id="final-total">₱ <?php echo number_format($finalTotal, 2); ?></td>
+                    <td id="final-total">₱ <input type="hidden" value="<?php echo number_format($finalTotal, 2); ?>" name="total"><?php echo number_format($finalTotal, 2); ?></td>
                 </tr>
             </table>
             <!--<a href="checkout.php" class="checkout">Proceed to Checkout</a>-->
-            <input type="submit" style="width: 250px;" class="checkout" value="Proceed to Checkout" <?php if ($totalItems == 0) echo 'disabled'; ?>>
+            <form id="checkout-form">
+    <input type="submit" style="width: 250px;" class="checkout" value="Proceed to Checkout" <?php if ($totalItems == 0) echo 'disabled'; ?>>
+</form>
 
-            </form>
-    
+
+     
         </div>
     </div>
 
@@ -629,10 +642,17 @@ if ($result && $result->num_rows > 0) {
 <script>
     document.addEventListener("DOMContentLoaded", function() {
     var checkboxes = document.querySelectorAll('.cart-checkbox');
+    var checkoutButton = document.querySelector('.checkout');
+
     checkboxes.forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
             updateOrderSummary();
         });
+    });
+
+    checkoutButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        processCheckout();
     });
 
     function updateOrderSummary() {
@@ -641,7 +661,6 @@ if ($result && $result->num_rows > 0) {
 
         checkboxes.forEach(function(checkbox) {
             if (checkbox.checked) {
-                var productId = checkbox.dataset.productId;
                 var quantity = parseInt(checkbox.closest('tr').querySelector('.quantity').value);
                 var price = parseFloat(checkbox.closest('tr').querySelector('.product-price').innerText.replace('₱', ''));
                 totalPrice += (quantity * price);
@@ -658,12 +677,49 @@ if ($result && $result->num_rows > 0) {
         document.getElementById("total-price").innerText = "₱" + totalPrice.toFixed(2);
         document.getElementById("discount").innerText = "₱" + discount.toFixed(2);
         document.getElementById("final-total").innerText = "₱" + finalTotal.toFixed(2);
+
+        checkoutButton.disabled = (totalItems === 0);
+    }
+
+    function processCheckout() {
+        var selectedItems = [];
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                selectedItems.push(checkbox.dataset.addcartId); // Make sure this matches the attribute in your HTML
+            }
+        });
+
+        if (selectedItems.length > 0) {
+            // Send an AJAX request to insert_checkout.php with selected items
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'function/insert_checkout.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText); // Handle the response if needed
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        alert("Items inserted into checkout successfully.");
+                        // Redirect to another page or update the UI as needed
+                    } else {
+                        alert("Failed to insert items into checkout.");
+                    }
+                }
+            };
+
+            xhr.send(JSON.stringify({ selectedItems: selectedItems }));
+        } else {
+            alert("No items selected for checkout.");
+        }
     }
 });
 
 </script>
+
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     // Function to update the order summary based on quantity changes
     function updateOrderSummary() {
         var quantities = document.querySelectorAll(".quantity");
@@ -710,52 +766,48 @@ if ($result && $result->num_rows > 0) {
     // Initial order summary update
     updateOrderSummary();
 });
-
 </script>
-
 <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const quantityInputs = document.querySelectorAll('.quantity-input');
+        // Update quantity via AJAX
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', function() {
+                const productId = this.dataset.productId;
+                const quantity = this.value;
 
-            quantityInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    const productId = this.getAttribute('data-product-id');
-                    const quantity = this.value;
-
-                    fetch('cart.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `action=updateQuantity&productId=${productId}&quantity=${quantity}`
+                fetch('cart.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'updateQuantity',
+                        productId: productId,
+                        quantity: quantity
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: data.message,
-                                icon: 'success'
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error',
-                                text: data.message,
-                                icon: 'error'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'An error occurred while updating the quantity.',
-                            icon: 'error'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Success', data.message, 'success').then(() => {
+                            location.reload();
                         });
-                    });
+                    } else {
+                        Swal.fire('Error', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('Error', 'Failed to update quantity.', 'error');
                 });
             });
+        });
+
+        // Handle checkout button click
+        document.getElementById('checkoutButton').addEventListener('click', function(event) {
+            const checkboxes = document.querySelectorAll('.cart-checkbox:checked');
+            if (checkboxes.length === 0) {
+                event.preventDefault();
+                Swal.fire('Warning', 'Please select at least one item to checkout.', 'warning');
+            }
         });
     </script>
 
