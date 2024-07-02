@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
-
-
 <?php
 session_start();
 if (!isset($_SESSION['uname'])) {
@@ -36,13 +33,11 @@ if (!$result) {
                     List of Orders
                 </h5>
                 <div class="d-flex justify-content-end align-items-center">
-                 <!--   <a href="complaint.php" style="font-size: 17px;" class="btn btn-warning btn-sm me-2">Complaint</a>
-                    <a href="history_transaction.php" style="font-size: 17px;" class="btn btn-primary btn-sm me-2">History</a>
-                -->
+                    <!-- Additional buttons if needed -->
                 </div>
             </div>
             <div class="card-body table-responsive">
-                 <table id="dataTable" class="table table-hover table-striped table-bordered">
+                <table id="dataTable" class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -57,41 +52,38 @@ if (!$result) {
                             <th>Action</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                    <?php
-                        $sql = "SELECT orders.id, customer.fname AS customer_name, products.name_item AS productname,  orders.innovoice, orders.quantity, orders.total_amount, orders.order_date, orders.status, orders.size
+                        <?php
+                        $sql = "SELECT orders.id, customer.fname AS customer_name, products.name_item AS productname, orders.innovoice, addcart.quantity, orders.total_amount, orders.order_date, orders.status, addcart.size
                                 FROM orders 
-                                INNER JOIN customer 
-                                ON orders.customer_id = customer.id
-                                INNER JOIN products
-                                ON orders.products_id = products.id";
-             
+                                INNER JOIN products ON orders.products_id = products.id
+                                INNER JOIN addcart ON orders.addcart_id = addcart.id
+                                INNER JOIN customer ON addcart.customer_id = customer.id";
+
                         $result = mysqli_query($conn, $sql);
 
                         if (mysqli_num_rows($result) > 0) {
-                            while($row = mysqli_fetch_assoc($result)) {
-                        ?>
-                        <tr>
-                            <td><?php echo $row['id']; ?></td>
-                            <td><?php echo isset($row['customer_name']) ? $row['customer_name'] : 'N/A'; ?></td>
-                            <td><?php echo $row['innovoice']; ?></td>
-                            <td><?php echo $row['productname']; ?></td>
-                            <td><?php echo $row['quantity']; ?></td>
-                            <td><?php echo $row['size']; ?></td>
-                            <td><?php echo $row['order_date']; ?></td>
-                            <td><?php echo $row['total_amount']; ?></td>
-                            <td><?php echo $row['status']; ?></td>
-                            
-                            <td>
-                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProductModal<?php echo $row['id']; ?>"><i class="fas fa-edit"></i></button>
-            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProductModal<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></button>
-                            </td>
-                        </tr>
-                        <?php
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                ?>
+                                <tr>
+                                    <td><?php echo $row['id']; ?></td>
+                                    <td><?php echo isset($row['customer_name']) ? $row['customer_name'] : 'N/A'; ?></td>
+                                    <td><?php echo $row['innovoice']; ?></td>
+                                    <td><?php echo $row['productname']; ?></td>
+                                    <td><?php echo $row['quantity']; ?></td>
+                                    <td><?php echo $row['size']; ?></td>
+                                    <td><?php echo $row['order_date']; ?></td>
+                                    <td><?php echo $row['total_amount']; ?></td>
+                                    <td><?php echo $row['status']; ?></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProductModal<?php echo $row['id']; ?>"><i class="fas fa-edit"></i></button>
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProductModal<?php echo $row['id']; ?>"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            <?php
                             }
                         } else {
-                            echo "<tr><td colspan='5'>No orders found</td></tr>";
+                            echo "<tr><td colspan='10'>No orders found</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -115,15 +107,15 @@ if (!$result) {
     </div>
 </footer>
 
+<!-- Bootstrap Bundle JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<!-- DataTables -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<!-- DataTables -->
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<!-- DataTables JS -->
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script>
-     $(document).ready(function() {
+    $(document).ready(function() {
         $('#dataTable').DataTable();
     });
- </script>   
+</script>

@@ -702,9 +702,13 @@ if ($result && $result->num_rows > 0) {
                         if (response.success) {
                             alert("Items inserted into checkout successfully.");
                             // Redirect to another page or update the UI as needed
+                            window.location.href = 'checkout.php?'; // Redirect to checkout.php
+                            // window.location.href = 'checkout.php?selectedIds=' + encodeURIComponent(selectedItems.join(',')); // Redirect to checkout.php
                         } else {
                             alert("Failed to insert items into checkout.");
+                            window.location.href = 'checkout.php?';
                         }
+
                     }
                 };
 

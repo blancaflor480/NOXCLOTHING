@@ -27,26 +27,37 @@ if (isset($data['selectedItems']) && is_array($data['selectedItems']) && !empty(
     try {
         foreach ($selectedItems as $addcartId) {
             if (is_numeric($addcartId)) {
-                // Check if addcart_id exists for the user
+                // Check if addcart_id exists for the user and not already in p_checkout
                 $stmt_select = $conn->prepare("SELECT id FROM addcart WHERE id = ? AND customer_id = ?");
                 $stmt_select->bind_param("ii", $addcartId, $user_id);
                 $stmt_select->execute();
                 $result = $stmt_select->get_result();
 
                 if ($result->num_rows > 0) {
-                    // Insert into p_checkout table
-                    $stmt_insert = $conn->prepare("INSERT INTO p_checkout (addcart_id, date) VALUES (?, NOW())");
-                    $stmt_insert->bind_param("i", $addcartId); // Bind addcart_id parameter
-                    if ($stmt_insert->execute()) {
-                        $stmt_insert->close();
+                    // Check if addcart_id already exists in p_checkout
+                    $stmt_check_existing = $conn->prepare("SELECT addcart_id FROM p_checkout WHERE addcart_id = ?");
+                    $stmt_check_existing->bind_param("i", $addcartId);
+                    $stmt_check_existing->execute();
+                    $existing_result = $stmt_check_existing->get_result();
+
+                    if ($existing_result->num_rows == 0) {
+                        // Insert into p_checkout table
+                        $stmt_insert = $conn->prepare("INSERT INTO p_checkout (addcart_id, date) VALUES (?, NOW())");
+                        $stmt_insert->bind_param("i", $addcartId); // Bind addcart_id parameter
+                        if ($stmt_insert->execute()) {
+                            $stmt_insert->close();
+                        } else {
+                            throw new Exception("Execute failed for addcart_id: $addcartId - " . $stmt_insert->error);
+                        }
                     } else {
-                        throw new Exception("Execute failed for addcart_id: $addcartId - " . $stmt_insert->error);
+                        throw new Exception("addcart_id: $addcartId already exists in p_checkout.");
                     }
                 } else {
                     throw new Exception("addcart_id: $addcartId does not exist for user_id: $user_id");
                 }
 
                 $stmt_select->close();
+                $stmt_check_existing->close();
             } else {
                 throw new Exception("Invalid addcart_id: $addcartId");
             }
@@ -68,4 +79,5 @@ if (isset($data['selectedItems']) && is_array($data['selectedItems']) && !empty(
 }
 
 $conn->close();
+
 ?>

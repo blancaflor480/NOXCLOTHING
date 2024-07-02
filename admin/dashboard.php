@@ -255,6 +255,7 @@
                         
                     </div>
                     <!-- Table Element -->
+                    <!--
                     <div class="card border-0">
                         <div class="card-header">
                             <h5 class="card-title">
@@ -284,27 +285,14 @@
                             </table>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </main>
             <!--<a href="#" class="theme-toggle">
                 <i class="fa-regular fa-moon"></i>
                 <i class="fa-regular fa-sun"></i>
             </a>-->
            
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row text-muted">
-                        <div class="col-6 text-start">
-                            <p class="mb-0">
-                                <a href="#" class="text-muted">
-                                    <strong>GAME VAULT</strong>
-                                </a>
-                            </p>
-                        </div>
-                        
-                    </div>
-                </div>
-            </footer>
+
         </div>
     </div>
  

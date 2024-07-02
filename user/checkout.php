@@ -8,7 +8,7 @@ if (!isset($_SESSION['email'])) {
 }
 
 // Include the database connection file
-include 'dbconn/conn.php';
+include 'dbconn/conn.php'; // Adjust path as necessary
 
 // Get the email from the session
 $email = $_SESSION['email'];
@@ -30,13 +30,10 @@ if ($result->num_rows > 0) {
 
 // Process the checkout form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Fetch the voucher code if provided
-    $voucher_code = isset($_POST['voucher']) ? $_POST['voucher'] : null;
-    
-    $payment_method = $_POST['paymentMethod'];
-    
+    $payment_method = $_POST['paymentMethod']; // Get the payment method from form
+
     // Prepare the query to get the cart items for the user
-    $query = "SELECT addcart.*, products.price AS product_price, products.discount
+    $query = "SELECT addcart.*, addcart.price AS product_price, products.discount
               FROM addcart
               INNER JOIN products ON addcart.products_id = products.id
               WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
@@ -48,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Variables to calculate total amount
     $total_amount = 0.00;
     $order_date = date('Y-m-d');
-    
+
     // Insert each cart item into the orders table
     while ($row = $result->fetch_assoc()) {
         $addcart_id = $row['id'];
@@ -58,19 +55,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $size = $row['size'];
         $price = $row['product_price'];
         $discount = $row['discount'];
-        
+
         // Calculate the total amount for this item
         $item_total = ($price - $discount) * $quantity;
         $total_amount += $item_total;
-        
+
         // Insert into the orders table
-        $stmt = $conn->prepare("INSERT INTO orders (customer_id, products_id, addcart_id, innovoice, price, quantity, color, size, voucher_id, status, total_amount, order_date)
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO orders (products_id, addcart_id, innovoice, status, paymentMethod, total_amount, order_date)
+                                VALUES (?, ?, ?, 'Pending', ?, ?, ?)");
         $innovoice = rand(1000, 9999); // Generate a random invoice number
-        $voucher_id = null; // Assume no voucher ID, you can handle voucher application separately
-        
+
         // Bind parameters and execute the statement
-        $stmt->bind_param("iiiidississ", $user_id, $products_id, $addcart_id, $innovoice, $price, $quantity, $color, $size, $voucher_id, $total_amount, $order_date);
+        $stmt->bind_param("iissds", $products_id, $addcart_id, $innovoice, $payment_method, $total_amount, $order_date);
         $stmt->execute();
     }
 
@@ -84,6 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit();
 }
 ?>
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- Custom StyleSheet -->
     <link rel="stylesheet" href="./css/styles.css" />
-    <title>Your Cart</title>
+    <title>NOXCLOTHING | Checkout</title>
 <style>
 
 </style>
@@ -244,7 +244,7 @@ if ($result && $result->num_rows > 0) {
           </div>
   </div>
 </div>
-          
+          <!--
 <div class="card mt-3">
         <div class="card-body">
             <div class="row mt-2" style="background-color: white;">
@@ -261,7 +261,7 @@ if ($result && $result->num_rows > 0) {
         </div>
     </div>          
 
-
+-->
     <div class="card mt-3">
                         <div class="card-body">
                             <div class="row mt-2" style="background-color: white;">
@@ -328,7 +328,6 @@ if ($result && $result->num_rows > 0) {
                     </div>
         </form>
       </div>
-      
       <!-- Order Summary Column -->
       <div class="col-lg-4 mt-5">
         <div class="card" style="width: 100%;">
@@ -338,38 +337,43 @@ if ($result && $result->num_rows > 0) {
         <div class="card-body">
         <ul class="list-group list-group-flush">
         <?php
-    // Gumawa ng query para sa order summary
-    $query = "SELECT addcart.*, products.price AS product_price, products.name_item, products.discount
-    FROM addcart 
-    INNER JOIN products ON addcart.products_id = products.id WHERE addcart.customer_id = $user_id";
-    $result = mysqli_query($conn, $query);
+// Gumawa ng query para sa order summary
+$query = "
+    SELECT ac.*, p.price AS product_price, ac.price AS Add_price, ac.quantity AS qty, p.name_item, p.discount, pc.id AS checkout_id
+    FROM addcart AS ac
+    INNER JOIN products AS p ON ac.products_id = p.id
+    LEFT JOIN p_checkout AS pc ON ac.id = pc.addcart_id
+    WHERE ac.customer_id = $user_id
+";
+$result = mysqli_query($conn, $query);
 
-    // Variable initialization
-    $totalPrice = 0.00;
-    $totalItems = 0;
+// Variable initialization
+$totalPrice = 0.00;
+$totalItems = 0;
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        // Loop through each item in the cart
-        while ($row = mysqli_fetch_assoc($result)) {
+if ($result && mysqli_num_rows($result) > 0) {
+    // Loop through each item in the cart
+    while ($row = mysqli_fetch_assoc($result)) {
+        // Validate if there is a checkout record for this addcartId
+        if ($row['checkout_id']) {
             // Display details of each item
             echo "<li class='list-group-item'>";
             echo "<table>";
             echo "<tr>";
             echo "<td style='font-weight: bold;'>Product: </td>";
-            echo "<td> x". $row['quantity'] ." ". $row['name_item'] . "</td>";
-            echo "</tr>";
-            
-            
-            echo "<tr>";
-            echo "<td style='font-weight: bold;'>Subtotal: </td>";
-            echo "<td>₱" . number_format($row['product_price'], 2) . "</td>";
+            echo "<td>x {$row['qty']} {$row['name_item']}</td>";
             echo "</tr>";
 
             echo "<tr>";
-            echo "<td style='font-weight: bold;'>Discount: </td>";
+            echo "<td style='font-weight: bold;'>Subtotal: </td>";
+            echo "<td>₱" . number_format($row['Add_price'] * $row['qty'], 2) . "</td>";
+            echo "</tr>";
+
+            echo "<tr>";
+            echo "<td style='font-weight: bold;'>Shipping Fee: </td>";
             echo "<td>₱" . number_format($row['discount'], 2) . "</td>";
             echo "</tr>";
-        
+
             echo "</table>";
             echo "</li>";
 
@@ -377,37 +381,45 @@ if ($result && $result->num_rows > 0) {
             $subtotal = $row['quantity'] * $row['product_price'];
             $totalPrice += $subtotal; // Add subtotal to total price
             $totalItems += $row['quantity']; // Increment total items count
+        } else {
+            // Handle case where no checkout record found
+            echo "<li class='list-group-item'>";
+            echo "<p>Item with ID {$row['id']} does not have a valid checkout record.</p>";
+            echo "</li>";
         }
-
-        // Display total price and total items
-        echo "<li class='list-group-item'>";
-        echo "<table>";
-        
-        echo "<tr>";
-        echo "<td>Total Items:</td>";
-        echo "<td>$totalItems</td>";
-        echo "</tr>";
-        
-        echo "<td>Total Amount:</td>";
-        echo "<td>₱" . number_format($totalPrice, 2) . "</td>";
-        
-        
-        // Add checkout button
-        echo "</table>";
-        echo "<li style='text-align: center;'>";
-        echo "<form action='checkout.php' method='post'>";
-        echo "<button type='submit' class='btn btn-primary' style='background-color:#222831; border-color:#222831;
-        margin: 10px; width: 90px; height: 45px; font-size: 1.3rem'>Checkout</button>";
-         echo "<a href='cart.php'><button type='button' class='btn btn-primary' style='background-color: transparent; color: black; border-color:#222831;
-        margin: 10px; width: 90px; height: 45px; font-size: 1.3rem'>Cancel</button></a>";
-        echo "</form>";
-        echo "<li>";
-        
-        echo "</li>";
-    } else {
-        echo "<li>No items in cart.</li>";
     }
+
+    // Display total price and total items
+    echo "<li class='list-group-item'>";
+    echo "<table>";
+    echo "<tr>";
+    echo "<td>Total Items:</td>";
+    echo "<td>$totalItems</td>";
+    echo "</tr>";
+
+    echo "<tr>";
+    echo "<td>Total Amount:</td>";
+    echo "<td>₱" . number_format($totalPrice, 2) . "</td>";
+    echo "</tr>";
+
+    // Add checkout button
+    echo "<tr>";
+    echo "<td colspan='2' style='text-align: center;'>";
+    echo "<form action='checkout.php' method='post' id='checkoutForm'>
+    <button type='submit' class='btn btn-primary' style='background-color:#222831; border-color:#222831; margin: 10px; width: 90px; height: 45px; font-size: 1.3rem' onclick='placeOrder()'>Checkout</button>
+</form>";
+    echo "<a href='cart.php'><button type='button' class='btn btn-primary' style='background-color: transparent; color: black; border-color:#222831; margin: 10px; width: 90px; height: 45px; font-size: 1.3rem'>Cancel</button></a>";
+    echo "</td>";
+    echo "</tr>";
+
+    echo "</table>";
+    echo "</li>";
+
+} else {
+    echo "<li>No items in cart.</li>";
+}
 ?>
+
 
                 
             </ul>      
