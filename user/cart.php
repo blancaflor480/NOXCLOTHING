@@ -317,7 +317,7 @@ if ($result && $result->num_rows > 0) {
     $totalItems = 0;
     $totalPrice = 0.00;
 
-    $sql = "SELECT addcart.*, products.price AS product_price, addcart.id AS ID, addcart.price AS cart_price, products.name_item, products.image_front, products.discount, products.quantity, addcart.quantity AS qty 
+    $sql = "SELECT addcart.*, products.price AS product_price, addcart.id AS addcartId, addcart.price AS cart_price, products.name_item, products.image_front, products.discount, products.quantity, addcart.quantity AS qty 
             FROM addcart 
             INNER JOIN products ON addcart.products_id = products.id 
             WHERE addcart.customer_id = ? AND addcart.status != 'Paid'";
@@ -343,7 +343,7 @@ if ($result && $result->num_rows > 0) {
 
             echo "
             <tr>
-         <td><input style='width: 15px; height: 15px;' type='checkbox' class='cart-checkbox' value='" . $row['ID'] . "' data-product-id='" . $row['ID'] . "' /></td>
+         <td><input style='width: 15px; height: 15px;' type='checkbox' class='cart-checkbox' value='" . $row['addcartId'] . "' data-product-id='" . $row['addcartId'] . "' /></td>
   
     
 
@@ -641,81 +641,81 @@ if ($result && $result->num_rows > 0) {
     </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    var checkboxes = document.querySelectorAll('.cart-checkbox');
-    var checkoutButton = document.querySelector('.checkout');
-
-    checkboxes.forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            updateOrderSummary();
-        });
-    });
-
-    checkoutButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        processCheckout();
-    });
-
-    function updateOrderSummary() {
-        var totalItems = 0;
-        var totalPrice = 0.00;
+        var checkboxes = document.querySelectorAll('.cart-checkbox');
+        var checkoutButton = document.querySelector('.checkout');
 
         checkboxes.forEach(function(checkbox) {
-            if (checkbox.checked) {
-                var quantity = parseInt(checkbox.closest('tr').querySelector('.quantity').value);
-                var price = parseFloat(checkbox.closest('tr').querySelector('.product-price').innerText.replace('₱', ''));
-                totalPrice += (quantity * price);
-                totalItems++;
-            }
+            checkbox.addEventListener('change', function() {
+                updateOrderSummary();
+            });
         });
 
-        // Update order summary elements
-        var discountRate = 0.1; // Assuming a 10% discount rate
-        var discount = totalPrice * discountRate;
-        var finalTotal = totalPrice - discount;
-
-        document.getElementById("total-items").innerText = totalItems;
-        document.getElementById("total-price").innerText = "₱" + totalPrice.toFixed(2);
-        document.getElementById("discount").innerText = "₱" + discount.toFixed(2);
-        document.getElementById("final-total").innerText = "₱" + finalTotal.toFixed(2);
-
-        checkoutButton.disabled = (totalItems === 0);
-    }
-
-    function processCheckout() {
-        var selectedItems = [];
-
-        checkboxes.forEach(function(checkbox) {
-            if (checkbox.checked) {
-                selectedItems.push(checkbox.dataset.addcartId); // Make sure this matches the attribute in your HTML
-            }
+        checkoutButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            processCheckout();
         });
 
-        if (selectedItems.length > 0) {
-            // Send an AJAX request to insert_checkout.php with selected items
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'function/insert_checkout.php', true);
-            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    console.log(xhr.responseText); // Handle the response if needed
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        alert("Items inserted into checkout successfully.");
-                        // Redirect to another page or update the UI as needed
-                    } else {
-                        alert("Failed to insert items into checkout.");
-                    }
+        function updateOrderSummary() {
+            var totalItems = 0;
+            var totalPrice = 0.00;
+
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    var quantity = parseInt(checkbox.closest('tr').querySelector('.quantity').value);
+                    var price = parseFloat(checkbox.closest('tr').querySelector('.product-price').innerText.replace('₱', ''));
+                    totalPrice += (quantity * price);
+                    totalItems++;
                 }
-            };
+            });
 
-            xhr.send(JSON.stringify({ selectedItems: selectedItems }));
-        } else {
-            alert("No items selected for checkout.");
+            // Update order summary elements
+            var discountRate = 0.1; // Assuming a 10% discount rate
+            var discount = totalPrice * discountRate;
+            var finalTotal = totalPrice - discount;
+
+            document.getElementById("total-items").innerText = totalItems;
+            document.getElementById("total-price").innerText = "₱" + totalPrice.toFixed(2);
+            document.getElementById("discount").innerText = "₱" + discount.toFixed(2);
+            document.getElementById("final-total").innerText = "₱" + finalTotal.toFixed(2);
+
+            checkoutButton.disabled = (totalItems === 0);
         }
-    }
-});
 
+        function processCheckout() {
+            var selectedItems = [];
+
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    selectedItems.push(checkbox.dataset.productId); // Corrected to use dataset.productId
+                }
+            });
+
+            if (selectedItems.length > 0) {
+                // Send an AJAX request to insert_checkout.php with selected items
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'function/insert_checkout.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log(xhr.responseText); // Handle the response if needed
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            alert("Items inserted into checkout successfully.");
+                            // Redirect to another page or update the UI as needed
+                        } else {
+                            alert("Failed to insert items into checkout.");
+                        }
+                    }
+                };
+
+                xhr.send(JSON.stringify({ selectedItems: selectedItems }));
+            } else {
+                alert("No items selected for checkout.");
+            }
+        }
+    });
 </script>
+
 
 
 <script>
